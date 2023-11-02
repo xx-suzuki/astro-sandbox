@@ -1,0 +1,81 @@
+---
+import { Env } from '@/constants/env';
+import Header from '@/projects/Header.astro';
+import Footer from '@/projects/Footer.astro';
+interface Props {
+  id: string;
+  title: string;
+  description: string;
+  keywords?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+}
+
+const {
+  id,
+  title,
+  keywords,
+  description,
+  ogImage = '/ogp.png',
+  ogType = 'website',
+} = Astro.props;
+
+const url = new URL(Astro.url.pathname, Astro.site);
+const ogp = new URL(ogImage, url);
+---
+
+<html lang="ja" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="format-detection" content="email=no,telephone=no,address=no">
+    <meta name="description" content={description}>
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:type" content={ogType}>
+    <meta property="og:title" content={title}>
+    <meta property="og:site_name" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={url}>
+    <meta property="og:image" content={ogp}>
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content={url}>
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={ogp}>
+    <meta name="thumbnail" content={ogp}>
+    <title itemprop="name">{ title }</title>
+    <link rel="canonical" href={url}>
+    {Env.isDev ?
+      (
+      <link rel="stylesheet" href="/src/styles/style.scss" />
+      ) : (
+      <link rel="stylesheet" href={`${Astro.url.pathname}CSS/app.css`} />
+      )
+    }
+  </head>
+  <body class={`p-${id}`} id={id}>
+    <div class="layout-wrapper" id="wrap">
+      <div class="layout-header">
+        <Header />
+      </div>
+      <main class="layout-contents">
+        <slot />
+      </main>
+    </main>
+    <div class="layout-footer">
+      <Footer />
+    </div>
+  </div>
+  {Env.isDev ?
+    (
+    <script type="module" src="/src/main.ts"></script>
+    ) : (
+    <script type="module" src={`${Astro.url.pathname}JS/vendor.js`} is:inline></script>
+    <script type="module" src={`${Astro.url.pathname}JS/bundle.js`} is:inline></script>
+    )
+  }
+  </body>
+</html>

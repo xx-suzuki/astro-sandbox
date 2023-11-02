@@ -1,0 +1,52 @@
+@use 'sass:math';
+@use '../setting/variable' as var;
+@use '../tool/function' as func;
+@use '../tool/mixin' as mixin;
+
+html {
+  line-break: normal;
+  text-underline-position: under;
+  overflow-wrap: break-word;
+  -webkit-tap-highlight-color: transparent;
+  scrollbar-gutter: stable;
+
+  &:focus-within {
+    @media (prefers-reduced-motion: no-preference) {
+      scroll-behavior: smooth;
+    }
+  }
+
+  @include mixin.mq-pc {
+    font-size: math.div(var.$fz-root * 100, 16) * 1%;
+  }
+
+  @include mixin.mq-sp {
+    font-size: calc(10px + (13 - 10) * (100vw - #{var.$bp-sp}px) / (var.$bp-tab - var.$bp-sp));
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var.$ff-main;
+  font-weight: var.$fw-r;
+  font-feature-settings: 'palt' 1;
+  line-height: 1.5;
+  color: var.$c-black;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: unset;
+  @media (min-resolution: 1.5dppx) {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    color: var.$c-white;
+    background-color: rgba(var.$c-black, 0.8);
+  }
+}

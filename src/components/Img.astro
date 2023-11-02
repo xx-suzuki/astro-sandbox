@@ -1,0 +1,28 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { imageSize } from 'image-size';
+import { assetPath, getFileData } from '@/helper/path';
+export type Props = Omit<HTMLAttributes<'img'>, 'src'> & {
+  src: string;
+  pictureClass?: string;
+};
+const { src, pictureClass, ...restProps } = Astro.props;
+const { width, height } = imageSize(assetPath(src));
+const { ext, assetDir, name } = getFileData(src);
+const attr = {
+  width,
+  height,
+  alt: '',
+  ...restProps,
+};
+---
+
+<picture class={pictureClass}>
+  {
+    ext === '.svg' ? (
+      <img src={src} decoding="async" {...attr} />
+    ) : (
+      <img src={`${assetDir}/${name}.webp`} decoding="async" {...attr} />
+    )
+  }
+</picture>

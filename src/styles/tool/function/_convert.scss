@@ -1,0 +1,27 @@
+@use '../../setting/variable/font-size' as fz;
+@use 'sass:math';
+@use '../../setting/variable/width' as w;
+
+@function vw($size, $base: w.$base-sp) {
+  $vw: math.div($size * 100, $base) * 1vw;
+
+  @return $vw;
+}
+
+@function per($size, $base: w.$inner-pc) {
+  $per: math.div($size * 100, $base) * 1%;
+
+  @return $per;
+}
+
+@function em($size, $base: fz.$root) {
+  $em: math.div($size, $base) * 1em;
+
+  @return $em;
+}
+
+@function rem($size, $base: fz.$root) {
+  $rem: math.div($size, $base) * 1rem;
+
+  @return $rem;
+}

@@ -1,0 +1,14 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Kv from '@/projects/Kv.astro';
+
+/** 下層ページ情報 */
+const id = 'sample';
+const title = 'サンプル';
+const description = 'description';
+const keywords = 'keywords';
+---
+
+<Layout title={title} description={description} keywords={keywords} id={id}>
+  <Kv />
+</Layout>

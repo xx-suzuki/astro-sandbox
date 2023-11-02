@@ -1,0 +1,28 @@
+---
+import path from 'node:path';
+import type { HTMLAttributes } from 'astro/types';
+import { imageSize } from 'image-size';
+import { dirName } from '@/helper/path';
+export type Props = HTMLAttributes<'svg'> & {
+  hash: string;
+};
+const { hash, ...restProps } = Astro.props;
+const target = import.meta.env.PROD
+  ? path
+      .resolve(dirName, '../../')
+      .replace(
+        `dist${import.meta.env.BASE_URL.replace(/\/$/, '')}`,
+        `src/assets/svg-sprite/${hash}.svg`,
+      )
+  : path.resolve(dirName, `../assets/svg-sprite/${hash}.svg`);
+
+const { width, height } = imageSize(target);
+const attr = {
+  viewBox: `0 0 ${width} ${height}`,
+  ...restProps,
+};
+---
+
+<svg role="img" {...attr}>
+  <use xlink:href={`${import.meta.env.BASE_URL}IMAGES/sprite.svg#${hash}`}></use>
+</svg>

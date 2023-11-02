@@ -1,0 +1,39 @@
+@use 'sass:math';
+
+/*
+ * 数値から単位を分離して返す
+ * @params $number : 単位付きのcssの値です
+ */
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return math.div($number, $number * 0 + 1);
+  }
+
+  @return $number;
+}
+
+/*
+ * 数値から単位だけを返す
+ * @params $number : 単位付きのcssの値です
+ */
+@function get-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    $unit: math.unit($number);
+
+    @return $unit;
+  }
+
+  @return $number;
+}
+
+@function str-replace($string, $search, $replace: '') {
+  $index: string.index($string, $search);
+
+  @if $index {
+    $r: string.replace(string.slice($string, $index + string.length($search)), $search, $replace);
+
+    @return string.slice($string, 1, $index - 1) + $replace + $r;
+  }
+
+  @return $string;
+}

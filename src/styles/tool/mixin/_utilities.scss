@@ -1,0 +1,31 @@
+@use '../../setting/variable/easing' as es;
+
+@mixin clearfix {
+  &::after {
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+    content: '.';
+  }
+}
+
+@mixin transition($duration, $target: all, $delay: 0s, $easing: es.$base) {
+  transition: $target $duration $easing $delay;
+}
+
+@mixin placeholder-color($color) {
+  &:placeholder-shown {
+    color: $color;
+  }
+
+  &:placeholder {
+    color: $color;
+    opacity: 1;
+  }
+
+  &::placeholder {
+    color: $color;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,22 @@
+@use '../../setting/variable/font-family' as ff;
+@use '../../setting/variable/font-size' as fz;
+@use '../../tool/function/convert' as cv;
+@use 'media' as mq;
+@use 'sass:string';
+
+@mixin font-icon($code) {
+  display: inline-block;
+  font-family: ff.$icon;
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  vertical-align: top;
+  content: string.unquote("'") + $code + string.unquote("'");
+  text-rendering: auto;
+}
+
+@mixin set-icon($code) {
+  &::before {
+    @include font-icon($code);
+  }
+}

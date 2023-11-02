@@ -1,0 +1,6 @@
+dist/*
+.tmp/*
+static/*
+node_modules/*
+public/*
+*.md
