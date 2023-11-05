@@ -53,6 +53,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@astrojs/tailwind": "^5.0.2",
     "@tweakpane/core": "^2.0.1",
     "@types/image-size": "^0.8.0",
     "@types/lodash-es": "^4.17.10",

@@ -10,6 +10,7 @@ const viteConfig: UserConfigExport = {
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src/'),
+      '@root': resolve(__dirname, './'),
     },
   },
   plugins: [splitVendorChunkPlugin(), visualizer()],

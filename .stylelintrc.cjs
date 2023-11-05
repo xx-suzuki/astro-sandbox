@@ -2,10 +2,7 @@
 module.exports = {
   syntax: 'scss',
   plugins: ['stylelint-scss', 'stylelint-prettier'],
-  extends: [
-    'stylelint-config-recess-order',
-    'stylelint-config-recommended-scss',
-  ],
+  extends: ['stylelint-config-recess-order', 'stylelint-config-recommended-scss'],
   rules: {
     'function-no-unknown': null,
     'no-empty-source': null,
@@ -22,7 +19,6 @@ module.exports = {
     ],
     'at-rule-no-unknown': null,
     'selector-pseudo-element-colon-notation': 'double',
-    'scss/selector-no-union-class-name': true,
     'rule-empty-line-before': [
       'always',
       {
@@ -36,6 +32,13 @@ module.exports = {
         except: ['blockless-after-same-name-blockless', 'first-nested'],
         ignore: ['after-comment'],
         ignoreAtRules: ['if', 'else'],
+      },
+    ],
+    'scss/selector-no-union-class-name': true,
+    'scss/at-rule-no-unknown': [
+      true,
+      {
+        ignoreAtRules: ['screen'],
       },
     ],
   },

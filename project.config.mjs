@@ -14,6 +14,19 @@ export const outDir = `dist/${baseDir}`;
 
 export const tmpDir = '.tmp';
 
+export const breakpoints = {
+  sp: 768 - 0.02,
+  pc: 768,
+  tab: 1024,
+  desktop: 1440,
+  huge: 1920,
+};
+
+export const designSize = {
+  sp: 375,
+  pc: 1440,
+};
+
 // ----------------------------------
 // clean-up.mjs
 export const cleanUp = [tmpDir, outDir];

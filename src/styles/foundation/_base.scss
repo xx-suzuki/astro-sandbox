@@ -16,12 +16,15 @@ html {
     }
   }
 
-  @include mixin.mq-pc {
+  @screen pc {
     font-size: math.div(var.$fz-root * 100, 16) * 1%;
   }
 
-  @include mixin.mq-sp {
-    font-size: calc(10px + (13 - 10) * (100vw - #{var.$bp-sp}px) / (var.$bp-tab - var.$bp-sp));
+  @screen sp {
+    font-size: calc(
+      10px + (13 - 10) * (100vw - #{theme('screens.valSp') + 'px'}) /
+        (theme('screens.valSp') - theme('screens.designSp'))
+    );
   }
 }
 
@@ -40,6 +43,7 @@ body {
   overflow-wrap: break-word;
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: unset;
+
   @media (min-resolution: 1.5dppx) {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
