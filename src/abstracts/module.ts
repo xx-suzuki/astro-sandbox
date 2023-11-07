@@ -8,12 +8,12 @@ export default abstract class Module<T = IModuleProps> {
   public moduleName: string;
   public uuid: string = uuid();
   protected html = document.documentElement;
-  protected element: HTMLElement;
+  protected target: HTMLElement;
   protected props: T | null;
 
   constructor(element: HTMLElement, props?: T) {
     this.moduleName = this.constructor.name;
-    this.element = element;
+    this.target = element;
     this.props = props ?? null;
   }
 
