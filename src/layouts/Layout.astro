@@ -48,13 +48,7 @@ const ogp = new URL(ogImage, url);
     <meta name="thumbnail" content={ogp}>
     <title itemprop="name">{ title }</title>
     <link rel="canonical" href={url}>
-    {Env.isDev ?
-      (
-      <link rel="stylesheet" href="/src/styles/style.scss" />
-      ) : (
-      <link rel="stylesheet" href={`${Astro.url.pathname}CSS/app.css`} />
-      )
-    }
+    {Env.isProd && <link rel="stylesheet" href={`${Astro.url.pathname}${Env.assets.styles.outDir}/${Env.assets.styles.outName}.css`} />}
   </head>
   <body class={`p-${id}`} id={id}>
     <div class="layout-wrapper" id="wrap">
@@ -73,8 +67,8 @@ const ogp = new URL(ogImage, url);
     (
     <script type="module" src="/src/main.ts"></script>
     ) : (
-    <script type="module" src={`${Astro.url.pathname}JS/vendor.js`} is:inline></script>
-    <script type="module" src={`${Astro.url.pathname}JS/bundle.js`} is:inline></script>
+    <script type="module" src={`${Astro.url.pathname}${Env.assets.javascript.outDir}/vendor.js`} is:inline></script>
+    <script type="module" src={`${Astro.url.pathname}${Env.assets.javascript.outDir}/${Env.assets.javascript.outName}.js`} is:inline></script>
     )
   }
   </body>

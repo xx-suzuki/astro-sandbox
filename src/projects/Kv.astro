@@ -1,3 +1,14 @@
+---
+import Img from '@/components/Img.astro';
+import SvgSprite from '@/components/SvgSprite.astro';
+---
+
 <div class="p-kv">
-  <p>KV</p>
+  <p class="u-text-lg u-text-center">Tailwind.css output test.</p>
+  <Img
+    src="/assets/images/1.webp"
+    pictureClass="p-kv__picture u-block"
+    class="p-kv__picture-img u-w-full"
+  />
+  <SvgSprite hash="youtube" class="p-kv__youtube u-w-[40px]" />
 </div>

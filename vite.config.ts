@@ -3,7 +3,7 @@ import type { PreRenderedAsset } from 'rollup';
 import { visualizer } from 'rollup-plugin-visualizer';
 import type { UserConfigExport } from 'vite';
 import { defineConfig, splitVendorChunkPlugin } from 'vite';
-import { outDir } from './project.config.mjs';
+import { outDir, assetsDir } from './project.config.mjs';
 const isInit = process.env.BUILD_BY === 'vite';
 
 const viteConfig: UserConfigExport = {
@@ -34,8 +34,8 @@ const viteConfig: UserConfigExport = {
       },
       output: {
         manualChunks: undefined,
-        entryFileNames: 'assets/js/bundle.js',
-        chunkFileNames: `assets/js/[name].js`,
+        entryFileNames: `${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`,
+        chunkFileNames: `${assetsDir.javascript.outDir}/[name].js`,
         assetFileNames: (chunkInfo: PreRenderedAsset) => resolveAssetFileName(chunkInfo),
       },
     },
@@ -53,9 +53,9 @@ const resolveAssetFileName = (chunkInfo: PreRenderedAsset) => {
   const fileName = chunkInfo.name && path.basename(chunkInfo.name);
 
   if (fileExt && imgExt.includes(fileExt)) {
-    return `assets/images/${fileName}`;
+    return `${assetsDir.images.outDir}/${fileName}`;
   } else if (fileExt && cssExt.includes(fileExt)) {
-    return `assets/css/${fileName}`;
+    return `${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`;
   } else {
     return `${chunkInfo.name}`;
   }

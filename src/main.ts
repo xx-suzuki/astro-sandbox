@@ -4,7 +4,7 @@ import '@/foundation/layout';
 import '@/foundation/browser';
 import '@/foundation/parameter';
 
-import '@/styles/style.scss';
+import '@/styles/styles.scss';
 
 /** Init */
 const Init = async () => {

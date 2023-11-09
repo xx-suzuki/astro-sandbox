@@ -1,18 +1,37 @@
 // ----------------------------------
 // Utility
-export const siteUrl = 'https://example.com';
-
 export const isDev = process.env.NODE_ENV === 'development';
 
 export const isProd = process.env.NODE_ENV === 'production';
 
-export const assetsDir = 'src/assets';
+// ----------------------------------
+// Project settings
+export const siteUrl = 'https://example.com';
 
 export const baseDir = '';
 
 export const outDir = `dist/${baseDir}`;
 
 export const tmpDir = '.tmp';
+
+export const assetsDir = {
+  javascript: {
+    outDir: 'assets/js',
+    outName: 'bundle',
+  },
+  styles: {
+    outDir: 'assets/css',
+    outName: 'styles',
+  },
+  images: {
+    outDir: 'assets/images',
+    outName: '[name]',
+  },
+  sprite: {
+    outDir: 'assets/images',
+    outName: 'sprite',
+  },
+};
 
 export const breakpoints = {
   sp: 768 - 0.02,
@@ -43,8 +62,8 @@ export const imageMin = {
 // svg-sprite.mjs
 export const svgSprite = {
   base: 'src/assets/svg-sprite',
-  outDir: `${tmpDir}/assets/images`,
-  outName: 'sprite',
+  outDir: `${tmpDir}/${assetsDir.sprite.outDir}`,
+  outName: assetsDir.sprite.outName,
   files: 'src/assets/svg-sprite/*.svg',
 };
 

@@ -50,7 +50,6 @@
     "astro": "^3.4.0",
     "destyle.css": "^4.0.0",
     "sass": "^1.69.5",
-    "stats-js": "^1.0.1",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.2.2",
     "uuid": "^9.0.1"
