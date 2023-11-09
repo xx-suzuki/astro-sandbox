@@ -1,6 +1,8 @@
 import tailwind from '@astrojs/tailwind';
 import { defineConfig } from 'astro/config';
-import { siteUrl, baseDir, outDir, tmpDir } from './project.config.mjs';
+import { isDev, siteUrl, baseDir, outDir, tmpDir } from './project.config.mjs';
+
+const integrations = isDev ? [tailwind({ applyBaseStyles: false })] : [];
 
 export default defineConfig({
   site: siteUrl,
@@ -9,7 +11,7 @@ export default defineConfig({
   outDir: outDir,
   trailingSlash: 'always',
   compressHTML: false,
-  integrations: [tailwind()],
+  integrations,
   server: {
     open: true,
     host: true,

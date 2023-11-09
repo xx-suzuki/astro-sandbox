@@ -1,4 +1,5 @@
-import { resolve } from 'path';
+import path from 'node:path';
+import type { PreRenderedAsset } from 'rollup';
 import { visualizer } from 'rollup-plugin-visualizer';
 import type { UserConfigExport } from 'vite';
 import { defineConfig, splitVendorChunkPlugin } from 'vite';
@@ -9,8 +10,8 @@ const viteConfig: UserConfigExport = {
   base: '',
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src/'),
-      '@root': resolve(__dirname, './'),
+      '@': path.resolve(__dirname, 'src/'),
+      '@root': path.resolve(__dirname, './'),
     },
   },
   plugins: [splitVendorChunkPlugin(), visualizer()],
@@ -33,31 +34,29 @@ const viteConfig: UserConfigExport = {
       },
       output: {
         manualChunks: undefined,
-        entryFileNames: 'JS/bundle.js',
-        chunkFileNames: `JS/[name].js`,
-        assetFileNames(info) {
-          if (info.name === 'style.css') {
-            return `CSS/app.css`;
-          }
-          return info.name ?? '';
-        },
+        entryFileNames: 'assets/js/bundle.js',
+        chunkFileNames: `assets/js/[name].js`,
+        assetFileNames: (chunkInfo: PreRenderedAsset) => resolveAssetFileName(chunkInfo),
       },
     },
     chunkSizeWarningLimit: 3000,
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `
-          @use 'sass:map';
-          @use 'sass:math';
-          @use 'src/styles/additional/variable' as var;
-          @use 'src/styles/additional/function' as func;
-          @use 'src/styles/additional/mixin' as mixin;
-        `,
-      },
-    },
-  },
 };
 
 export default defineConfig(isInit ? viteConfig : {});
+
+const resolveAssetFileName = (chunkInfo: PreRenderedAsset) => {
+  const imgExt = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
+  const cssExt = ['css'];
+  const fileExtname = chunkInfo.name && path.extname(chunkInfo.name);
+  const fileExt = fileExtname && fileExtname.slice(1);
+  const fileName = chunkInfo.name && path.basename(chunkInfo.name);
+
+  if (fileExt && imgExt.includes(fileExt)) {
+    return `assets/images/${fileName}`;
+  } else if (fileExt && cssExt.includes(fileExt)) {
+    return `assets/css/${fileName}`;
+  } else {
+    return `${chunkInfo.name}`;
+  }
+};
