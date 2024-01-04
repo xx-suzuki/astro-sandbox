@@ -1,0 +1,22 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import SvgSprite from '@/components/SvgSprite.astro';
+interface Props {
+  anchor: Omit<HTMLAttributes<'a'>, 'href'> & {
+    href: string;
+  };
+  text?: string;
+  addClass?: string;
+  target?: boolean;
+}
+
+const { anchor, text = 'for details', addClass, target = false } = Astro.props;
+const anchorAttr = target ? { ...anchor, ...{ target: '_blank', rel: 'noopener' } } : anchor;
+---
+
+<div class:list={['c-btn-basic', addClass]}>
+  <a class="c-btn-basic__link" {...anchorAttr}>
+    <span class="c-btn-basic__text">{text}</span>
+    <SvgSprite hash="arrow-link" class="c-btn-basic__icon" />
+  </a>
+</div>
