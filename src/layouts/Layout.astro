@@ -51,15 +51,15 @@ const ogp = new URL(ogImage, url);
     {Env.isProd && <link rel="stylesheet" href={`${Astro.url.pathname}${Env.assets.styles.outDir}/${Env.assets.styles.outName}.css`} />}
   </head>
   <body class={`p-${id}`} id={id}>
-    <div class="layout-wrapper" id="wrap">
-      <div class="layout-header">
+    <div class="l-wrapper" id="wrap">
+      <div class="l-wrapper__header">
         <Header />
       </div>
-      <main class="layout-contents">
+      <main class="l-wrapper__contents">
         <slot />
       </main>
-    </main>
-    <div class="layout-footer">
+    </div>
+    <div class="l-wrapper__footer">
       <Footer />
     </div>
   </div>

@@ -1,6 +1,6 @@
 // 基準にするデザインのサイズ
-$base-pc: theme('screens.designPc');
-$base-sp: theme('screens.designSp');
+$base-pc: 1440;
+$base-sp: 375;
 
 // 基準にするコンテンツ幅
 $inner-pc: 1200;

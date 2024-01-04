@@ -54,7 +54,7 @@ export const cleanUp = [tmpDir, outDir];
 // image-min.mjs
 export const imageMin = {
   base: 'src/assets/images',
-  outDir: `${tmpDir}/assets/images`,
+  outDir: `${tmpDir}/${assetsDir.images.outDir}`,
   files: 'src/assets/images/**/*.{jpg,jpeg,png,gif,svg,webp}',
 };
 

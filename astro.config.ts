@@ -11,6 +11,9 @@ export default defineConfig({
   outDir: outDir,
   trailingSlash: 'always',
   compressHTML: false,
+  devToolbar: {
+    enabled: false,
+  },
   integrations,
   server: {
     open: true,
