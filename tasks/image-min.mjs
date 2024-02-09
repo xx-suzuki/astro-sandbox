@@ -21,19 +21,13 @@ const options = {
     progressive: true,
   },
   jpg: {
-    quality: 80,
+    quality: 85,
   },
   gif: {},
-  webp: {
-    png: {
-      lossless: true,
-    },
-    jpg: {
-      quality: 90,
-    },
-    gif: {},
+  webp: {},
+  avif: {
+    quality: 70,
   },
-  avif: {},
   // ----------------------------------
   // SVGO settings
   svg: {
@@ -85,20 +79,20 @@ const imageMin = async (file) => {
     // Images
     const ext = fileExt === 'jpeg' ? 'jpg' : fileExt;
     const src = sharp(file);
-    // const img = path.join(outDir, fileName + fileExtname);
-    const webp = path.join(outDir, `${fileName}.webp`);
-    // const avif = path.join(outDir, `${fileName}.avif`);
+    const img = path.join(outDir, fileName + fileExtname);
+    // const webp = path.join(outDir, `${fileName}.webp`);
+    const avif = path.join(outDir, `${fileName}.avif`);
     await Promise.all([
-      // src.toFormat(ext, options[ext]).toFile(img),
-      src.webp(options.webp[ext]).toFile(webp),
-      // src.avif(options.avif).toFile(avif)
+      src.toFormat(ext, options[ext]).toFile(img),
+      // src.webp(options.webp[ext]).toFile(webp),
+      src.avif(options.avif).toFile(avif)
     ]);
-    // consoleSizeCompare(file, img);
-    consoleSizeCompare(file, webp);
-    // consoleSizeCompare(file, avif);
+    consoleSizeCompare(file, img);
+    // consoleSizeCompare(file, webp);
+    consoleSizeCompare(file, avif);
   } else {
     // Other
-    await fs.copy(file, outFile, {
+    fs.copy(file, outFile, {
       recursive: true,
     });
     consoleSize(outFile);

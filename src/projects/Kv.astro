@@ -1,14 +1,21 @@
 ---
 import Img from '@/components/Img.astro';
+import Pic from '@/components/Pic.astro';
 import SvgSprite from '@/components/SvgSprite.astro';
 ---
 
 <div class="p-kv">
   <p class="u-text-lg u-text-center">Tailwind.css output test.</p>
   <Img
-    src="/assets/images/1.webp"
+    src="/assets/images/1.jpg"
     pictureClass="p-kv__picture u-block"
     class="p-kv__picture-img u-w-full"
+  />
+  <Pic
+    srcPc="/assets/images/1.jpg"
+    srcSp="/assets/images/8.jpg"
+    pictureProps={{ class: 'pic' }}
+    imageProps={{ class: 'img' }}
   />
   <SvgSprite hash="youtube" class="p-kv__youtube u-w-[40px]" />
 </div>

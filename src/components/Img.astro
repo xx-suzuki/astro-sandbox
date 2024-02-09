@@ -22,7 +22,15 @@ const attr = {
     ext === '.svg' ? (
       <img src={src} decoding="async" {...attr} />
     ) : (
-      <img src={`${assetDir}/${name}.webp`} decoding="async" {...attr} />
+      <>
+        <source
+          srcset={`${assetDir}/${name}.avif`}
+          width={width}
+          height={height}
+          type="image/avif"
+        />
+        <img src={`${assetDir}/${name}${ext}`} decoding="async" {...attr} />
+      </>
     )
   }
 </picture>
