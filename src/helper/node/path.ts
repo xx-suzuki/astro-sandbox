@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Env } from '@/constants/env';
 
 /**
  * ファイルパス名から拡張子を取得
@@ -28,7 +29,10 @@ export const dirName = path.dirname(fileName);
 export const assetPath = (src: string) => {
   return import.meta.env.PROD
     ? path.join(path.resolve(dirName, '../../'), src.replace(import.meta.env.BASE_URL, ''))
-    : path.join(path.resolve(dirName, '../../../'), src.replace(import.meta.env.BASE_URL, '.tmp/'));
+    : path.join(
+        path.resolve(dirName, '../../../'),
+        src.replace(import.meta.env.BASE_URL, `${Env.tmpDir}/`),
+      );
 };
 
 /**
