@@ -17,7 +17,7 @@
     "npm": "^10.2.4"
   },
   "scripts": {
-    "dev": "run-s clean dev:copy build:img dev:svg && run-p dev:astro \"watch:*\"",
+    "dev": "run-s clean plop:scss dev:copy build:img dev:svg && run-p dev:astro \"watch:*\"",
     "dev:astro": "astro dev",
     "dev:copy": "node tasks/static-copy.mjs",
     "dev:svg": "node tasks/svg-sprite.mjs",
@@ -26,7 +26,7 @@
     "watch:svg": "onchange \"src/assets/svg-sprite/*.svg\" -- node tasks/svg-sprite.mjs \"{{changed}}\"",
     "stg": "astro check && tsc --noEmit && run-s clean build:copy build:img build:svg build:astro stg:vite beautify:html",
     "stg:vite": "cross-env BUILD_BY=vite vite build --mode staging",
-    "build": "astro check && tsc --noEmit && run-s clean build:copy build:img build:svg build:astro build:vite beautify:html",
+    "build": "astro check && tsc --noEmit && run-s clean plop:scss build:copy build:img build:svg build:astro build:vite beautify:html",
     "build:astro": "astro build",
     "build:vite": "cross-env BUILD_BY=vite vite build",
     "build:img": "cross-env NODE_ENV=production node tasks/image-min.mjs",
@@ -43,6 +43,7 @@
     "clean": "node tasks/clean-up.mjs",
     "lint-staged": "lint-staged",
     "plop": "plop",
+    "plop:scss": "plop scss",
     "prepare": "husky"
   },
   "dependencies": {

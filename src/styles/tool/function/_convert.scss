@@ -2,13 +2,13 @@
 @use 'sass:math';
 @use '../../setting/variable/width' as w;
 
-@function vw($size, $base: w.$base-sp) {
+@function vw($size, $base: w.$design-sp) {
   $vw: math.div($size * 100, $base) * 1vw;
 
   @return $vw;
 }
 
-@function per($size, $base: w.$inner-pc) {
+@function per($size, $base) {
   $per: math.div($size * 100, $base) * 1%;
 
   @return $per;
