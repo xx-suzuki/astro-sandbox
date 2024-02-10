@@ -85,7 +85,7 @@ const imageMin = async (file) => {
     await Promise.all([
       src.toFormat(ext, options[ext]).toFile(img),
       // src.webp(options.webp[ext]).toFile(webp),
-      src.avif(options.avif).toFile(avif)
+      src.avif(options.avif).toFile(avif),
     ]);
     consoleSizeCompare(file, img);
     // consoleSizeCompare(file, webp);

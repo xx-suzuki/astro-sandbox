@@ -10,6 +10,7 @@ em {
 
 img {
   height: auto;
+
   @media (max-resolution: 1.5dppx) {
     /* stylelint-disable-next-line */
     image-rendering: -webkit-optimize-contrast;
