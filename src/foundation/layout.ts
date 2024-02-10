@@ -1,4 +1,5 @@
 import { MediaQueryList as MQL } from '@/constants/media-query-list';
+import { decimalPart } from '@/helper/math';
 
 const { body } = document;
 
@@ -31,20 +32,23 @@ class Layout {
     // スクロールバー無し
     const docW = this.documentWidth * 0.01;
     const docH = this.documentHeight * 0.01;
-    document.documentElement.style.setProperty('--vw', `${docW}px`);
-    document.documentElement.style.setProperty('--vh', `${docH}px`);
+    document.documentElement.style.setProperty('--vw', `${decimalPart(docW, 2)}px`);
+    document.documentElement.style.setProperty('--vh', `${decimalPart(docH, 2)}px`);
 
     // ----------------------------------
     // ウインドウサイズ（SPはメニュー拡大縮小で可変）
     const winW = this.windowWidth * 0.01;
     const winH = this.windowHeight * 0.01;
-    document.documentElement.style.setProperty('--vw-win', `${winW}px`);
-    document.documentElement.style.setProperty('--vh-win', `${winH}px`);
+    document.documentElement.style.setProperty('--vw-win', `${decimalPart(winW, 2)}px`);
+    document.documentElement.style.setProperty('--vh-win', `${decimalPart(winH, 2)}px`);
 
     // ----------------------------------
     // スクロールバー
     this.scrollBarWidth = (winW - docW) * 100;
-    document.documentElement.style.setProperty('--scroll-bar', `${this.scrollBarWidth}px`);
+    document.documentElement.style.setProperty(
+      '--scroll-bar',
+      `${decimalPart(this.scrollBarWidth, 2)}px`,
+    );
   }
 }
 

@@ -1,18 +1,15 @@
-// import { Env } from '@/constants/env';
-import { Events } from '@/constants/events';
+import { Env } from '@/constants/env';
 import '@/foundation/layout';
 import '@/foundation/browser';
-import '@/foundation/parameter';
-
 import '@/styles/styles.scss';
 
 /** Init */
-const Init = async () => {
+async function Init() {
   /** Foundation */
-};
 
-if (document.readyState !== 'loading') {
-  Init();
-} else {
-  document.addEventListener(Events.Load, Init, false);
+  if (Env.isDev) {
+    await import('@/foundation/parameter');
+  }
 }
+
+void Init();
