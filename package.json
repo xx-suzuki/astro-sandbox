@@ -13,8 +13,8 @@
     "url": "git+https://github.com/xx-suzuki/astro-sandbox.git"
   },
   "engines": {
-    "node": "^20.10.0",
-    "npm": "^10.2.3"
+    "node": "^20.11.0",
+    "npm": "^10.2.4"
   },
   "scripts": {
     "dev": "run-s clean dev:copy build:img dev:svg && run-p dev:astro \"watch:*\"",
