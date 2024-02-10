@@ -1,0 +1,11 @@
+---
+import { Env } from '@/constants/env';
+import type { HTMLAttributes } from 'astro/types';
+interface Props {}
+const { ...restProps } = Astro.props;
+import Img from '@/components/Img.astro';
+import Pic from '@/components/Pic.astro';
+import SvgSprite from '@/components/SvgSprite.astro';
+---
+
+<div class="{{slug}}"></div>
