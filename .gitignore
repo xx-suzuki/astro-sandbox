@@ -33,3 +33,4 @@ report-w3c.txt
 # temporary files
 .tmp/
 src/styles/setting/variable/_width.scss
+src/styles/setting/variable/_path.scss

@@ -17,13 +17,12 @@ html {
   }
 
   @screen pc {
-    font-size: math.div(var.$fz-root * 100, 16) * 1%;
+    font-size: min(1.35vh, math.div(var.$fz-root * 100, 16) * 1%);
   }
 
   @screen sp {
     font-size: calc(
-      10px + (13 - 10) * (100vw - #{theme('screens.valSp') + 'px'}) /
-        (theme('screens.valSp') - theme('screens.designSp'))
+      10px + (13 - 10) * (100vw - #{var.$w-design-sp}px) / (var.$w-bp-sp - var.$w-design-sp)
     );
   }
 }
