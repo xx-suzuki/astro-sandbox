@@ -58,11 +58,10 @@ const ogp = new URL(ogImage, url);
       <main class="l-wrapper__contents">
         <slot />
       </main>
+      <div class="l-wrapper__footer">
+        <Footer />
+      </div>
     </div>
-    <div class="l-wrapper__footer">
-      <Footer />
-    </div>
-  </div>
   {Env.isDev ?
     (
     <script type="module" src="/src/main.ts"></script>

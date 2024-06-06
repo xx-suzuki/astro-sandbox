@@ -52,4 +52,4 @@ class Layout {
   }
 }
 
-export const browser = new Layout();
+export const layout = new Layout();

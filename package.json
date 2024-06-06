@@ -19,8 +19,8 @@
   "scripts": {
     "dev": "run-s clean plop:scss dev:copy build:img dev:svg && run-p dev:astro \"watch:*\"",
     "dev:astro": "astro dev",
-    "dev:copy": "node tasks/static-copy.mjs",
-    "dev:svg": "node tasks/svg-sprite.mjs",
+    "dev:copy": "cross-env NODE_ENV=development node tasks/static-copy.mjs",
+    "dev:svg": "cross-env NODE_ENV=development node tasks/svg-sprite.mjs",
     "watch:img": "onchange \"src/assets/images/**\" -- node tasks/image-min.mjs \"{{changed}}\"",
     "watch:copy": "onchange \"static/**\" -- node tasks/static-copy.mjs \"{{changed}}\"",
     "watch:svg": "onchange \"src/assets/svg-sprite/*.svg\" -- node tasks/svg-sprite.mjs \"{{changed}}\"",

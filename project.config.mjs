@@ -10,7 +10,9 @@ export const siteUrl = 'https://example.com';
 
 export const baseDir = '';
 
-export const outDir = `dist/${baseDir}`;
+export const distDir = `dist`;
+
+export const outDir = `${distDir}/${baseDir}`;
 
 export const tmpDir = '.tmp';
 

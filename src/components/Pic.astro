@@ -30,19 +30,28 @@ const attrSp: HTMLAttributes<'source'> = {
 ---
 
 <picture {...pictureProps}>
-  <source
-    media={attrSp.media}
-    srcset={`${dataSp.assetDir}/${dataSp.name}.avif`}
-    width={attrSp.width}
-    height={attrSp.height}
-    type="image/avif"
-  />
+  {
+    dataSp.ext !== '.svg' && (
+      <source
+        media={attrSp.media}
+        srcset={`${dataSp.assetDir}/${dataSp.name}.avif`}
+        width={attrSp.width}
+        height={attrSp.height}
+        type="image/avif"
+      />
+    )
+  }
   <source srcset={`${dataSp.assetDir}/${dataSp.name}${dataSp.ext}`} {...attrSp} />
-  <source
-    srcset={`${dataPc.assetDir}/${dataPc.name}.avif`}
-    width={attrPc.width}
-    height={attrPc.height}
-    type="image/avif"
-  />
+
+  {
+    dataPc.ext !== '.svg' && (
+      <source
+        srcset={`${dataPc.assetDir}/${dataPc.name}.avif`}
+        width={attrPc.width}
+        height={attrPc.height}
+        type="image/avif"
+      />
+    )
+  }
   <img src={`${dataPc.assetDir}/${dataPc.name}${dataPc.ext}`} decoding="async" {...attrPc} />
 </picture>

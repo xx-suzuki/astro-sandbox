@@ -92,7 +92,7 @@ const imageMin = async (file) => {
     consoleSizeCompare(file, avif);
   } else {
     // Other
-    fs.copy(file, outFile, {
+    await fs.copy(file, outFile, {
       recursive: true,
     });
     consoleSize(outFile);
