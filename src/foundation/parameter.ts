@@ -82,7 +82,7 @@ class Parameter {
   }
 
   get getPane() {
-    if (this.pane) return this.pane;
+    return this.pane;
   }
 
   private updateStyleVariables() {

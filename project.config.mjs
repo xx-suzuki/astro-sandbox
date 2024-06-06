@@ -8,17 +8,18 @@ export const isProd = process.env.NODE_ENV === 'production';
 // Project settings
 export const siteUrl = 'https://example.com';
 
-export const baseDir = '';
+// 読み込んでいるhtmlのパスがズレるため、開発時はルートに設定
+export const baseDir = isDev ? '/' : '/production/';
 
 export const distDir = `dist`;
 
-export const outDir = `${distDir}/${baseDir}`;
+export const outDir = `${distDir}${baseDir}`;
 
 export const tmpDir = '.tmp';
 
 export const assetsDir = {
   javascript: {
-    outDir: 'assets/js',
+    outDir: `assets/js`,
     outName: 'bundle',
   },
   styles: {
@@ -35,6 +36,8 @@ export const assetsDir = {
   },
 };
 
+export const imgDir = `${baseDir}${assetsDir.images.outDir}`;
+
 export const breakpoints = {
   sp: 768 - 0.02,
   pc: 768,
@@ -50,7 +53,7 @@ export const designSize = {
 
 // ----------------------------------
 // clean-up.mjs
-export const cleanUp = [tmpDir, outDir];
+export const cleanUp = [tmpDir, distDir];
 
 // ----------------------------------
 // image-min.mjs

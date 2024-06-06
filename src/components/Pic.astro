@@ -1,8 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 import { imageSize } from 'image-size';
-import { Env } from '@/constants/env';
 import { assetPath, getFileData } from '@/helper/node/path';
+import { breakpoints } from '@root/project.config.mjs';
 export type Props = {
   srcPc: string;
   srcSp: string;
@@ -25,7 +25,7 @@ const attrPc: Omit<HTMLAttributes<'img'>, 'src'> = {
 const attrSp: HTMLAttributes<'source'> = {
   width: sizeSp.width,
   height: sizeSp.height,
-  media: `(max-width: ${Env.breakpoints.sp}px)`,
+  media: `(max-width: ${breakpoints.sp}px)`,
 };
 ---
 

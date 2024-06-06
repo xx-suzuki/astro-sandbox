@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Env } from '@/constants/env';
+import { tmpDir, outDir } from '@root/project.config.mjs';
 
 /**
  * ファイルパス名から拡張子を取得
@@ -22,17 +23,14 @@ export const fileName = fileURLToPath(import.meta.url);
  */
 export const dirName = path.dirname(fileName);
 
+export const rootPath = process.cwd();
+
 /**
  * ファイルパス名からpublic(.tmp)の画像データを参照する
  * @param {string} src パス文字列
  */
 export const assetPath = (src: string) => {
-  return import.meta.env.PROD
-    ? path.join(path.resolve(dirName, '../../'), src.replace(import.meta.env.BASE_URL, ''))
-    : path.join(
-        path.resolve(dirName, '../../../'),
-        src.replace(import.meta.env.BASE_URL, `${Env.tmpDir}/`),
-      );
+  return Env.isProd ? path.join(rootPath, outDir + src) : path.join(rootPath, tmpDir + src);
 };
 
 /**

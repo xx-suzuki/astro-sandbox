@@ -1,5 +1,6 @@
 ---
 import { Env } from '@/constants/env';
+import { siteUrl, baseDir, assetsDir, imgDir } from '@root/project.config.mjs';
 import Header from '@/projects/Header.astro';
 import Footer from '@/projects/Footer.astro';
 interface Props {
@@ -21,7 +22,7 @@ const {
 } = Astro.props;
 
 const url = new URL(Astro.url.pathname, Astro.site);
-const ogp = new URL(ogImage, url);
+const ogp = siteUrl + imgDir + ogImage;
 ---
 
 <html lang="ja" itemscope itemtype="http://schema.org/WebPage">
@@ -48,7 +49,7 @@ const ogp = new URL(ogImage, url);
     <meta name="thumbnail" content={ogp}>
     <title itemprop="name">{ title }</title>
     <link rel="canonical" href={url}>
-    {Env.isProd && <link rel="stylesheet" href={`${Astro.url.pathname}${Env.assets.styles.outDir}/${Env.assets.styles.outName}.css`} />}
+    {Env.isProd && <link rel="stylesheet" href={`${baseDir}${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`} />}
   </head>
   <body class={`p-${id}`} id={id}>
     <div class="l-wrapper" id="wrap">
@@ -66,8 +67,8 @@ const ogp = new URL(ogImage, url);
     (
     <script type="module" src="/src/main.ts"></script>
     ) : (
-    <script type="module" src={`${Astro.url.pathname}${Env.assets.javascript.outDir}/vendor.js`} is:inline></script>
-    <script type="module" src={`${Astro.url.pathname}${Env.assets.javascript.outDir}/${Env.assets.javascript.outName}.js`} is:inline></script>
+    <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/vendor.js`} is:inline></script>
+    <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`} is:inline></script>
     )
   }
   </body>

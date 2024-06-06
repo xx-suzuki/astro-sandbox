@@ -1,8 +1,8 @@
-import { Env } from '@/constants/env';
+import { breakpoints } from '@root/project.config.mjs';
 
 export const MediaQueryList = {
-  Sp: window.matchMedia(`screen and (max-width: ${Env.breakpoints.sp}px)`),
-  Pc: window.matchMedia(`screen and (min-width: ${Env.breakpoints.pc}px)`),
-  Tab: window.matchMedia(`screen and (max-width: ${Env.breakpoints.tab}px)`),
-  Huge: window.matchMedia(`screen and (min-width: ${Env.breakpoints.huge}px)`),
+  Sp: window.matchMedia(`screen and (max-width: ${breakpoints.sp}px)`),
+  Pc: window.matchMedia(`screen and (min-width: ${breakpoints.pc}px)`),
+  Tab: window.matchMedia(`screen and (max-width: ${breakpoints.tab}px)`),
+  Huge: window.matchMedia(`screen and (min-width: ${breakpoints.huge}px)`),
 } as const;
