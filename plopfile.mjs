@@ -1,5 +1,5 @@
 // https://github.com/plopjs/plop
-import { assetsDir, breakpoints, designSize } from './project.config.mjs';
+import { baseDir, assetsDir, breakpoints, designSize } from './project.config.mjs';
 
 export default function (
   /** @type {import('plop').NodePlopAPI} */
@@ -27,6 +27,7 @@ export default function (
         templateFile: 'plop/styles/_path.scss.hbs',
         force: true,
         data: {
+          baseDir,
           assetsDir,
         },
       },
