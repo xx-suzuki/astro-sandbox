@@ -1,10 +1,10 @@
 export default {
   './*.{js,cjs,mjs,ts}': [
-    "eslint -c .eslintrc.cjs --fix --ignore-pattern '!.*rc.cjs'",
+    "eslint -c eslint.config.mjs --fix --ignore-pattern '!.*rc.cjs'",
     'prettier --write --no-error-on-unmatched-pattern',
   ],
   './src/**/*.{ts,tsx,astro,vue}': [
-    'eslint -c .eslintrc.cjs --fix',
+    'eslint -c eslint.config.mjs --fix',
     'prettier --write --no-error-on-unmatched-pattern',
   ],
   './src/**/*.{scss,css}': [
