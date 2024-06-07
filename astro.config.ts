@@ -20,7 +20,11 @@ export default defineConfig({
   server: {
     open: true,
     host: true,
-    port: Number(DEV_PORT) ?? undefined,
+    ...(isDev
+      ? {
+          port: Number(DEV_PORT) ?? 4321,
+        }
+      : {}),
   },
   vite: {
     css: {
