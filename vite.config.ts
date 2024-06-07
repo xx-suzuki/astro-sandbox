@@ -2,14 +2,14 @@ import path from 'node:path';
 import type { PreRenderedAsset } from 'rollup';
 import { visualizer } from 'rollup-plugin-visualizer';
 import type { UserConfigExport } from 'vite';
-import { defineConfig, splitVendorChunkPlugin } from 'vite';
+import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { outDir, assetsDir } from './project.config.mjs';
 const isInit = process.env.BUILD_BY === 'vite';
 
 const viteConfig: UserConfigExport = {
   base: '',
-  plugins: [tsconfigPaths(), splitVendorChunkPlugin(), visualizer()],
+  plugins: [tsconfigPaths(), visualizer()],
   build: {
     outDir,
     cssCodeSplit: false,
@@ -28,7 +28,11 @@ const viteConfig: UserConfigExport = {
         main: './src/main.ts',
       },
       output: {
-        manualChunks: undefined,
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        },
         entryFileNames: `${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`,
         chunkFileNames: `${assetsDir.javascript.outDir}/[name].js`,
         assetFileNames: (chunkInfo: PreRenderedAsset) => resolveAssetFileName(chunkInfo),
