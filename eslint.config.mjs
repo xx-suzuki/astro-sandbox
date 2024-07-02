@@ -96,17 +96,4 @@ export default [
       '@typescript-eslint/no-redeclare': 'off',
     },
   },
-
-  // ----------------------------------
-  // Test
-  {
-    files: ['**/*.test.*', '**/types.ts'],
-    rules: {
-      '@typescript-eslint/no-unused-expressions': 'off',
-      'func-style': 'off',
-      'n/no-unsupported-features/es-syntax': 'off',
-      'no-console': 'off',
-      'no-unused-expressions': 'off',
-    },
-  },
 ];
