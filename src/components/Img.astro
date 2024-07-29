@@ -2,13 +2,16 @@
 import type { HTMLAttributes } from 'astro/types';
 import { imageSize } from 'image-size';
 import { assetPath, getFileData } from '@/helper/node/path';
+import { parseDataAttributes } from '@/helper/node/utils';
 export type Props = Omit<HTMLAttributes<'img'>, 'src'> & {
   src: string;
-  pictureClass?: string;
+  pictureProps?: HTMLAttributes<'picture'>;
+  dataAttrs?: string[];
 };
-const { src, pictureClass, ...restProps } = Astro.props;
+const { src, pictureProps, dataAttrs = [], ...restProps } = Astro.props;
 const { width, height } = imageSize(assetPath(src));
 const { ext, assetDir, name } = getFileData(src);
+const dataAttributes = parseDataAttributes(dataAttrs);
 const attr = {
   width,
   height,
@@ -17,7 +20,7 @@ const attr = {
 };
 ---
 
-<picture class={pictureClass}>
+<picture {...pictureProps} {...dataAttributes}>
   {
     ext === '.svg' ? (
       <img src={src} decoding="async" {...attr} />
