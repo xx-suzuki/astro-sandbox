@@ -2,6 +2,7 @@ import jsLint from '@eslint/js';
 import astroParser from 'astro-eslint-parser';
 import astroLint from 'eslint-plugin-astro';
 import importPlugin from 'eslint-plugin-import'; // 追加
+import globals from 'globals';
 import tsLint from 'typescript-eslint';
 // import tsParser from '@typescript-eslint/parser';
 
@@ -10,11 +11,26 @@ export default [
   // ----------------------------------
   // Common
   {
-    ignores: ['dist/*', '.tmp/*', 'static/*', 'node_modules/*', 'public/*'],
+    ignores: [
+      'dist/*',
+      '.tmp/*',
+      'static/*',
+      'node_modules/*',
+      'public/*',
+      'src/layouts/Layout.astro',
+    ],
   },
   {
     linterOptions: {
       reportUnusedDisableDirectives: 'warn',
+    },
+  },
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
     },
   },
 
@@ -85,6 +101,9 @@ export default [
         parser: '@typescript-eslint/parser',
         extraFileExtensions: ['.astro'],
       },
+    },
+    rules: {
+      'astro/no-conflict-set-directives': 'off',
     },
   },
 
