@@ -20,7 +20,7 @@ const viteConfig: UserConfigExport = {
       mangle: true,
       toplevel: true,
       compress: {
-        drop_console: false,
+        drop_console: true,
       },
     },
     rollupOptions: {
