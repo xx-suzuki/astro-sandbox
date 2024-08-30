@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import inquirer from 'inquirer';
 import { fontAwesome as config } from '../project.config.mjs';
 import { createFolder } from './helper/utils.mjs';
-import { consoleError, consoleExist } from './helper/drop-console.mjs';
+import { consoleError, consoleExist, consoleGenerate } from './helper/drop-console.mjs';
 
 // ----------------------------------
 // Types
@@ -14,11 +14,11 @@ type SvgData = {
   width: number;
   height: number;
   path: string | string[];
-}
+};
 
 type SvgCollection = {
   svg: Record<string, SvgData>;
-}
+};
 
 // ----------------------------------
 // Util
@@ -27,8 +27,8 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-const askQuestion = async (choices: string[]) => {
-  const answers = await inquirer.prompt([
+const askQuestion = async (choices: string[]): Promise<string> => {
+  const { selectedOption } = await inquirer.prompt([
     {
       type: 'list',
       name: 'selectedOption',
@@ -37,55 +37,71 @@ const askQuestion = async (choices: string[]) => {
     },
   ]);
 
-  return answers.selectedOption;
-}
+  return selectedOption;
+};
 
-const getIconData = (jsonData: Record<string, any>, number: string) => {
+const getIconData = (jsonData: Record<string, any>, name: string) => {
+  const iconData = jsonData[name];
   return {
-    styles: jsonData[number]?.styles as string[],
-    svg: jsonData[number]?.svg as SvgCollection,
+    styles: iconData?.styles as string[] | undefined,
+    svg: iconData?.svg as SvgCollection | undefined,
   };
-}
+};
+
+const loadJsonFile = (filePath: string): Record<string, any> | null => {
+  try {
+    const file = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(file);
+  } catch (error) {
+    consoleError(`Failed to load or parse JSON file: ${error.message}`);
+    return null;
+  }
+};
+
+const saveSvgFile = (filePath: string, svgContent: string) => {
+  createFolder(config.outDir);
+  fs.writeFileSync(filePath, svgContent);
+  consoleGenerate();
+};
+
+const processIconSelection = async (
+  name: string,
+  data: { styles: string[] | undefined; svg: SvgCollection | undefined },
+) => {
+  if (!data.svg || !data.styles) {
+    consoleError(`"${name}" icon is not available.`);
+    return;
+  }
+
+  let selectedStyle: string;
+  if (data.styles.length > 1) {
+    selectedStyle = await askQuestion(data.styles);
+  } else {
+    selectedStyle = data.styles[0];
+  }
+
+  saveSvgFile(`${config.outDir}/${name}-${selectedStyle}.svg`, data.svg[selectedStyle].raw);
+};
 
 // ----------------------------------
 // init
 const init = async () => {
   rl.question('Please enter icon name: ', async (name) => {
-    const file = fs.readFileSync(config.file, { encoding: 'utf-8' });
-    if (!file) {
+    const jsonData = loadJsonFile(config.file);
+    if (!jsonData) {
       consoleExist();
       rl.close();
-    };
+      return;
+    }
 
-    // Jsonデータに変換し対象アイコンがあるかチェック
-    const jsonData = JSON.parse(file);
     const data = getIconData(jsonData, name);
-    if (!data.svg) {
-      consoleError(`"${name}" icon is not available.`);
-      rl.close();
-    };
-
-    // 選択肢を表示
-    const result = {
-      svg: '',
-      dist: ''
-    }
-    if (1 < data.styles.length) {
-      const select = await askQuestion(data.styles);
-      result.svg = data.svg[select as any].raw;
-      result.dist = `${config.outDir}/${name}-${select}.svg`;
-    } else {
-      result.svg = data.svg[data.styles[0]].raw;
-      result.dist = `${config.outDir}/${name}-${data.styles[0]}.svg`;
-    }
-    createFolder(config.outDir);
-    fs.writeFileSync(result.dist, result.svg);
+    await processIconSelection(name, data);
 
     rl.close();
   });
 };
 
-init().catch((e) => {
-  console.trace(e);
+init().catch((error) => {
+  console.trace(error);
   process.exitCode = 1;
 });
