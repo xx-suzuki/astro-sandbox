@@ -73,6 +73,13 @@ export const svgSprite = {
 };
 
 // ----------------------------------
+// font-awesome
+export const fontAwesome = {
+  file: 'tasks/font-awesome/icons.json',
+  outDir: 'src/assets/svg-sprite',
+};
+
+// ----------------------------------
 // html-prettify.mjs
 export const htmlPrettify = {
   files: 'dist/**/*.html',
