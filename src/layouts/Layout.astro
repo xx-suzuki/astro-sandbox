@@ -25,7 +25,7 @@ const url = new URL(Astro.url.pathname, Astro.site);
 const ogp = siteUrl + imgDir + ogImage;
 ---
 
-<html lang="ja" itemscope itemtype="http://schema.org/WebPage">
+<html lang="ja">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
@@ -47,7 +47,7 @@ const ogp = siteUrl + imgDir + ogImage;
     <meta name="twitter:description" content={description}>
     <meta name="twitter:image" content={ogp}>
     <meta name="thumbnail" content={ogp}>
-    <title itemprop="name">{ title }</title>
+    <title>{ title }</title>
     <link rel="canonical" href={url}>
     {Env.isProd && <link rel="stylesheet" href={`${baseDir}${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`} />}
   </head>

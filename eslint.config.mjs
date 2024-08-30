@@ -1,7 +1,7 @@
 import jsLint from '@eslint/js';
 import astroParser from 'astro-eslint-parser';
 import astroLint from 'eslint-plugin-astro';
-import importPlugin from 'eslint-plugin-import'; // 追加
+import importPlugin from 'eslint-plugin-import';
 import globals from 'globals';
 import tsLint from 'typescript-eslint';
 // import tsParser from '@typescript-eslint/parser';

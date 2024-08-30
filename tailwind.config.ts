@@ -19,6 +19,9 @@ export default {
       designSp: `${designSize.sp}`,
       designPc: `${designSize.pc}`,
     },
+    spacing: {
+      ...Object.fromEntries([...Array(401)].map((_, i) => i).map((num) => [num, `${num / 10}rem`])),
+    },
     extend: {},
   },
   plugins: [],
