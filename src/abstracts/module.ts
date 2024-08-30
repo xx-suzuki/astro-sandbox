@@ -1,8 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-export interface IModuleProps {
-  [key: string]: any;
-}
+export type IModuleProps = Record<string, any>;
 
 export default abstract class Module<T = IModuleProps> {
   public moduleName: string;

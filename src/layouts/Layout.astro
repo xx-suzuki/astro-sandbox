@@ -2,7 +2,7 @@
 import { Env } from '@/constants/env';
 import Footer from '@/projects/Footer.astro';
 import Header from '@/projects/Header.astro';
-import { siteUrl, baseDir, assetsDir, imgDir } from '@root/project.config.mjs';
+import { siteUrl, baseDir, assetsDir, imgDir } from '@root/project.config.js;
 interface Props {
   id: string;
   title: string;
@@ -65,7 +65,7 @@ const ogp = siteUrl + imgDir + ogImage;
     </div>
   {Env.isDev ?
     (
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/main.ts" is:inline></script>
     ) : (
     <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/vendor.js`} is:inline></script>
     <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`} is:inline></script>
