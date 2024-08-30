@@ -19,5 +19,5 @@
     },
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["./src", "./*.{js,cjs,mjs,ts,vue}", "astro.config.ts", "tailwind.config.ts"]
+  "include": ["./src", "./*.{js,cjs,mjs,ts,tsx}", "astro.config.ts", "tailwind.config.ts"]
 }
