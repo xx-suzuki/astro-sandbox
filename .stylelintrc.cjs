@@ -35,6 +35,7 @@ module.exports = {
       },
     ],
     'scss/selector-no-union-class-name': true,
+    'scss/no-global-function-names': null,
     'scss/at-rule-no-unknown': [
       true,
       {

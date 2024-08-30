@@ -6,7 +6,7 @@ import globals from 'globals';
 import tsLint from 'typescript-eslint';
 // import tsParser from '@typescript-eslint/parser';
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/** @type {import('@typescript-eslint/utils').TSESLint.FlatConfig.ConfigFile} */
 export default [
   // ----------------------------------
   // Common
