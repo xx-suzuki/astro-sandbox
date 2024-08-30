@@ -10,7 +10,11 @@ export const consoleSize = (file: string, task: string = taskName): void => {
   console.log(`${color.gray(`[${task}]`)} ${color.blue(file)} ${color.magenta(prettyBytes(size))}`);
 };
 
-export const consoleSizeCompare = (input: string, output: string, task: string = taskName): void => {
+export const consoleSizeCompare = (
+  input: string,
+  output: string,
+  task: string = taskName,
+): void => {
   const { size: inputSize } = fs.statSync(input);
   const { size: outputSize } = fs.statSync(output);
   const compressionSize = Math.round((outputSize / inputSize) * 1000) / 10;

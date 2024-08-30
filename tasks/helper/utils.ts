@@ -16,7 +16,11 @@ export const createFolder = (dir: string): void => {
 };
 
 /** Creating Files */
-export const createFile = (outputDir: string, data: string | Buffer, filename: string): Promise<boolean> => {
+export const createFile = (
+  outputDir: string,
+  data: string | Buffer,
+  filename: string,
+): Promise<boolean> => {
   const filePath = path.join(outputDir, filename);
   createFolder(outputDir);
 

@@ -5,7 +5,9 @@ import type HtmlValidator from 'html-validator';
 import { validateHtml as config } from '../project.config.mjs';
 import { consoleDone, consoleExist, consoleError } from './helper/drop-console';
 
-const options: HtmlValidator.OptionsForHtmlFileAsValidationTargetAndObjectAsResult | HtmlValidator.OptionsForExternalUrlAsValidationTargetAndObjectAsResult = {
+const options:
+  | HtmlValidator.OptionsForHtmlFileAsValidationTargetAndObjectAsResult
+  | HtmlValidator.OptionsForExternalUrlAsValidationTargetAndObjectAsResult = {
   data: '',
   url: 'http://url-to-validate.com',
   format: 'json',

@@ -10,7 +10,8 @@ type ConfigItem = {
   useProduction: boolean;
 };
 
-const targets: string | string[] = process.argv[2] || config.map(({ base }: ConfigItem) => `${base}/**`);
+const targets: string | string[] =
+  process.argv[2] || config.map(({ base }: ConfigItem) => `${base}/**`);
 
 /** Functions */
 const copyStaticFile = async (file: string): Promise<void> => {

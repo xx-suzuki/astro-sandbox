@@ -16,12 +16,12 @@ import { isIgnoreFile, createFolder } from './helper/utils';
  */
 
 type Options = {
-  png: PngOptions,
-  jpeg: JpegOptions,
-  gif: GifOptions,
-  webp: WebpOptions,
-  avif: AvifOptions,
-  svg: SvgOptions
+  png: PngOptions;
+  jpeg: JpegOptions;
+  gif: GifOptions;
+  webp: WebpOptions;
+  avif: AvifOptions;
+  svg: SvgOptions;
 };
 
 const options: Options = {

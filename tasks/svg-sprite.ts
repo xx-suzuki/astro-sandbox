@@ -31,7 +31,7 @@ const svgoConfig: SVGOConfig = {
         attrs: '(fill|stroke|stroke-linejoin|stroke-width)',
       },
     },
-    removeSymbolXmlns
+    removeSymbolXmlns,
   ],
 };
 
@@ -45,16 +45,16 @@ const options: Config = {
     symbol: {
       dest: config.outDir,
       sprite: `${config.outName}.svg`,
-    }
+    },
   },
   svg: {
     xmlDeclaration: false,
     transform: [
-      svg => {
+      (svg) => {
         const { data } = optimize(String(svg), svgoConfig);
         return data;
       },
-    ]
+    ],
   },
 };
 
