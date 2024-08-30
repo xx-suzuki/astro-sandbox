@@ -37,8 +37,9 @@ export default [
   // ----------------------------------
   // Config
   jsLint.configs.recommended,
-  ...astroLint.configs['flat/recommended'],
   ...tsLint.configs.recommended,
+  ...tsLint.configs.stylistic,
+  ...astroLint.configs['flat/recommended'],
 
   // ----------------------------------
   // Rules
