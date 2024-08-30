@@ -2,8 +2,8 @@ import readline from 'node:readline';
 import fs from 'fs-extra';
 import inquirer from 'inquirer';
 import { fontAwesome as config } from '../project.config.mjs';
-import { createFolder } from './helper/utils.mjs';
-import { consoleError, consoleExist, consoleGenerate } from './helper/drop-console.mjs';
+import { createFolder } from './helper/utils';
+import { consoleError, consoleGenerate } from './helper/drop-console';
 
 // ----------------------------------
 // Types
@@ -86,14 +86,13 @@ const processIconSelection = async (
 // ----------------------------------
 // init
 const init = async () => {
-  rl.question('Please enter icon name: ', async (name) => {
-    const jsonData = loadJsonFile(config.file);
-    if (!jsonData) {
-      consoleExist();
-      rl.close();
-      return;
-    }
+  const jsonData = loadJsonFile(config.file);
+  if (!jsonData) {
+    rl.close();
+    return;
+  }
 
+  rl.question('Please enter icon name: ', async (name) => {
     const data = getIconData(jsonData, name);
     await processIconSelection(name, data);
 

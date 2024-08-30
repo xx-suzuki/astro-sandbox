@@ -1,26 +1,30 @@
 import fs from 'fs-extra';
 import fg from 'fast-glob';
 import validator from 'html-validator';
+import type HtmlValidator from 'html-validator';
 import { validateHtml as config } from '../project.config.mjs';
-import { consoleDone, consoleExist, consoleError } from './helper/drop-console.mjs';
+import { consoleDone, consoleExist, consoleError } from './helper/drop-console';
 
-const options = {
+const options: HtmlValidator.OptionsForHtmlFileAsValidationTargetAndObjectAsResult | HtmlValidator.OptionsForExternalUrlAsValidationTargetAndObjectAsResult = {
+  data: '',
   url: 'http://url-to-validate.com',
   format: 'json',
 };
 
-const init = async () => {
+const init = async (): Promise<void> => {
   await fs.remove('./report-w3c.txt');
 
   const files = fg.sync(config.files, { ignore: config.ignore });
-  if (!fs.existsSync(files[0])) {
+  if (files.length === 0 || !fs.existsSync(files[0])) {
     return consoleExist('HTML');
   }
 
   const stream = fs.createWriteStream('./report-w3c.txt', { flags: 'a' });
 
   for (const file of files) {
-    options.data = fs.readFileSync(file, 'utf8');
+    if ('data' in options) {
+      options.data = fs.readFileSync(file, 'utf8');
+    }
     try {
       const result = await validator(options);
       stream.write(`===========================\n>> ${file}\n`);
@@ -28,7 +32,11 @@ const init = async () => {
         stream.write(`\n✨ No errors or warnings to show.\n`);
       } else {
         result.messages.forEach((msg) => {
-          stream.write(`\n[${msg.type}] line: ${msg.lastLine}\n${msg.message}\n`);
+          if ('lastLine' in msg) {
+            stream.write(`\n[${msg.type}] line: ${msg.lastLine}\n${msg.message}\n`);
+          } else {
+            stream.write(`\n[${msg.type}] line: N/A\n${msg.message}\n`);
+          }
         });
       }
       stream.write(`\n`);

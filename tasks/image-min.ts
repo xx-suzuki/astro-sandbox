@@ -2,17 +2,29 @@ import path from 'node:path';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import sharp from 'sharp';
+import type { PngOptions, JpegOptions, GifOptions, WebpOptions, AvifOptions } from 'sharp';
 import { optimize } from 'svgo';
+import type { Config as SvgOptions } from 'svgo';
 import { imageMin as config } from '../project.config.mjs';
-import { consoleSizeCompare, consoleSize, consoleExist } from './helper/drop-console.mjs';
-import { isIgnoreFile, createFolder } from './helper/utils.mjs';
+import { consoleSizeCompare, consoleSize, consoleExist } from './helper/drop-console';
+import { isIgnoreFile, createFolder } from './helper/utils';
 
 /**
  * Options
  * @see https://sharp.pixelplumbing.com/api-output
  * @see https://github.com/svg/svgo
  */
-const options = {
+
+type Options = {
+  png: PngOptions,
+  jpeg: JpegOptions,
+  gif: GifOptions,
+  webp: WebpOptions,
+  avif: AvifOptions,
+  svg: SvgOptions
+};
+
+const options: Options = {
   // ----------------------------------
   // Sharp settings
   png: {
@@ -20,7 +32,7 @@ const options = {
     adaptiveFiltering: true,
     progressive: true,
   },
-  jpg: {
+  jpeg: {
     quality: 85,
   },
   gif: {},
@@ -48,7 +60,11 @@ const options = {
 const targets = process.argv[2] || config.files;
 
 /** functions */
-const imageMin = async (file) => {
+const isSharpFormat = (format: string): format is keyof sharp.FormatEnum => {
+  return Object.keys(sharp.format).includes(format);
+};
+
+const imageMin = async (file: string): Promise<void> => {
   // ----------------------------------
   // ignore
   if (isIgnoreFile(file)) return;
@@ -72,16 +88,19 @@ const imageMin = async (file) => {
   if (fileExt && svgExt.includes(fileExt)) {
     // SVG
     const binaryData = fs.readFileSync(file);
-    const { data } = optimize(binaryData, options.svg);
+    const { data } = optimize(String(binaryData), options.svg);
     await fs.outputFile(outFile, data);
     consoleSizeCompare(file, outFile);
   } else if (imgExt.includes(fileExt)) {
     // Images
-    const ext = fileExt === 'jpeg' ? 'jpg' : fileExt;
+    const ext = fileExt === 'jpg' ? 'jpeg' : fileExt;
     const src = sharp(file);
     const img = path.join(outDir, fileName + fileExtname);
     // const webp = path.join(outDir, `${fileName}.webp`);
     const avif = path.join(outDir, `${fileName}.avif`);
+
+    if (!isSharpFormat(ext)) return;
+
     await Promise.all([
       src.toFormat(ext, options[ext]).toFile(img),
       // src.webp(options.webp[ext]).toFile(webp),
@@ -92,14 +111,12 @@ const imageMin = async (file) => {
     consoleSizeCompare(file, avif);
   } else {
     // Other
-    await fs.copy(file, outFile, {
-      recursive: true,
-    });
+    await fs.copy(file, outFile);
     consoleSize(outFile);
   }
 };
 
-const init = async () => {
+const init = async (): Promise<void> => {
   const files = fg.sync(targets);
 
   if (!process.argv[2] && !fs.existsSync(files[0])) {

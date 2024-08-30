@@ -2,11 +2,12 @@ import { readFile, writeFile } from 'node:fs/promises';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import beautify from 'js-beautify';
+import type { HTMLBeautifyOptions } from 'js-beautify';
 import { htmlPrettify as config } from '../project.config.mjs';
-import { consoleDone, consoleExist } from './helper/drop-console.mjs';
+import { consoleDone, consoleExist } from './helper/drop-console';
 
 // https://www.npmjs.com/package/js-beautify
-const beautifyConfig = {
+const beautifyConfig: HTMLBeautifyOptions = {
   indent_size: 2,
   max_preserve_newlines: 0,
   indent_inner_html: true,
@@ -15,7 +16,7 @@ const beautifyConfig = {
   inline: ['span', 'strong', 'b', 'small', 'del', 's', 'code', 'br', 'wbr'],
 };
 
-const readWrite = async (file) => {
+const readWrite = async (file: string): Promise<void> => {
   const data = await readFile(file, 'utf-8');
   const res = beautify.html(data, beautifyConfig);
 
@@ -27,7 +28,7 @@ const readWrite = async (file) => {
   }
 };
 
-const init = async () => {
+const init = async (): Promise<void> => {
   const files = fg.sync(config.files, { ignore: config.ignore });
 
   if (!fs.existsSync(files[0])) {
