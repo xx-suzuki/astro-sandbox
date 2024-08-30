@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Env } from '@/constants/env';
-import { tmpDir, distDir } from '@root/project.config.mjs';
+import { tmpDir, outDir } from '@root/project.config.mjs';
 
 /**
  * ファイルパス名から拡張子を取得
@@ -30,7 +30,7 @@ export const rootPath = process.cwd();
  * @param {string} src パス文字列
  */
 export const assetPath = (src: string) => {
-  return Env.isProd ? path.join(rootPath, distDir + src) : path.join(rootPath, tmpDir + src);
+  return Env.isProd ? path.join(rootPath, outDir + src) : path.join(rootPath, tmpDir + src);
 };
 
 /**
