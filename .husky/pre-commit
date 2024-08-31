@@ -1,1 +1,20 @@
 npm run lint-staged
+
+# Node.js script to check for spaces in filenames
+node -e "
+const { execSync } = require('child_process');
+
+// Get the names of the files that are staged for commit
+const files = execSync('git diff --cached --name-only', { encoding: 'utf-8' }).trim().split('\n');
+
+// Check for file names containing spaces
+files.forEach((file) => {
+  if (file.includes(' ')) {
+    console.error(\`Error: The file name contains spaces: \${file}\`);
+    console.error('Please rename the file to remove spaces.');
+    process.exit(1);
+  }
+});
+
+process.exit(0);
+"
