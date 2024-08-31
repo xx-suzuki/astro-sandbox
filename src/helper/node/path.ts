@@ -23,6 +23,9 @@ export const fileName = fileURLToPath(import.meta.url);
  */
 export const dirName = path.dirname(fileName);
 
+/**
+ * Root path
+ */
 export const rootPath = process.cwd();
 
 /**
