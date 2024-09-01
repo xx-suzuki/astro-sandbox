@@ -90,7 +90,7 @@ const init = async (): Promise<void> => {
   const rootPath = process.cwd()
   const filePath = path.join(rootPath, 'src/types', 'svg-sprite.ts');
   const unionType = types.map(name => `'${name}'`).join(' | ');
-  const tsContent = `// prettier-ignore\nexport type SvgSpriteNames = ${unionType};`;
+  const tsContent = `// prettier-ignore\nexport type SvgSpriteNames = ${unionType};\n`;
   createFolder(path.join(rootPath, 'src/types'));
   await fs.writeFile(filePath, tsContent, 'utf-8');
 
