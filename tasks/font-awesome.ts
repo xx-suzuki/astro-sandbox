@@ -1,6 +1,6 @@
 import readline from 'node:readline';
 import fs from 'fs-extra';
-import inquirer from 'inquirer';
+import { select } from "@inquirer/prompts";
 import { fontAwesome as config } from '../project.config.mjs';
 import { createFolder } from './helper/utils';
 import { consoleError, consoleGenerate } from './helper/drop-console';
@@ -28,14 +28,12 @@ const rl = readline.createInterface({
 });
 
 const askQuestion = async (choices: string[]): Promise<string> => {
-  const { selectedOption } = await inquirer.prompt([
+  const selectedOption = await select(
     {
-      type: 'list',
-      name: 'selectedOption',
       message: 'Please choose a style:',
-      choices: choices,
+      choices: choices.map(choice => ({ value: choice })),
     },
-  ]);
+  );
 
   return selectedOption;
 };
