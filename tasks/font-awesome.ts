@@ -8,7 +8,7 @@ import { consoleError, consoleGenerate } from './helper/drop-console';
 // ----------------------------------
 // Types
 type SvgData = {
-  last_modified: number;
+  lastModified: number;
   raw: string;
   viewBox: [number, number, number, number];
   width: number;
@@ -17,8 +17,20 @@ type SvgData = {
 };
 
 type SvgCollection = {
-  svg: Record<string, SvgData>;
+  [family: string]: {
+    [style: string]: SvgData;
+  };
 };
+
+type IconData = {
+  family: string;
+  style: string;
+};
+
+type IconMap = {
+  [key: string]: IconData;
+};
+
 
 // ----------------------------------
 // Util
@@ -40,9 +52,17 @@ const askQuestion = async (choices: string[]): Promise<string> => {
 
 const getIconData = (jsonData: Record<string, any>, name: string) => {
   const iconData = jsonData[name];
+  const svg: SvgCollection = iconData['svgs'];
+  const families: IconData[] = iconData['familyStylesByLicense']['pro'];
+  const choices: IconMap = families.reduce((acc, item) => {
+    const key = `${item.family}-${item.style}`;
+    acc[key] = item;
+    return acc;
+  }, {});
+
   return {
-    styles: iconData?.styles as string[] | undefined,
-    svg: iconData?.svg as SvgCollection | undefined,
+    choices,
+    svg
   };
 };
 
@@ -64,21 +84,29 @@ const saveSvgFile = (filePath: string, svgContent: string) => {
 
 const processIconSelection = async (
   name: string,
-  data: { styles: string[] | undefined; svg: SvgCollection | undefined },
+  data: { choices: IconMap, svg: SvgCollection},
 ) => {
-  if (!data.svg || !data.styles) {
+  if (!data.choices || !data.svg) {
     consoleError(`"${name}" icon is not available.`);
     return;
   }
 
-  let selectedStyle: string;
-  if (data.styles.length > 1) {
-    selectedStyle = await askQuestion(data.styles);
-  } else {
-    selectedStyle = data.styles[0];
+  let selectedStyle = Object.keys(data.choices)[0];
+  if (Object.keys(data.choices).length > 1) {
+    selectedStyle = await askQuestion(Object.keys(data.choices));
   }
 
-  saveSvgFile(`${config.outDir}/${name}-${selectedStyle}.svg`, data.svg[selectedStyle].raw);
+  const { family, style } = data.choices[selectedStyle];
+
+  const svg = data.svg[family][style].raw;
+  if(!svg) {
+    consoleError(`No matching SVG data found.`);
+    return;
+  }
+
+  const fileName = `${name}-${selectedStyle}.svg`.replace('classic-', '');
+
+  saveSvgFile(`${config.outDir}/${fileName}`, svg);
 };
 
 // ----------------------------------
