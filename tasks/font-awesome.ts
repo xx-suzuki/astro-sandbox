@@ -27,34 +27,40 @@ type IconData = {
   style: string;
 };
 
-type IconMap = {
-  [key: string]: IconData;
-};
+type IconMap = Record<string, IconData>;
 
+type JsonData = Record<string, {
+  svgs: SvgCollection;
+  familyStylesByLicense: {
+    pro: IconData[];
+  };
+}>;
 
 // ----------------------------------
-// Util
+// Util Functions
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
 const askQuestion = async (choices: string[]): Promise<string> => {
-  const selectedOption = await select(
-    {
-      message: 'Please choose a style:',
-      choices: choices.map(choice => ({ value: choice })),
-    },
-  );
-
-  return selectedOption;
+  return select({
+    message: 'Please choose a style:',
+    choices: choices.map(choice => ({ value: choice })),
+  });
 };
 
-const getIconData = (jsonData: Record<string, any>, name: string) => {
+const getIconData = (jsonData: JsonData, name: string) => {
   const iconData = jsonData[name];
-  const svg: SvgCollection = iconData['svgs'];
-  const families: IconData[] = iconData['familyStylesByLicense']['pro'];
-  const choices: IconMap = families.reduce((acc, item) => {
+  if (!iconData) {
+    consoleError(`Icon "${name}" not found in JSON data.`);
+    return null;
+  }
+
+  const svg: SvgCollection = iconData.svgs;
+  const families: IconData[] = iconData.familyStylesByLicense.pro;
+
+  const choices: IconMap = families.reduce<IconMap>((acc, item) => {
     const key = `${item.family}-${item.style}`;
     acc[key] = item;
     return acc;
@@ -62,16 +68,16 @@ const getIconData = (jsonData: Record<string, any>, name: string) => {
 
   return {
     choices,
-    svg
+    svg,
   };
 };
 
-const loadJsonFile = (filePath: string): Record<string, any> | null => {
+const loadJsonFile = (filePath: string): JsonData | null => {
   try {
-    const file = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(file);
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(fileContent) as JsonData;
   } catch (error) {
-    consoleError(`Failed to load or parse JSON file: ${error.message}`);
+    consoleError(`Failed to load or parse JSON file: ${(error as Error).message}`);
     return null;
   }
 };
@@ -84,7 +90,7 @@ const saveSvgFile = (filePath: string, svgContent: string) => {
 
 const processIconSelection = async (
   name: string,
-  data: { choices: IconMap, svg: SvgCollection},
+  data: { choices: IconMap; svg: SvgCollection }
 ) => {
   if (!data.choices || !data.svg) {
     consoleError(`"${name}" icon is not available.`);
@@ -97,20 +103,19 @@ const processIconSelection = async (
   }
 
   const { family, style } = data.choices[selectedStyle];
+  const svg = data.svg[family]?.[style]?.raw;
 
-  const svg = data.svg[family][style].raw;
-  if(!svg) {
+  if (!svg) {
     consoleError(`No matching SVG data found.`);
     return;
   }
 
   const fileName = `${name}-${selectedStyle}.svg`.replace('classic-', '');
-
   saveSvgFile(`${config.outDir}/${fileName}`, svg);
 };
 
 // ----------------------------------
-// init
+// Init
 const init = async () => {
   const jsonData = loadJsonFile(config.file);
   if (!jsonData) {
@@ -120,7 +125,9 @@ const init = async () => {
 
   rl.question('Please enter icon name: ', async (name) => {
     const data = getIconData(jsonData, name);
-    await processIconSelection(name, data);
+    if (data) {
+      await processIconSelection(name, data);
+    }
 
     rl.close();
   });
