@@ -2,29 +2,8 @@
 
 ## About
 
-案件名 (2024.01~)構築のための環境です。
-
-## Project information
-
-### Production URL
-
-https://example.com/
-
-### Staging URL
-
-https://stg.example.com/
-
-## Git flow
-
-一人で完結する時は `main` から作業ブランチ `feature/**` を切って作業を行ない完了後 `main` ブランチにマージ。  
-複数人で開発する時は `m1` などのマイルストーンに関連したブランチを作成。`m1`を起点に作業ブランチを作成し完了後`m1`にマージしプレビューアップ。FIX後に `main` ブランチにマージを行い納品データの作成。
-
-### Delivery & Differential data
-1. `main` に作業ブランチをマージ
-2. GitHub Actions にて `dist/production` にビルド後のファイルが生成されます
-3. ファイル出力  
-3-1. 全ファイルの場合、下記GitHubより納品データDL
-3-2. 差分ファイルの場合、`dist/production` の前回納品からの差分を出力
+簡易的な静的サイト用の開発環境です。  
+CMS等にアップロードや差分納品しなければならいケースを想定して、ファイルのハッシュ化をしない構成にしてます…🫠
 
 ## Tech Stack
 
@@ -87,6 +66,7 @@ npm run dev
 | `fix`   | ESLint & Stylelint                                 |
 | `plop`  | Create template files                              |
 | `w3c`   | Output of W3C Validate report (Please after build) |
+| `icon`  | Generate SVG data for font-awesome.                |
 
 ## Others
 
@@ -99,6 +79,13 @@ Gitコミット時に`eslint`と`stylelint`、`prettier`が実行されます。
 SVGからSpriteデータを生成します。  
 対象データは下記に格納してください。  
 `/src/assets/svg-sprite/*.svg`
+
+### Font Awesome
+`npm run icon` を実行し、Font Awesomeのicon名（`house`など）を入力すると、jsonデータからSVGデータを生成します。  
+アイコン名は下記から探してください。  
+https://fontawesome.com/
+
+また、有料ユーザーは`/tasks/font-awesome/icon-families.json`を有料版のjsonに差し替えると使用できます。
 
 ### W3C Validate
 
