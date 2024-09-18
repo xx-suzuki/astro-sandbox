@@ -1,5 +1,5 @@
 /** @type {import('stylelint').Config} */
-module.exports = {
+export default {
   syntax: 'scss',
   plugins: ['stylelint-scss', 'stylelint-prettier'],
   extends: ['stylelint-config-recess-order', 'stylelint-config-recommended-scss'],

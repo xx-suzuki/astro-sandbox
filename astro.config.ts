@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 import { isDev, siteUrl, baseDir, outDir, tmpDir } from './project.config.mjs';
 
-const integrations = isDev ? [tailwind({ applyBaseStyles: false })] : [];
+const integrations = isDev ? [tailwind({ applyBaseStyles: false, nesting: true })] : [];
 const { DEV_PORT } = loadEnv(import.meta.env.MODE, process.cwd(), '');
 
 export default defineConfig({
@@ -27,6 +27,9 @@ export default defineConfig({
       : {}),
   },
   vite: {
+    build: {
+      emptyOutDir: false,
+    },
     css: {
       devSourcemap: true,
     },

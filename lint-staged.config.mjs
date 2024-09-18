@@ -12,7 +12,7 @@ export default {
     'prettier --write --no-error-on-unmatched-pattern',
   ],
   './src/**/*.{scss,css}': [
-    'stylelint --config .stylelintrc.cjs --fix --aei',
+    'stylelint --config .stylelintrc.mjs --fix --aei',
     'prettier --write --no-error-on-unmatched-pattern',
   ],
 };
