@@ -1,7 +1,7 @@
 import tailwind from '@astrojs/tailwind';
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
-import { isDev, siteUrl, baseDir, outDir, tmpDir } from './project.config.mjs';
+import { isDev, siteUrl, baseDir, outDir, tmpDir } from './project.config.ts';
 
 const integrations = isDev ? [tailwind({ applyBaseStyles: false, nesting: true })] : [];
 const { DEV_PORT } = loadEnv(import.meta.env.MODE, process.cwd(), '');

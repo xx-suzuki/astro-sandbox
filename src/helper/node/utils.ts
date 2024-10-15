@@ -23,7 +23,6 @@ export const splitText = (text: string) => {
  * Parses an array of data attribute strings and returns an object with the parsed key-value pairs.
  *
  * @param {string[]} str - An array of strings representing data attributes in the format 'data-<name>="<value>"'.
- * @returns {Object} An object with the parsed data attributes as key-value pairs. If the input array is empty, returns an empty object.
  */
 export const parseDataAttributes = (str: string[]) => {
   if (str.length === 0) return {};

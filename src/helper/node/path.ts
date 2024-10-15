@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Env } from '@/constants/env';
-import { tmpDir, outDir } from '@root/project.config.mjs';
+import { tmpDir, outDir } from '@root/project.config';
 
 /**
  * ファイルパス名から拡張子を取得

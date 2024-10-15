@@ -54,7 +54,7 @@ npm run dev
 │   └── types/          # Type definitions
 ├── static/             # Static assets
 ├── tasks/              # Processing for npm scripts
-└── project.config.mjs  # Common project settings
+└── project.config.ts   # Common project settings
 ```
 
 ## Commands

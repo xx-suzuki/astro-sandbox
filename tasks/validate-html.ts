@@ -2,8 +2,8 @@ import fs from 'fs-extra';
 import fg from 'fast-glob';
 import validator from 'html-validator';
 import type HtmlValidator from 'html-validator';
-import { validateHtml as config } from '../project.config.mjs';
-import { consoleDone, consoleExist, consoleError } from './helper/drop-console';
+import { validateHtml as config } from '@root/project.config';
+import { consoleDone, consoleExist, consoleError } from '@root/tasks/helper/drop-console';
 
 const options:
   | HtmlValidator.OptionsForHtmlFileAsValidationTargetAndObjectAsResult
@@ -17,7 +17,7 @@ const init = async (): Promise<void> => {
   await fs.remove('./report-w3c.txt');
 
   const files = fg.sync(config.files, { ignore: config.ignore });
-  if (files.length === 0 || !fs.existsSync(files[0])) {
+  if (files.length === 0) {
     return consoleExist('HTML');
   }
 
@@ -43,7 +43,7 @@ const init = async (): Promise<void> => {
       }
       stream.write(`\n`);
     } catch (error) {
-      consoleError(error);
+      consoleError(error as string);
     }
   }
   consoleDone();

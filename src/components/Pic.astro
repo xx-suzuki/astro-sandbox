@@ -3,14 +3,14 @@ import type { HTMLAttributes } from 'astro/types';
 import { imageSize } from 'image-size';
 import { assetPath, getFileData } from '@/helper/node/path';
 import { parseDataAttributes } from '@/helper/node/utils';
-import { breakpoints } from '@root/project.config.mjs';
-export type Props = {
+import { breakpoints } from '@root/project.config';
+export interface Props {
   srcPc: string;
   srcSp: string;
   pictureProps?: HTMLAttributes<'picture'>;
   imageProps?: Omit<HTMLAttributes<'img'>, 'src'>;
   dataAttrs?: string[];
-};
+}
 const { srcPc, srcSp, imageProps, pictureProps, dataAttrs = [] } = Astro.props;
 const size = {
   pc: imageSize(assetPath(srcPc)),

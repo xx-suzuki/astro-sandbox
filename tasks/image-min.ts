@@ -5,9 +5,9 @@ import sharp from 'sharp';
 import type { PngOptions, JpegOptions, GifOptions, WebpOptions, AvifOptions } from 'sharp';
 import { optimize } from 'svgo';
 import type { Config as SvgOptions } from 'svgo';
-import { imageMin as config } from '../project.config.mjs';
-import { consoleSizeCompare, consoleSize, consoleExist } from './helper/drop-console';
-import { isIgnoreFile, createFolder } from './helper/utils';
+import { imageMin as config } from '@root/project.config';
+import { consoleSizeCompare, consoleSize, consoleExist } from '@root/tasks/helper/drop-console';
+import { isIgnoreFile, createFolder } from '@root/tasks/helper/utils';
 
 /**
  * Options
@@ -23,6 +23,8 @@ type Options = {
   avif: AvifOptions;
   svg: SvgOptions;
 };
+
+type SharpKeys = Exclude<keyof Options, 'svg'>;
 
 const options: Options = {
   // ----------------------------------
@@ -102,8 +104,8 @@ const imageMin = async (file: string): Promise<void> => {
     if (!isSharpFormat(ext)) return;
 
     await Promise.all([
-      src.toFormat(ext, options[ext]).toFile(img),
-      // src.webp(options.webp[ext]).toFile(webp),
+      src.toFormat(ext, options[ext as SharpKeys]).toFile(img),
+      // src.webp(options.webp).toFile(webp),
       src.avif(options.avif).toFile(avif),
     ]);
     consoleSizeCompare(file, img);
@@ -119,7 +121,7 @@ const imageMin = async (file: string): Promise<void> => {
 const init = async (): Promise<void> => {
   const files = fg.sync(targets);
 
-  if (!process.argv[2] && !fs.existsSync(files[0])) {
+  if (!process.argv[2] && files.length === 0) {
     return consoleExist('Image');
   }
 

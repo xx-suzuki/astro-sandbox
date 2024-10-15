@@ -1,8 +1,8 @@
 import fg from 'fast-glob';
 import fs from 'fs-extra';
-import { isDev, staticCopy as config } from '../project.config.mjs';
-import { consoleSize, consoleExist } from './helper/drop-console';
-import { isIgnoreFile } from './helper/utils';
+import { isDev, staticCopy as config } from '@root/project.config';
+import { consoleSize, consoleExist } from '@root/tasks/helper/drop-console';
+import { isIgnoreFile } from '@root/tasks/helper/utils';
 
 type ConfigItem = {
   base: string;
@@ -38,7 +38,7 @@ const copyStaticFile = async (file: string): Promise<void> => {
 const init = async (): Promise<void> => {
   const files = fg.sync(targets);
 
-  if (!process.argv[2] && !fs.existsSync(files[0])) {
+  if (!process.argv[2] && files.length === 0) {
     return consoleExist('Static');
   }
 

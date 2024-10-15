@@ -1,9 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import fg from 'fast-glob';
-import fs from 'fs-extra';
 import beautify from 'js-beautify';
 import type { HTMLBeautifyOptions } from 'js-beautify';
-import { htmlPrettify as config } from '../project.config.mjs';
+import { htmlPrettify as config } from '@root/project.config';
 import { consoleDone, consoleExist } from './helper/drop-console';
 
 // https://www.npmjs.com/package/js-beautify
@@ -31,7 +30,7 @@ const readWrite = async (file: string): Promise<void> => {
 const init = async (): Promise<void> => {
   const files = fg.sync(config.files, { ignore: config.ignore });
 
-  if (!fs.existsSync(files[0])) {
+  if (files.length === 0) {
     return consoleExist('HTML');
   }
 

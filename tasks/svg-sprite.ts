@@ -5,9 +5,9 @@ import { optimize } from 'svgo';
 import type { CustomPlugin, Config as SVGOConfig } from 'svgo';
 import fs from 'fs-extra';
 import fg from 'fast-glob';
-import { svgSprite as config } from '../project.config.mjs';
-import { consoleExist, consoleGenerate } from './helper/drop-console';
-import { createFolder } from './helper/utils';
+import { svgSprite as config } from '@root/project.config';
+import { consoleExist, consoleGenerate } from '@root/tasks/helper/drop-console';
+import { createFolder } from '@root/tasks/helper/utils';
 
 const removeSymbolXmlns: CustomPlugin = {
   name: 'removeSymbolXmlns',
@@ -65,7 +65,7 @@ const spriter = new svgSprite(options);
 const init = async (): Promise<void> => {
   const files = fg.sync(config.files);
 
-  if (files.length === 0 || !fs.existsSync(files[0])) {
+  if (files.length === 0) {
     return consoleExist('SVG');
   }
 

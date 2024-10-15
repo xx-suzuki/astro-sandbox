@@ -4,7 +4,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import type { UserConfigExport } from 'vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { outDir, assetsDir } from './project.config.mjs';
+import { outDir, assetsDir } from './project.config.ts';
 const isInit = process.env.BUILD_BY === 'vite';
 
 const viteConfig: UserConfigExport = {
@@ -32,6 +32,7 @@ const viteConfig: UserConfigExport = {
           if (id.includes('node_modules')) {
             return 'vendor';
           }
+          return;
         },
         entryFileNames: `${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`,
         chunkFileNames: `${assetsDir.javascript.outDir}/[name].js`,

@@ -1,10 +1,8 @@
 // https://github.com/plopjs/plop
-import { baseDir, assetsDir, breakpoints, designSize } from './project.config.mjs';
+import type { NodePlopAPI } from 'plop';
+import { baseDir, assetsDir, breakpoints, designSize } from '@root/project.config';
 
-export default function (
-  /** @type {import('plop').NodePlopAPI} */
-  plop,
-) {
+export default function (plop: NodePlopAPI) {
   // ----------------------------------
   // Scss auto-generate
   plop.setGenerator('scss', {

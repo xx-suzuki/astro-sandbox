@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import color from 'picocolors';
 import prettyBytes from 'pretty-bytes';
 
-const taskName: string = path.basename(process.argv[1], '.js');
+const taskName: string = path.basename(process.argv[1]!, '.ts');
 
 export const consoleSize = (file: string, task: string = taskName): void => {
   const { size } = fs.statSync(file);

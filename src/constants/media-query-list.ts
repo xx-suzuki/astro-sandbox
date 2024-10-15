@@ -1,4 +1,4 @@
-import { breakpoints } from '@root/project.config.mjs';
+import { breakpoints } from '@root/project.config';
 
 export const MediaQueryList = {
   Sp: window.matchMedia(`screen and (max-width: ${breakpoints.sp}px)`),

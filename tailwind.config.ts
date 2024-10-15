@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { breakpoints, designSize } from './project.config.mjs';
+import { breakpoints, designSize } from './project.config.ts';
 
 export default {
   prefix: 'u-',

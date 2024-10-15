@@ -1,9 +1,9 @@
 import readline from 'node:readline';
 import fs from 'fs-extra';
 import { select } from "@inquirer/prompts";
-import { fontAwesome as config } from '../project.config.mjs';
-import { createFolder } from './helper/utils';
-import { consoleError, consoleGenerate } from './helper/drop-console';
+import { fontAwesome as config } from '@root/project.config';
+import { createFolder } from '@root/tasks/helper/utils';
+import { consoleError, consoleGenerate } from '@root/tasks/helper/drop-console';
 
 // ----------------------------------
 // Types
@@ -102,8 +102,13 @@ const processIconSelection = async (
     selectedStyle = await askQuestion(Object.keys(data.choices));
   }
 
-  const { family, style } = data.choices[selectedStyle];
-  const svg = data.svg[family]?.[style]?.raw;
+  if (!selectedStyle || !(selectedStyle in data.choices)) {
+    consoleError(`Selected style "${selectedStyle}" is not valid.`);
+    return;
+  }
+
+  const iconData = data.choices[selectedStyle];
+  const svg = data.svg[iconData!.family]?.[iconData!.style]?.raw;
 
   if (!svg) {
     consoleError(`No matching SVG data found.`);

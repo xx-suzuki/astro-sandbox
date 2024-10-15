@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
-import { cleanUp as config } from '../project.config.mjs';
-import { consoleDone, consoleError } from './helper/drop-console';
+import { cleanUp as config } from '@root/project.config';
+import { consoleDone, consoleError } from '@root/tasks/helper/drop-console';
 
 const init = async (): Promise<void> => {
   try {
