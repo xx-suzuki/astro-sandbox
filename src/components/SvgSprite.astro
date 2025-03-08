@@ -1,4 +1,5 @@
 ---
+import fs from 'node:fs';
 import path from 'node:path';
 import type { HTMLAttributes } from 'astro/types';
 import { imageSize } from 'image-size';
@@ -11,8 +12,9 @@ export type Props = HTMLAttributes<'svg'> & {
 };
 const { hash, ...restProps } = Astro.props;
 const target = path.join(rootPath, `/src/assets/svg-sprite/${hash}.svg`);
+const buffer = fs.readFileSync(target);
 
-const { width, height } = imageSize(target);
+const { width, height } = imageSize(buffer);
 const attr = {
   viewBox: `0 0 ${width} ${height}`,
   ...restProps,
