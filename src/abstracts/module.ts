@@ -1,10 +1,7 @@
-import { v4 as uuid } from 'uuid';
+export type ModuleProps = Record<string, any>;
 
-export type IModuleProps = Record<string, any>;
-
-export default abstract class Module<T = IModuleProps> {
+export default abstract class Module<T = ModuleProps> {
   public moduleName: string;
-  public uuid: string = uuid();
   protected html = document.documentElement;
   protected target: HTMLElement;
   protected props: T | null;
