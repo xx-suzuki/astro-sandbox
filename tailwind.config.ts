@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { breakpoints, designSize } from './project.config.ts';
+import { breakpoints } from './project.config.ts';
 
 export default {
   prefix: 'u-',
@@ -11,13 +11,6 @@ export default {
       tab: { raw: `(max-width: ${breakpoints.tab}px)` },
       huge: { raw: `(min-width: ${breakpoints.huge}px)` },
       hover: { raw: `(hover: hover) and (pointer: fine)` },
-      valSp: `${breakpoints.sp}`,
-      valPc: `${breakpoints.pc}`,
-      valTab: `${breakpoints.tab}`,
-      valDesktop: `${breakpoints.desktop}`,
-      valHuge: `${breakpoints.huge}`,
-      designSp: `${designSize.sp}`,
-      designPc: `${designSize.pc}`,
     },
     spacing: {
       ...Object.fromEntries([...Array(401)].map((_, i) => i).map((num) => [num, `${num / 10}rem`])),

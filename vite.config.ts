@@ -41,6 +41,13 @@ const viteConfig: UserConfigExport = {
     },
     chunkSizeWarningLimit: 3000,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
 };
 
 export default defineConfig(isInit ? viteConfig : {});
@@ -48,15 +55,18 @@ export default defineConfig(isInit ? viteConfig : {});
 const resolveAssetFileName = (chunkInfo: PreRenderedAsset) => {
   const imgExt = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
   const cssExt = ['css'];
-  const fileExtname = chunkInfo.name && path.extname(chunkInfo.name);
-  const fileExt = fileExtname && fileExtname.slice(1);
-  const fileName = chunkInfo.name && path.basename(chunkInfo.name);
+  const name = chunkInfo.names?.[0];
+  if (!name) return '';
+
+  const fileExtname = path.extname(name);
+  const fileExt = fileExtname.slice(1);
+  const fileName = path.basename(name);
 
   if (fileExt && imgExt.includes(fileExt)) {
     return `${assetsDir.images.outDir}/${fileName}`;
   } else if (fileExt && cssExt.includes(fileExt)) {
     return `${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`;
   } else {
-    return `${chunkInfo.name}`;
+    return `${name}`;
   }
 };

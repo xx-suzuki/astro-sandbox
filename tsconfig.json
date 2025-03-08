@@ -6,14 +6,12 @@
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "sourceMap": true,
-    "resolveJsonModule": true,
     "esModuleInterop": true,
     "noEmit": true,
     "paths": {
       "@/*": ["src/*"],
       "@root/*": ["./*"]
     },
-    "types": ["vitest/globals"]
   },
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules", ".tmp", "static"]
 }
