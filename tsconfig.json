@@ -2,16 +2,19 @@
   "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
     "baseUrl": ".",
+    "jsx": "react",
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "sourceMap": true,
     "esModuleInterop": true,
     "noEmit": true,
+    "resolveJsonModule": true,
     "paths": {
       "@/*": ["src/*"],
       "@root/*": ["./*"]
     },
+    "types": ["vitest/globals"]
   },
   "exclude": ["dist", "node_modules", ".tmp", "static"]
 }

@@ -4,20 +4,14 @@
 @use '../tool/mixin' as mixin;
 
 :root {
-  // use -> height: calc(var(--vh, 1vh) * 100);
-  --vw: 1vw;
-  --vh: 1vh;
-  --vw-win: 1vw;
-  --vh-win: 1vh;
-  --vw-sp: 1vw;
-  --vh-sp: 1vh;
-  --scroll-bar: 0;
+  --size-rate: 1;
+  --scroll-bar: 0px;
 
   // transition
-  --transition-duration-opacity-out: 0.7s;
-  --transition-duration-opacity-in: 0.6s;
-  --transition-duration-translate-out: 0.5s;
-  --transition-duration-translate-in: 0.4s;
+  --duration-fast: 0.25s;
+  --duration-base: 0.35s;
+  --duration-slow: 0.6s;
+  --duration-loose: 1.2s;
 
   --leading-trim: calc((1em - 1lh) / 2);
   --leading-trim-en: calc((1cap - 1lh) / 2);

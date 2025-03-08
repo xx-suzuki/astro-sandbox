@@ -8,7 +8,7 @@ class Browser {
 
   constructor() {
     this.setDevice();
-    this.setBrowsert();
+    this.setBrowser();
     this.addClass();
   }
 
@@ -32,7 +32,7 @@ class Browser {
     this.isTouch = 'ontouchstart' in window;
   }
 
-  private setBrowsert() {
+  private setBrowser() {
     if (this.ua.includes('trident/7') || this.ua.includes('msie')) {
       this.browser = 'ie11';
     } else if (this.ua.includes('edge')) {

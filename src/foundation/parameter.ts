@@ -2,6 +2,7 @@ import * as EssentialsPlugin from '@tweakpane/plugin-essentials';
 import type { FpsGraphBladeApi } from '@tweakpane/plugin-essentials';
 import { Pane } from 'tweakpane';
 import { Env } from '@/constants/env';
+import { decimalPart } from '@/helper/math';
 
 const html = document.documentElement;
 const { body } = document;
@@ -16,18 +17,10 @@ class Parameter {
   // ----------------------------------
   // Style
   public PARAMS = {
-    opacity: {
-      duration: {
-        in: 0.7,
-        out: 0.7,
-      },
-    },
-    translate: {
-      duration: {
-        in: 0.5,
-        out: 0.4,
-      },
-    },
+    fast: 0.25,
+    base: 0.35,
+    slow: 0.6,
+    loose: 1.2,
   };
 
   private layerElm: HTMLDivElement | null = null;
@@ -86,73 +79,60 @@ class Parameter {
   }
 
   private updateStyleVariables() {
-    html.style.setProperty(
-      '--transition-duration-opacity-in',
-      `${this.PARAMS.opacity.duration.in}s`,
-    );
-    html.style.setProperty(
-      '--transition-duration-opacity-out',
-      `${this.PARAMS.opacity.duration.out}s`,
-    );
-    html.style.setProperty(
-      '--transition-duration-translate-in',
-      `${this.PARAMS.translate.duration.in}s`,
-    );
-    html.style.setProperty(
-      '--transition-duration-translate-out',
-      `${this.PARAMS.translate.duration.out}s`,
-    );
+    html.style.setProperty('--duration-fast', `${this.PARAMS.fast}s`);
+    html.style.setProperty('--duration-base', `${this.PARAMS.base}s`);
+    html.style.setProperty('--duration-slow', `${this.PARAMS.slow}s`);
+    html.style.setProperty('--duration-loose', `${this.PARAMS.loose}s`);
   }
 
   private bindStyleVariables() {
-    const { opacity, translate } = this.PARAMS;
     if (this.pane) {
       const folder = this.pane.addFolder({
-        title: 'CSS Variables',
+        title: 'CSS Duration',
       });
 
       folder
-        .addBinding(opacity.duration, 'in', {
-          label: 'Opacity (in)',
+        .addBinding(this.PARAMS, 'fast', {
+          label: 'Fast',
           min: 0.15,
           max: 3.0,
           step: 0.05,
         })
         .on('change', (v) => {
-          opacity.duration.in = Number(v.value);
+          this.PARAMS.fast = decimalPart(Number(v.value), 3);
         });
 
       folder
-        .addBinding(opacity.duration, 'out', {
-          label: 'Opacity (out)',
+        .addBinding(this.PARAMS, 'base', {
+          label: 'Base',
           min: 0.15,
           max: 3.0,
           step: 0.05,
         })
         .on('change', (v) => {
-          opacity.duration.out = Number(v.value);
+          this.PARAMS.base = decimalPart(Number(v.value), 3);
         });
 
       folder
-        .addBinding(translate.duration, 'in', {
-          label: 'translate (in)',
+        .addBinding(this.PARAMS, 'slow', {
+          label: 'Slow',
           min: 0.15,
           max: 3.0,
           step: 0.05,
         })
         .on('change', (v) => {
-          translate.duration.in = Number(v.value);
+          this.PARAMS.slow = decimalPart(Number(v.value), 3);
         });
 
       folder
-        .addBinding(translate.duration, 'out', {
-          label: 'translate (out)',
+        .addBinding(this.PARAMS, 'loose', {
+          label: 'Loose',
           min: 0.15,
           max: 3.0,
           step: 0.05,
         })
         .on('change', (v) => {
-          translate.duration.out = Number(v.value);
+          this.PARAMS.loose = decimalPart(Number(v.value), 3);
         });
 
       folder.on('change', () => {

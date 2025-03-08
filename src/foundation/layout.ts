@@ -1,5 +1,7 @@
 import { MediaQueryList as MQL } from '@/constants/media-query-list';
 import { decimalPart } from '@/helper/math';
+import { debounce } from '@/helper/utils';
+import { breakpoints, designSize } from '@root/project.config';
 
 const { body } = document;
 
@@ -14,8 +16,8 @@ class Layout {
   public scrollBarWidth = 0;
 
   constructor() {
-    this.handleResize();
-    const ro = new ResizeObserver(() => this.handleResize());
+    this.handleResize = this.handleResize.bind(this);
+    const ro = new ResizeObserver(debounce(this.handleResize, 100));
     ro.observe(body);
   }
 
@@ -29,26 +31,20 @@ class Layout {
     this.windowHeight = window.innerHeight;
 
     // ----------------------------------
-    // スクロールバー無し
-    const docW = this.documentWidth * 0.01;
-    const docH = this.documentHeight * 0.01;
-    document.documentElement.style.setProperty('--vw', `${decimalPart(docW, 2)}px`);
-    document.documentElement.style.setProperty('--vh', `${decimalPart(docH, 2)}px`);
-
-    // ----------------------------------
-    // ウインドウサイズ（SPはメニュー拡大縮小で可変）
-    const winW = this.windowWidth * 0.01;
-    const winH = this.windowHeight * 0.01;
-    document.documentElement.style.setProperty('--vw-win', `${decimalPart(winW, 2)}px`);
-    document.documentElement.style.setProperty('--vh-win', `${decimalPart(winH, 2)}px`);
-
-    // ----------------------------------
     // スクロールバー
-    this.scrollBarWidth = (winW - docW) * 100;
+    this.scrollBarWidth = this.windowWidth - this.documentWidth;
     document.documentElement.style.setProperty(
       '--scroll-bar',
       `${decimalPart(this.scrollBarWidth, 2)}px`,
     );
+
+    // ----------------------------------
+    // ルートサイズ
+    const sizeRate =
+      this.windowWidth > breakpoints.sp
+        ? Math.min(this.documentWidth / designSize.pc, 1)
+        : this.documentWidth / designSize.sp;
+    document.documentElement.style.setProperty('--size-rate', `${decimalPart(sizeRate, 3)}`);
   }
 }
 

@@ -1,9 +1,10 @@
 /**
- * PHPライクな配列を作成
+ * Creates an array similar to PHP's range function
  * @function
- * @param {number} start 開始
- * @param {number} end 終了
+ * @param {number} start - Start value
+ * @param {number} end - End value
+ * @returns {number[]} - Array of numbers from start to end
  */
-export const range = (start: number, end: number) => {
+export const range = (start: number, end: number): number[] => {
   return [...Array(end - start + 1)].map((_, i) => start + i);
 };
