@@ -1,7 +1,8 @@
 ---
-import Img from '@/components/Img.astro';
-import Pic from '@/components/Pic.astro';
-import SvgSprite from '@/components/SvgSprite.astro';
+import BtnBasic from '@/components/component/BtnBasic.astro';
+import Img from '@/components/component/Img.astro';
+import Pic from '@/components/component/Pic.astro';
+import SvgSprite from '@/components/component/SvgSprite.astro';
 import { imgDir } from '@root/project.config';
 ---
 
@@ -19,4 +20,5 @@ import { imgDir } from '@root/project.config';
     imageProps={{ class: 'img u-w-full' }}
   />
   <SvgSprite hash="logo-youtube" class="p-kv__youtube u-w-[40px]" />
+  <BtnBasic anchor={{ href: '#' }} target={true} addClass="u-text-lg" />
 </div>

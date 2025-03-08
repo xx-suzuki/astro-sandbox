@@ -1,7 +1,7 @@
 ---
 import { Env } from '@/constants/env';
-import Footer from '@/projects/Footer.astro';
-import Header from '@/projects/Header.astro';
+import Footer from '@/components/projects/Footer.astro';
+import Header from '@/components/projects/Header.astro';
 import { siteUrl, baseDir, assetsDir, imgDir } from '@root/project.config';
 interface Props {
   id: string;
@@ -9,7 +9,7 @@ interface Props {
   description: string;
   keywords?: string;
   ogImage?: string;
-  ogType?: 'website' | 'article';
+  ogType?: 'website' | 'article' | 'blog' | 'product' | 'profile';
 }
 
 const {
@@ -47,9 +47,18 @@ const ogp = siteUrl + imgDir + ogImage;
     <meta name="twitter:description" content={description}>
     <meta name="twitter:image" content={ogp}>
     <meta name="thumbnail" content={ogp}>
+    <meta name="theme-color" content="#FFFFFF">
     <title>{ title }</title>
     <link rel="canonical" href={url}>
     {Env.isProd && <link rel="stylesheet" href={`${baseDir}${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`} />}
+    {Env.isDev ?
+      (
+      <script type="module" src="/src/main.ts" is:inline></script>
+      ) : (
+      <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/vendor.js`} is:inline></script>
+      <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`} is:inline></script>
+      )
+    }
   </head>
   <body class={`p-${id}`} id={id}>
     <div class="l-wrapper" id="wrap">
@@ -63,13 +72,5 @@ const ogp = siteUrl + imgDir + ogImage;
         <Footer />
       </div>
     </div>
-  {Env.isDev ?
-    (
-    <script type="module" src="/src/main.ts" is:inline></script>
-    ) : (
-    <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/vendor.js`} is:inline></script>
-    <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`} is:inline></script>
-    )
-  }
   </body>
 </html>
