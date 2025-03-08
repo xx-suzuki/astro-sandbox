@@ -22,7 +22,7 @@ export default defineConfig({
     host: true,
     ...(isDev
       ? {
-          port: Number(DEV_PORT) ?? 4321,
+          port: !isNaN(Number(DEV_PORT)) ? Number(DEV_PORT) : 4321,
         }
       : {}),
   },
@@ -32,6 +32,11 @@ export default defineConfig({
     },
     css: {
       devSourcemap: true,
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler',
+        },
+      },
     },
   },
 });
