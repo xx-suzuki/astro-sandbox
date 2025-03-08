@@ -53,7 +53,7 @@ export const designSize = {
 
 // ----------------------------------
 // clean-up.mjs
-export const cleanUp = [tmpDir, distDir];
+export const cleanUp = isDev ? [tmpDir] : [tmpDir, distDir];
 
 // ----------------------------------
 // image-min.mjs
