@@ -1,6 +1,6 @@
 import readline from 'node:readline';
 import fs from 'fs-extra';
-import { select } from "@inquirer/prompts";
+import { select } from '@inquirer/prompts';
 import { fontAwesome as config } from '@root/project.config';
 import { createFolder } from '@root/tasks/helper/utils';
 import { consoleError, consoleGenerate } from '@root/tasks/helper/drop-console';
@@ -29,12 +29,15 @@ type IconData = {
 
 type IconMap = Record<string, IconData>;
 
-type JsonData = Record<string, {
-  svgs: SvgCollection;
-  familyStylesByLicense: {
-    pro: IconData[];
-  };
-}>;
+type JsonData = Record<
+  string,
+  {
+    svgs: SvgCollection;
+    familyStylesByLicense: {
+      pro: IconData[];
+    };
+  }
+>;
 
 // ----------------------------------
 // Util Functions
@@ -46,7 +49,7 @@ const rl = readline.createInterface({
 const askQuestion = async (choices: string[]): Promise<string> => {
   return select({
     message: 'Please choose a style:',
-    choices: choices.map(choice => ({ value: choice })),
+    choices: choices.map((choice) => ({ value: choice })),
   });
 };
 
@@ -90,7 +93,7 @@ const saveSvgFile = (filePath: string, svgContent: string) => {
 
 const processIconSelection = async (
   name: string,
-  data: { choices: IconMap; svg: SvgCollection }
+  data: { choices: IconMap; svg: SvgCollection },
 ) => {
   if (!data.choices || !data.svg) {
     consoleError(`"${name}" icon is not available.`);

@@ -4,11 +4,11 @@
 @use '../tool/mixin' as mixin;
 
 html {
-  line-break: normal;
-  text-underline-position: under;
-  overflow-wrap: break-word;
-  -webkit-tap-highlight-color: transparent;
   scrollbar-gutter: stable;
+  overflow-wrap: break-word;
+  text-underline-position: under;
+  line-break: normal;
+  -webkit-tap-highlight-color: transparent;
 
   &:focus-within {
     @media (prefers-reduced-motion: no-preference) {
