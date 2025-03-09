@@ -4,11 +4,9 @@
 @use '../tool/mixin' as mixin;
 
 html {
-  scrollbar-gutter: stable;
-  overflow-wrap: break-word;
-  text-underline-position: under;
-  line-break: normal;
-  -webkit-tap-highlight-color: transparent;
+  font-variant-ligatures: no-common-ligatures;
+  tab-size: 4;
+  -webkit-font-smoothing: antialiased;
 
   &:focus-within {
     @media (prefers-reduced-motion: no-preference) {
@@ -35,18 +33,10 @@ body {
 body {
   font-family: var.$ff-main;
   font-weight: var.$fw-r;
-  font-feature-settings: 'palt' 1;
   line-height: 1.5;
   color: var.$c-black;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  -webkit-font-smoothing: subpixel-antialiased;
-  -moz-osx-font-smoothing: unset;
-
-  @media (min-resolution: 1.5dppx) {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
 
   ::selection {
     color: var.$c-white;

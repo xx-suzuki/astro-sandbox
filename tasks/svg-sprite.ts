@@ -59,6 +59,16 @@ const options: Config = {
   },
 };
 
+const encodeSVG = (svg: string) => {
+  return svg
+    .replace(/<\?xml.*?\?>\s*/g, '')
+    .replace(/\n/g, '')
+    .replace(/%/g, '%25')
+    .replace(/#/g, '%23')
+    .replace(/{/g, '%7B')
+    .replace(/}/g, '%7D');
+};
+
 /* init */
 const spriter = new svgSprite(options);
 
@@ -70,9 +80,11 @@ const init = async (): Promise<void> => {
   }
 
   const types: string[] = [];
+  const svgSources: Record<string, string> = {};
   files.forEach((file) => {
     const name = path.parse(file).name.replace(/\s+/g, '-');
     const code = fs.readFileSync(file, { encoding: 'utf-8' });
+    svgSources[name] = code;
     spriter.add(name, null, code);
     types.push(name);
   });
@@ -88,11 +100,20 @@ const init = async (): Promise<void> => {
 
   // for types
   const rootPath = process.cwd();
-  const filePath = path.join(rootPath, 'src/types', 'svg-sprite.ts');
+  const typesPath = path.join(rootPath, 'src/types', 'svg-sprite.ts');
   const unionType = types.map((name) => `'${name}'`).join(' | ');
   const tsContent = `// prettier-ignore\nexport type SvgSpriteNames = ${unionType};\n`;
   createFolder(path.join(rootPath, 'src/types'));
-  await fs.writeFile(filePath, tsContent, 'utf-8');
+  await fs.writeFile(typesPath, tsContent, 'utf-8');
+
+  // for scss
+  const scssContent = Object.entries(svgSources).map(([name, svg]) => {
+    const encodedSVG = encodeSVG(svg);
+    return `$${name}: url('data:image/svg+xml;charset=UTF-8,${encodedSVG}');`;
+  }).join('\n');
+  const scssPath = path.join(rootPath, 'src/styles/setting/variable', '_svg.scss');
+  await fs.writeFile(scssPath, scssContent, 'utf-8');
+
 
   consoleGenerate();
 };

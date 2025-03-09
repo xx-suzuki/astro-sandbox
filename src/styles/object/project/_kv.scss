@@ -5,5 +5,21 @@
 @use 'sass:list';
 
 .p-kv {
-  font-size: func.cv-vw(20);
+  display: grid;
+  gap: func.cv-rem(20);
+  place-items: center;
+}
+
+.p-kv__svg {
+  font-size: func.cv-rem(20);
+
+  &::after {
+    display: inline-block;
+    width: 0.9em;
+    height: 0.9em;
+    margin-left: 0.4em;
+    content: '';
+    background-color: #0866ff;
+    mask-image: var.$svg-logo-facebook;
+  }
 }
