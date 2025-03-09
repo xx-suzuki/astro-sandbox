@@ -6,3 +6,16 @@
 
 .c-btn-basic {
 }
+
+.c-btn-basic__link {
+  display: flex;
+  gap: func.cv-rem(8);
+  align-items: center;
+}
+
+.c-btn-basic__text {
+}
+
+.c-btn-basic__icon {
+  width: func.cv-rem(20);
+}

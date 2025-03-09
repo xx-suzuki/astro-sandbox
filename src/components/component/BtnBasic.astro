@@ -9,15 +9,17 @@ interface Props {
   text?: string;
   addClass?: string;
   target?: boolean;
+  modifier?: string;
 }
 
-const { anchor, text = 'details', addClass, target = false } = Astro.props;
+const { anchor, text = 'details', addClass, target = false, modifier } = Astro.props;
 const anchorAttr = target ? { ...anchor, ...isBlank(target) } : anchor;
+const addModifier = modifier ? `c-btn-basic--${modifier}` : '';
 ---
 
-<div class:list={['c-btn-basic', addClass]}>
+<div class:list={['c-btn-basic', addClass, addModifier]}>
   <a class="c-btn-basic__link" {...anchorAttr}>
     <span class="c-btn-basic__text">{text}</span>
-    <SvgSprite hash="logo-x" class="c-btn-basic__icon u-w-[40px]" />
+    <SvgSprite hash="logo-x" class="c-btn-basic__icon" />
   </a>
 </div>

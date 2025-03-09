@@ -5,4 +5,9 @@
 @use 'sass:list';
 
 .p-header {
+  padding: func.cv-rem(20);
+  font-size: func.cv-rem(20);
+  color: var.$c-white;
+  text-align: center;
+  background-color: rgb(var.$c-black, 90%);
 }

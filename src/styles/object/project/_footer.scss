@@ -5,4 +5,10 @@
 @use 'sass:list';
 
 .p-footer {
+  padding: func.cv-rem(20);
+  margin-top: func.cv-rem(60);
+  font-size: func.cv-rem(20);
+  color: var.$c-white;
+  text-align: center;
+  background-color: rgb(var.$c-black, 90%);
 }

@@ -1,0 +1,28 @@
+@use '../../setting/variable' as var;
+@use '../../tool/function' as func;
+@use '../../tool/mixin' as mixin;
+
+.u-hidden--sp {
+  @include mixin.mq-pc {
+    display: none;
+  }
+}
+
+.u-hidden--pc {
+  @include mixin.mq-sp {
+    display: none;
+  }
+}
+
+.u-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+  border-width: 0;
+  clip: rect(0, 0, 0, 0);
+}

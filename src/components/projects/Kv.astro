@@ -7,19 +7,18 @@ import { imgDir } from '@root/project.config';
 ---
 
 <div class="p-kv">
-  <p class="u-text-center u-text-lg">Tailwind.css output test.</p>
   <Img
     src={`${imgDir}/1.jpg`}
-    pictureProps={{ class: 'p-kv__picture u-block' }}
-    class="p-kv__picture-img u-w-full"
+    pictureProps={{ class: 'p-kv__picture' }}
+    class="p-kv__picture-img"
   />
   <Pic
     srcPc={`${imgDir}/8.jpg`}
     srcSp={`${imgDir}/1.jpg`}
-    pictureProps={{ class: 'pic' }}
-    imageProps={{ class: 'img u-w-full' }}
+    pictureProps={{ class: 'p-kv__picture' }}
+    imageProps={{ class: 'p-kv__picture-img' }}
   />
-  <SvgSprite hash="logo-youtube" class="p-kv__youtube u-w-[40px]" />
-  <BtnBasic anchor={{ href: '#' }} target={true} addClass="u-text-lg" />
+  <SvgSprite hash="logo-youtube" class="p-kv__sprite" />
+  <BtnBasic text="X (Twitter)" anchor={{ href: '#' }} target={true} addClass="p-kv__button" />
   <p class="p-kv__svg">Background SVG</p>
 </div>

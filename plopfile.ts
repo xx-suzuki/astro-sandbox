@@ -11,8 +11,8 @@ export default function (plop: NodePlopAPI) {
     actions: [
       {
         type: 'add',
-        path: `src/styles/setting/variable/_width.scss`,
-        templateFile: 'plop/styles/_width.scss.hbs',
+        path: `src/styles/setting/variable/_breakpoint.scss`,
+        templateFile: 'plop/styles/_breakpoint.scss.hbs',
         force: true,
         data: {
           breakpoints,

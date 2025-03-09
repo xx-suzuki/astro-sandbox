@@ -33,6 +33,6 @@ report-w3c.txt
 # temporary files
 .tmp/
 src/types/svg-sprite.ts
-src/styles/setting/variable/_width.scss
+src/styles/setting/variable/_breakpoint.scss
 src/styles/setting/variable/_svg.scss
 src/styles/setting/variable/_path.scss

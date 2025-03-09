@@ -1,17 +1,6 @@
-@use '../../setting/variable/easing' as es;
-
-@mixin clearfix {
-  &::after {
-    clear: both;
-    display: block;
-    visibility: hidden;
-    height: 0;
-    content: '.';
-  }
-}
-
-@mixin transition($duration, $target: all, $delay: 0s, $easing: es.$base) {
-  transition: $target $duration $easing $delay;
+@mixin kerning() {
+  font-feature-settings: 'palt', 'vpal';
+  font-kerning: normal;
 }
 
 @mixin placeholder-color($color) {

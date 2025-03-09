@@ -4,7 +4,6 @@ export default {
   plugins: ['stylelint-scss', 'stylelint-prettier'],
   extends: ['stylelint-config-recess-order', 'stylelint-config-recommended-scss'],
   rules: {
-    'function-no-unknown': null,
     'no-empty-source': null,
     'block-no-empty': null,
     'font-family-no-missing-generic-family-keyword': null,
@@ -17,7 +16,6 @@ export default {
         ignoreProperties: ['initial-scale'],
       },
     ],
-    'at-rule-no-unknown': null,
     'selector-pseudo-element-colon-notation': 'double',
     'rule-empty-line-before': [
       'always',

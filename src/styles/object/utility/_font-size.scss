@@ -1,0 +1,35 @@
+@use 'sass:list';
+@use '../../setting/variable' as var;
+@use '../../tool/function' as func;
+@use '../../tool/mixin' as mixin;
+
+@mixin text-style($size, $line-height) {
+  font-size: func.cv-rem($size);
+  line-height: $line-height;
+}
+
+$text-sizes: (
+  12: 1.33,
+  14: 1.42,
+  16: 1.5,
+  18: 1.55,
+  24: 1.33,
+);
+
+@each $size, $values in $text-sizes {
+  .u-text-#{$size} {
+    @include text-style($size, $values);
+  }
+
+  .u-text-#{$size}--pc {
+    @include mixin.mq-pc {
+      @include text-style($size, $values);
+    }
+  }
+
+  .u-text-#{$size}--sp {
+    @include mixin.mq-sp {
+      @include text-style($size, $values);
+    }
+  }
+}

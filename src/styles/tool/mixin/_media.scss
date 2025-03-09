@@ -1,0 +1,33 @@
+@use '../../setting/variable/breakpoint' as bp;
+
+@mixin sp {
+  @media (width < #{bp.$pc}px) {
+    @content;
+  }
+}
+
+@mixin pc {
+  @media (width >= #{bp.$pc}px), print {
+    @content;
+  }
+}
+
+@mixin tab {
+  @media (width >= #{bp.$pc}px) and (width <= #{bp.$tab}px) {
+    html & {
+      @content;
+    }
+  }
+}
+
+@mixin huge {
+  @media (width >= #{bp.$huge}px) {
+    @content;
+  }
+}
+
+@mixin hover {
+  @media (hover: hover) {
+    @content;
+  }
+}

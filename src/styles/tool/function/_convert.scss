@@ -1,8 +1,8 @@
 @use '../../setting/variable/font-size' as fz;
 @use 'sass:math';
-@use '../../setting/variable/width' as w;
+@use '../../setting/variable/breakpoint' as bp;
 
-@function vw($size, $base: w.$design-sp) {
+@function vw($size, $base: bp.$design-sp) {
   $vw: math.div($size * 100, $base) * 1vw;
 
   @return $vw;

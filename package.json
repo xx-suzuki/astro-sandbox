@@ -52,12 +52,10 @@
     "astro": "^5.4.2",
     "destyle.css": "^4.0.1",
     "sass": "^1.85.1",
-    "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/tailwind": "^6.0.0",
     "@inquirer/prompts": "^7.3.3",
     "@tweakpane/core": "^2.0.5",
     "@tweakpane/plugin-essentials": "^0.2.1",
@@ -91,7 +89,6 @@
     "postcss-sort-media-queries": "^5.2.0",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.6.11",
     "pretty-bytes": "^6.1.1",
     "rollup-plugin-visualizer": "^5.14.0",
     "sharp": "^0.33.5",
