@@ -1,10 +1,10 @@
 import path from 'node:path';
+import fg from 'fast-glob';
+import fs from 'fs-extra';
 import svgSprite from 'svg-sprite';
 import type { Config } from 'svg-sprite';
 import { optimize } from 'svgo';
 import type { CustomPlugin, Config as SVGOConfig } from 'svgo';
-import fs from 'fs-extra';
-import fg from 'fast-glob';
 import { svgSprite as config } from '@root/project.config';
 import { consoleExist, consoleGenerate } from '@root/tasks/helper/drop-console';
 import { createFolder } from '@root/tasks/helper/utils';
@@ -107,13 +107,14 @@ const init = async (): Promise<void> => {
   await fs.writeFile(typesPath, tsContent, 'utf-8');
 
   // for scss
-  const scssContent = Object.entries(svgSources).map(([name, svg]) => {
-    const encodedSVG = encodeSVG(svg);
-    return `$${name}: url('data:image/svg+xml;charset=UTF-8,${encodedSVG}');`;
-  }).join('\n');
+  const scssContent = Object.entries(svgSources)
+    .map(([name, svg]) => {
+      const encodedSVG = encodeSVG(svg);
+      return `$${name}: url('data:image/svg+xml;charset=UTF-8,${encodedSVG}');`;
+    })
+    .join('\n');
   const scssPath = path.join(rootPath, 'src/styles/setting/variable', '_svg.scss');
   await fs.writeFile(scssPath, scssContent, 'utf-8');
-
 
   consoleGenerate();
 };

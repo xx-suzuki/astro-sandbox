@@ -3,7 +3,7 @@ export default {
     "eslint -c eslint.config.mjs --fix --ignore-pattern '!.*rc.cjs'",
     'prettier --write --no-error-on-unmatched-pattern',
   ],
-  './task/**/*.{js,cjs,mjs,ts}': [
+  './tasks/**/*.{js,cjs,mjs,ts}': [
     "eslint -c eslint.config.mjs --fix --ignore-pattern '!.*rc.cjs'",
     'prettier --write --no-error-on-unmatched-pattern',
   ],

@@ -42,7 +42,9 @@ npm run dev
 ├── src/
 │   ├── abstracts/      # TypeScript abstract modules
 │   ├── assets/         # Assets such as images, SVGs, etc.
-│   ├── components/     # Astro components
+│   ├── components
+│   │   ├── component   # Astro components
+│   │   └── projects    # Astro components managing project-specific patterns
 │   ├── constants/      # Constants
 │   ├── foundation/     # Base processing for TypeScript
 │   ├── globals/        # TypeScript processing used throughout the site
@@ -69,6 +71,11 @@ npm run dev
 | `icon`  | Generate SVG data for font-awesome.                |
 
 ## Others
+
+### Project config
+
+プロジェクトの基本設定は`project.config.ts`を変更してください。  
+[development settings](project.config.ts)
 
 ### Husky & lintstaged
 

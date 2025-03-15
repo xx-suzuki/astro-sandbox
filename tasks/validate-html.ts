@@ -1,17 +1,12 @@
-import fs from 'fs-extra';
 import fg from 'fast-glob';
-import validator from 'html-validator';
-import type HtmlValidator from 'html-validator';
+import fs from 'fs-extra';
+import { HtmlValidate } from 'html-validate';
 import { validateHtml as config } from '@root/project.config';
 import { consoleDone, consoleExist, consoleError } from '@root/tasks/helper/drop-console';
 
-const options:
-  | HtmlValidator.OptionsForHtmlFileAsValidationTargetAndObjectAsResult
-  | HtmlValidator.OptionsForExternalUrlAsValidationTargetAndObjectAsResult = {
-  data: '',
-  url: 'http://url-to-validate.com',
-  format: 'json',
-};
+const htmlValidate = new HtmlValidate({
+  extends: ['html-validate:recommended'],
+});
 
 const init = async (): Promise<void> => {
   await fs.remove('./report-w3c.txt');
@@ -24,21 +19,22 @@ const init = async (): Promise<void> => {
   const stream = fs.createWriteStream('./report-w3c.txt', { flags: 'a' });
 
   for (const file of files) {
-    if ('data' in options) {
-      options.data = fs.readFileSync(file, 'utf8');
-    }
     try {
-      const result = await validator(options);
+      const htmlContent = fs.readFileSync(file, 'utf8');
+      const report = await htmlValidate.validateString(htmlContent);
+
       stream.write(`===========================\n>> ${file}\n`);
-      if (result.messages.length === 0) {
+
+      if (report.valid) {
         stream.write(`\n✨ No errors or warnings to show.\n`);
       } else {
-        result.messages.forEach((msg) => {
-          if ('lastLine' in msg) {
-            stream.write(`\n[${msg.type}] line: ${msg.lastLine}\n${msg.message}\n`);
-          } else {
-            stream.write(`\n[${msg.type}] line: N/A\n${msg.message}\n`);
-          }
+        report.results.forEach((result) => {
+          result.messages.forEach((msg) => {
+            console.log(msg);
+            stream.write(
+              `\n[${msg.severity === 2 ? 'error' : 'warning'}] line: ${msg.line || 'N/A'}\n${msg.message}\n`,
+            );
+          });
         });
       }
       stream.write(`\n`);
