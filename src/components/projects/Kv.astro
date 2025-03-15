@@ -18,7 +18,10 @@ import { imgDir } from '@root/project.config';
     pictureProps={{ class: 'p-kv__picture' }}
     imageProps={{ class: 'p-kv__picture-img' }}
   />
-  <SvgSprite hash="logo-youtube" class="p-kv__sprite" />
-  <BtnBasic text="X (Twitter)" anchor={{ href: '#' }} target={true} addClass="p-kv__button" />
+  <p class="p-kv__sprite">
+    <span class="p-kv__sprite-text">SVG Sprite</span>
+    <SvgSprite hash="logo-youtube" class="p-kv__sprite-icon" />
+  </p>
+  <BtnBasic text="Button component" anchor={{ href: '#' }} target={true} addClass="p-kv__button" />
   <p class="p-kv__svg">Background SVG</p>
 </div>

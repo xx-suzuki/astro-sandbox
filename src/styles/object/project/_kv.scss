@@ -17,10 +17,16 @@
 }
 
 .p-kv__sprite {
-  width: func.cv-rem(40);
+  font-size: func.cv-rem(20);
+}
+
+.p-kv__sprite-icon {
+  width: func.cv-rem(28);
+  color: #ff0000;
 }
 
 .p-kv__button {
+  font-size: func.cv-rem(20);
 }
 
 .p-kv__svg {
