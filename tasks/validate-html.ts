@@ -30,7 +30,6 @@ const init = async (): Promise<void> => {
       } else {
         report.results.forEach((result) => {
           result.messages.forEach((msg) => {
-            console.log(msg);
             stream.write(
               `\n[${msg.severity === 2 ? 'error' : 'warning'}] line: ${msg.line || 'N/A'}\n${msg.message}\n`,
             );

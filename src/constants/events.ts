@@ -1,5 +1,6 @@
 export const Events = {
-  Load: 'DOMContentLoaded',
+  Dom: 'DOMContentLoaded',
+  Load: 'load',
   Resize: 'resize',
   Scroll: 'scroll',
   Click: 'click',

@@ -17,14 +17,15 @@ class Layout {
 
   constructor() {
     this.handleResize = this.handleResize.bind(this);
+    this.handleResize();
     const ro = new ResizeObserver(debounce(this.handleResize, 100));
     ro.observe(body);
   }
 
   handleResize(): void {
     this.isSP = MQL.Sp.matches;
-    this.isTAB = MQL.Pc.matches;
-    this.isPC = !this.isSP && !this.isTAB;
+    this.isTAB = MQL.Tab.matches;
+    this.isPC = MQL.Pc.matches;
     this.documentWidth = body.clientWidth;
     this.documentHeight = body.clientHeight;
     this.windowWidth = window.innerWidth;
