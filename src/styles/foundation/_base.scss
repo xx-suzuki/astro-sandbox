@@ -36,8 +36,10 @@ body {
   font-weight: var.$fw-r;
   line-height: 1.5;
   color: var.$c-black;
-  word-wrap: break-word;
+  word-break: normal;
+  overflow-wrap: anywhere;
   overflow-wrap: break-word;
+  line-break: strict;
 
   ::selection {
     color: var.$c-white;
