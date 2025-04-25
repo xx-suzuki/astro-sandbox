@@ -1,15 +1,16 @@
 import path from 'node:path';
 import type { PreRenderedAsset } from 'rollup';
 import { visualizer } from 'rollup-plugin-visualizer';
-import type { UserConfigExport } from 'vite';
+import type { UserConfigExport, Plugin } from 'vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { outDir, assetsDir } from './project.config.ts';
+import { outDir, assetsDir, tmpDir } from './project.config.ts';
 const isInit = process.env.BUILD_BY === 'vite';
 
 const viteConfig: UserConfigExport = {
-  base: '',
-  plugins: [tsconfigPaths(), visualizer()],
+  base: '/',
+  publicDir: tmpDir,
+  plugins: [tsconfigPaths(), visualizer(), ignoreAssetWarnings()],
   build: {
     outDir,
     cssCodeSplit: false,
@@ -70,3 +71,20 @@ const resolveAssetFileName = (chunkInfo: PreRenderedAsset) => {
     return `${name}`;
   }
 };
+
+function ignoreAssetWarnings(): Plugin {
+  return {
+    name: 'intercept-console-warn',
+    apply: 'build',
+    configResolved() {
+      const original = console.warn;
+      console.warn = (...args: unknown[]) => {
+        const msg = args[0];
+        if (typeof msg === 'string' && msg.includes("didn't resolve at build time")) {
+          return;
+        }
+        original(...args);
+      };
+    },
+  };
+}
