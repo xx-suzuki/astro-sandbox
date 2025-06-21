@@ -25,6 +25,7 @@ const removeSymbolXmlns: CustomPlugin = {
 };
 
 const svgoConfig: SVGOConfig = {
+  multipass: true,
   plugins: [
     {
       name: 'removeAttrs',
@@ -32,17 +33,24 @@ const svgoConfig: SVGOConfig = {
         attrs: '(fill|stroke|stroke-linejoin|stroke-width)',
       },
     },
+    {
+      name: 'removeComments',
+    },
+    {
+      name: 'removeMetadata',
+    },
+    {
+      name: 'removeTitle',
+    },
     removeSymbolXmlns,
   ],
+  js2svg: {
+    pretty: false,
+  },
 };
 
 const options: Config = {
   mode: {
-    // CSSでも使用する時
-    // stack: {
-    //   dest: config.outDir,
-    //   sprite: `${config.outName}.svg`,
-    // },
     symbol: {
       dest: config.outDir,
       sprite: `${config.outName}.svg`,
@@ -60,13 +68,7 @@ const options: Config = {
 };
 
 const encodeSVG = (svg: string) => {
-  return svg
-    .replace(/<\?xml.*?\?>\s*/g, '')
-    .replace(/\n/g, '')
-    .replace(/%/g, '%25')
-    .replace(/#/g, '%23')
-    .replace(/{/g, '%7B')
-    .replace(/}/g, '%7D');
+  return svg.replace(/<\?xml.*?\?>\s*/g, '');
 };
 
 /* init */
@@ -74,6 +76,9 @@ const spriter = new svgSprite(options);
 
 const init = async (): Promise<void> => {
   const files = fg.sync(config.files);
+  const rootPath = process.cwd();
+  const scssPath = path.join(rootPath, 'src/styles/setting/variable', '_svg.scss');
+  await fs.writeFile(scssPath, '', 'utf-8');
 
   if (files.length === 0) {
     return consoleExist('SVG');
@@ -84,7 +89,7 @@ const init = async (): Promise<void> => {
   files.forEach((file) => {
     const name = path.parse(file).name.replace(/\s+/g, '-');
     const code = fs.readFileSync(file, { encoding: 'utf-8' });
-    svgSources[name] = code;
+    svgSources[name] = optimize(code, svgoConfig).data;
     spriter.add(name, null, code);
     types.push(name);
   });
@@ -99,7 +104,6 @@ const init = async (): Promise<void> => {
   }
 
   // for types
-  const rootPath = process.cwd();
   const typesPath = path.join(rootPath, 'src/types', 'svg-sprite.ts');
   const unionType = types.map((name) => `'${name}'`).join(' | ');
   const tsContent = `// prettier-ignore\nexport type SvgSpriteNames = ${unionType};\n`;
@@ -113,7 +117,6 @@ const init = async (): Promise<void> => {
       return `$${name}: url('data:image/svg+xml;charset=UTF-8,${encodedSVG}');`;
     })
     .join('\n');
-  const scssPath = path.join(rootPath, 'src/styles/setting/variable', '_svg.scss');
   await fs.writeFile(scssPath, scssContent, 'utf-8');
 
   consoleGenerate();
