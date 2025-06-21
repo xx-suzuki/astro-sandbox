@@ -1,6 +1,5 @@
 /** @type {import('stylelint').Config} */
 export default {
-  syntax: 'scss',
   plugins: ['stylelint-scss', 'stylelint-prettier'],
   extends: ['stylelint-config-recess-order', 'stylelint-config-recommended-scss'],
   rules: {
@@ -34,11 +33,5 @@ export default {
     ],
     'scss/selector-no-union-class-name': true,
     'scss/no-global-function-names': null,
-    'scss/at-rule-no-unknown': [
-      true,
-      {
-        ignoreAtRules: ['screen'],
-      },
-    ],
   },
 };
