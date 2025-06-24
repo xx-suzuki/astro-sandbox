@@ -53,6 +53,7 @@
     "test": "vitest run --passWithNoTests --coverage --reporter=verbose"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.4.1",
     "astro": "^5.10.0",
     "destyle.css": "^4.0.1",
     "sass": "^1.89.2",

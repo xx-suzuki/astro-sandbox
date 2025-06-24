@@ -1,3 +1,4 @@
+import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 import { isDev, siteUrl, baseDir, outDir, tmpDir } from './project.config.ts';
@@ -10,6 +11,7 @@ export default defineConfig({
   outDir: outDir,
   trailingSlash: 'always',
   compressHTML: false,
+  integrations: [sitemap()],
   devToolbar: {
     enabled: false,
   },
