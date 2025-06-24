@@ -5,9 +5,9 @@ import type { HTMLAttributes } from 'astro/types';
 import { imageSize } from 'image-size';
 import { rootPath } from '@/helper/node/path';
 import type { SvgSpriteNames } from '@/types/svg-sprite';
-import { assetsDir } from '@root/project.config';
+import { svgSpritePath } from '@root/project.config';
 
-export type Props = HTMLAttributes<'svg'> & {
+export type Props = Omit<HTMLAttributes<'svg'>, 'role'> & {
   hash: SvgSpriteNames;
 };
 const { hash, ...restProps } = Astro.props;
@@ -22,8 +22,5 @@ const attr = {
 ---
 
 <svg role="img" {...attr}>
-  <use
-    xlink:href={`${import.meta.env.BASE_URL}${assetsDir.sprite.outDir}/${
-      assetsDir.sprite.outName
-    }.svg#${hash}`}></use>
+  <use xlink:href={`${svgSpritePath}#${hash}`}></use>
 </svg>

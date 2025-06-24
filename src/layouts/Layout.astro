@@ -2,7 +2,7 @@
 import { Env } from '@/constants/env';
 import Footer from '@/components/projects/Footer.astro';
 import Header from '@/components/projects/Header.astro';
-import { siteUrl, baseDir, assetsDir, imgDir } from '@root/project.config';
+import { siteUrl, baseDir, assetsDir, imgDir, svgSpritePath } from '@root/project.config';
 interface Props {
   id: string;
   title: string;
@@ -50,6 +50,7 @@ const ogp = siteUrl + imgDir + ogImage;
     <meta name="theme-color" content="#FFFFFF">
     <title>{ title }</title>
     <link rel="canonical" href={url}>
+    <link rel="preload" as="image" href={svgSpritePath} type="image/svg+xml">
     {Env.isProd && <link rel="stylesheet" href={`${baseDir}${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`} />}
     {Env.isDev ?
       (

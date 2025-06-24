@@ -38,6 +38,8 @@ export const assetsDir = {
 
 export const imgDir = `${baseDir}${assetsDir.images.outDir}`;
 
+export const svgSpritePath = `${baseDir}${assetsDir.sprite.outDir}/${assetsDir.sprite.outName}.svg`;
+
 export const breakpoints = {
   sp: 768 - 0.02,
   pc: 768,
