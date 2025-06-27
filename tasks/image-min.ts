@@ -15,14 +15,14 @@ import { isIgnoreFile, createFolder } from '@root/tasks/helper/utils';
  * @see https://github.com/svg/svgo
  */
 
-type Options = {
+interface Options {
   png: PngOptions;
   jpeg: JpegOptions;
   gif: GifOptions;
   webp: WebpOptions;
   avif: AvifOptions;
   svg: SvgOptions;
-};
+}
 
 type SharpKeys = Exclude<keyof Options, 'svg'>;
 
@@ -46,16 +46,7 @@ const options: Options = {
   // SVGO settings
   svg: {
     multipass: true,
-    plugins: [
-      {
-        name: 'preset-default',
-        params: {
-          overrides: {
-            removeViewBox: false,
-          },
-        },
-      },
-    ],
+    plugins: ['preset-default'],
   },
 };
 

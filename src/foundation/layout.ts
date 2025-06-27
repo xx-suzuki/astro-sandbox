@@ -32,7 +32,7 @@ class Layout {
     this.windowHeight = window.innerHeight;
 
     // ----------------------------------
-    // スクロールバー
+    // scroll bar width
     this.scrollBarWidth = this.windowWidth - this.documentWidth;
     document.documentElement.style.setProperty(
       '--scroll-bar',
@@ -40,7 +40,7 @@ class Layout {
     );
 
     // ----------------------------------
-    // ルートサイズ
+    // size rate
     const sizeRate =
       this.windowWidth > breakpoints.sp
         ? Math.min(this.documentWidth / designSize.pc, 1)
