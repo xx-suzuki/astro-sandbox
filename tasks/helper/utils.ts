@@ -34,3 +34,29 @@ export const createFile = (
     });
   });
 };
+
+export const removeEmptyDir = async (dir: string): Promise<boolean> => {
+  if (!(await fs.pathExists(dir))) return false;
+
+  const entries = await fs.readdir(dir);
+  let isEmpty = true;
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry);
+    const stat = await fs.stat(fullPath);
+
+    if (stat.isDirectory()) {
+      const childEmpty = await removeEmptyDir(fullPath);
+      if (!childEmpty) isEmpty = false;
+    } else if (!defaultIgnoreFiles.includes(entry)) {
+      isEmpty = false;
+    }
+  }
+
+  if (isEmpty) {
+    await fs.remove(dir);
+    return true;
+  }
+
+  return false;
+};

@@ -54,11 +54,11 @@ export const designSize = {
 };
 
 // ----------------------------------
-// clean-up.mjs
+// clean-up.ts
 export const cleanUp = isDev ? [tmpDir] : [tmpDir, distDir];
 
 // ----------------------------------
-// image-min.mjs
+// image-min.ts
 export const imageMin = {
   base: 'src/assets/images',
   outDir: `${tmpDir}/${assetsDir.images.outDir}`,
@@ -66,7 +66,7 @@ export const imageMin = {
 };
 
 // ----------------------------------
-// svg-sprite.mjs
+// svg-sprite.ts
 export const svgSprite = {
   base: 'src/assets/svg-sprite',
   outDir: `${tmpDir}/${assetsDir.sprite.outDir}`,
@@ -75,28 +75,28 @@ export const svgSprite = {
 };
 
 // ----------------------------------
-// font-awesome
+// font-awesome.ts
 export const fontAwesome = {
   file: 'tasks/font-awesome/icon-families.json',
   outDir: 'src/assets/svg-sprite',
 };
 
 // ----------------------------------
-// html-prettify.mjs
+// html-prettify.ts
 export const htmlPrettify = {
   files: 'dist/**/*.html',
   ignore: ['**/assets/**'],
 };
 
 // ----------------------------------
-// validate-html.mjs
+// validate-html.ts
 export const validateHtml = {
   files: 'dist/**/*.html',
   ignore: ['**/assets/**'],
 };
 
 // ----------------------------------
-// static-copy.mjs
+// static-copy.ts
 export const staticCopy = [
   {
     base: 'static/assets',
@@ -109,3 +109,11 @@ export const staticCopy = [
     useProduction: true,
   },
 ];
+
+// ----------------------------------
+// relocate-astro-fonts.ts
+export const relocateAstroFonts = {
+  distDir,
+  baseDir,
+  targetFontPath: 'assets/fonts',
+};

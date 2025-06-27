@@ -1,5 +1,5 @@
 import sitemap from '@astrojs/sitemap';
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import { loadEnv } from 'vite';
 import { isDev, siteUrl, baseDir, outDir, tmpDir } from './project.config.ts';
 const { DEV_PORT } = loadEnv(import.meta.env.MODE, process.cwd(), '');
@@ -23,6 +23,15 @@ export default defineConfig({
           port: !isNaN(Number(DEV_PORT)) ? Number(DEV_PORT) : 4321,
         }
       : {}),
+  },
+  experimental: {
+    fonts: [
+      {
+        provider: fontProviders.google(),
+        name: 'Noto Sans JP',
+        cssVariable: '--font-main',
+      },
+    ],
   },
   vite: {
     build: {
