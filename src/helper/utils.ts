@@ -83,3 +83,8 @@ export const debounce = <T extends (...args: any[]) => void>(
     }, delay);
   };
 };
+
+// https://largeapps.dev/case-studies/advanced/
+export const yieldToMain = () => {
+  return new Promise((resolve) => setTimeout(resolve, 0));
+};

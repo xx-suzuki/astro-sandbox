@@ -65,7 +65,7 @@ export const zeroPad = (num: number, length: number): string => {
 };
 
 // Formats a number with comma separators for readability
-export const formatNumberWithCommas = (value: number | string): string => {
+export const addCommas = (value: number | string): string => {
   const num = typeof value === 'number' ? value : Number(value);
   return num.toLocaleString('ja-JP');
 };
