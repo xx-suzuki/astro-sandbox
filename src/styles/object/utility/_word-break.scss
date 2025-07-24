@@ -1,0 +1,9 @@
+@use 'sass:list';
+@use '../../setting/variable' as var;
+@use '../../tool/function' as func;
+@use '../../tool/mixin' as mixin;
+
+.u-budoux {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}

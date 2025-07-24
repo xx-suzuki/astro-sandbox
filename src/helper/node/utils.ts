@@ -46,7 +46,6 @@ export const isBlank = (bool: boolean): { target?: string } => {
 export const budouXTranslate = (str: string) => {
   const parser = loadDefaultJapaneseParser();
 
-  const parsed = parser.translateHTMLString(str);
-
-  return parsed.replace(/\u200B/g, '<wbr>');
+  const phrases = parser.parse(str);
+  return phrases.join('<wbr>');
 };
