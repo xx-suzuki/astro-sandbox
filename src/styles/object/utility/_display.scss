@@ -3,13 +3,13 @@
 @use '../../tool/mixin' as mixin;
 
 .u-hidden--sp {
-  @include mixin.mq-pc {
+  @include mixin.mq-sp {
     display: none;
   }
 }
 
 .u-hidden--pc {
-  @include mixin.mq-sp {
+  @include mixin.mq-pc {
     display: none;
   }
 }

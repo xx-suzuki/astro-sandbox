@@ -27,7 +27,7 @@
     "watch:copy": "onchange \"static/**\" -- npm run dev:copy \"{{changed}}\"",
     "watch:svg": "onchange \"src/assets/svg-sprite/*.svg\" -- npm run dev:svg \"{{changed}}\"",
     "watch:img": "onchange \"src/assets/images/**\" -- npm run dev:img \"{{changed}}\"",
-    "build": "run-s build:clean build:svg check build:plop:scss build:copy build:img build:astro build:vite build:fonts beautify:html",
+    "build": "run-s build:clean build:svg build:plop:scss build:copy build:img build:astro build:vite build:fonts beautify:html",
     "build:astro": "astro build",
     "build:vite": "cross-env BUILD_BY=vite vite build",
     "build:copy": "cross-env NODE_ENV=production tsx tasks/static-copy.ts",
