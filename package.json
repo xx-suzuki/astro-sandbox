@@ -51,6 +51,7 @@
     "lint-staged": "lint-staged",
     "plop": "cross-env NODE_OPTIONS=\"--import tsx\" plop --plopfile=plopfile.ts",
     "prepare": "husky",
+    "mul": "markuplint --allow-warnings \"./src/**/*.astro\"",
     "test": "vitest run --passWithNoTests --coverage --reporter=verbose"
   },
   "dependencies": {
@@ -63,6 +64,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "@inquirer/prompts": "^7.6.0",
+    "@markuplint/astro-parser": "^4.6.19",
     "@tweakpane/core": "^2.0.5",
     "@tweakpane/plugin-essentials": "^0.2.1",
     "@types/fs-extra": "^11.0.4",
