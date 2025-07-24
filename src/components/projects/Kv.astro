@@ -1,5 +1,6 @@
 ---
 import BtnBasic from '@/components/component/BtnBasic.astro';
+import BudouX from '@/components/component/BudouX.astro';
 import Img from '@/components/component/Img.astro';
 import Pic from '@/components/component/Pic.astro';
 import SvgSprite from '@/components/component/SvgSprite.astro';
@@ -7,6 +8,11 @@ import { imgDir } from '@root/project.config';
 ---
 
 <div class="p-kv">
+  <h1 class="p-kv__title">
+    <BudouX
+      text="簡易的な静的サイト用の開発環境です。<br>CMS等にアップロードや差分納品しなければならいケースを想定して、ファイルのハッシュ化をしない構成にしてます…🫠"
+    />
+  </h1>
   <Img
     src={`${imgDir}/1.jpg`}
     pictureProps={{ class: 'p-kv__picture' }}

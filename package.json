@@ -57,6 +57,7 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.4.1",
     "astro": "^5.12.3",
+    "budoux": "^0.7.0",
     "destyle.css": "^4.0.1",
     "sass": "^1.89.2",
     "typescript": "^5.8.3"

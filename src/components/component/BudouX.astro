@@ -1,0 +1,10 @@
+---
+import { budouXTranslate } from '@/helper/node/utils';
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<Fragment set:html={budouXTranslate(text)} />

@@ -10,6 +10,11 @@
   place-items: center;
 }
 
+.p-kv__title {
+  padding: func.cv-rem(40) func.cv-rem(20) func.cv-rem(20);
+  font-size: func.cv-rem(20);
+}
+
 .p-kv__picture {
 }
 
