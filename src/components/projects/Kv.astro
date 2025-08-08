@@ -1,10 +1,11 @@
 ---
+import { imgDir } from '@root/project.config';
+
 import BtnBasic from '@/components/component/BtnBasic.astro';
 import BudouX from '@/components/component/BudouX.astro';
 import Img from '@/components/component/Img.astro';
 import Pic from '@/components/component/Pic.astro';
 import SvgSprite from '@/components/component/SvgSprite.astro';
-import { imgDir } from '@root/project.config';
 ---
 
 <div class="p-kv">
@@ -14,20 +15,21 @@ import { imgDir } from '@root/project.config';
     />
   </h1>
   <Img
-    src={`${imgDir}/1.jpg`}
-    pictureProps={{ class: 'p-kv__picture' }}
+    alt={'test2'}
     class="p-kv__picture-img"
+    pictureProps={{ class: 'p-kv__picture' }}
+    src={`${imgDir}/1.jpg`}
   />
   <Pic
+    imageProps={{ alt: 'test', class: 'p-kv__picture-img' }}
+    pictureProps={{ class: 'p-kv__picture' }}
     srcPc={`${imgDir}/8.jpg`}
     srcSp={`${imgDir}/1.jpg`}
-    pictureProps={{ class: 'p-kv__picture' }}
-    imageProps={{ class: 'p-kv__picture-img' }}
   />
   <p class="p-kv__sprite">
     <span class="p-kv__sprite-text">SVG Sprite</span>
-    <SvgSprite hash="logo-youtube" class="p-kv__sprite-icon" />
+    <SvgSprite class="p-kv__sprite-icon" hash="logo-youtube" />
   </p>
-  <BtnBasic text="Button component" anchor={{ href: '#' }} target={true} addClass="p-kv__button" />
+  <BtnBasic addClass="p-kv__button" anchor={{ href: '#' }} target={true} text="Button component" />
   <p class="p-kv__svg">Background SVG</p>
 </div>

@@ -1,25 +1,26 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
+
 import SvgSprite from '@/components/component/SvgSprite.astro';
 import { isBlank } from '@/helper/node/utils';
 interface Props {
+  addClass?: string;
   anchor: Omit<HTMLAttributes<'a'>, 'href'> & {
     href: string;
   };
-  text?: string;
-  addClass?: string;
-  target?: boolean;
   modifier?: string;
+  target?: boolean;
+  text?: string;
 }
 
-const { anchor, text = 'details', addClass, target = false, modifier } = Astro.props;
-const anchorAttr = target ? { ...anchor, ...isBlank(target) } : anchor;
+const { addClass, anchor, modifier, target = false, text = 'details' } = Astro.props;
+const anchorAttribute = target ? { ...anchor, ...isBlank(target) } : anchor;
 const addModifier = modifier ? `c-btn-basic--${modifier}` : '';
 ---
 
 <div class:list={['c-btn-basic', addClass, addModifier]}>
-  <a class="c-btn-basic__link" {...anchorAttr}>
+  <a class="c-btn-basic__link" {...anchorAttribute}>
     <span class="c-btn-basic__text">{text}</span>
-    <SvgSprite hash="logo-x" class="c-btn-basic__icon" />
+    <SvgSprite class="c-btn-basic__icon" hash="logo-x" />
   </a>
 </div>

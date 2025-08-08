@@ -1,16 +1,18 @@
 ---
-import fs from 'node:fs';
 import type { HTMLAttributes } from 'astro/types';
-import { imageSize } from 'image-size';
-import { assetPath, getFileData } from '@/helper/node/path';
+
 import { breakpoints } from '@root/project.config';
+import { imageSize } from 'image-size';
+import fs from 'node:fs';
+
+import { assetPath, getFileData } from '@/helper/node/path';
 export interface Props {
+  imageProps?: Omit<HTMLAttributes<'img'>, 'src'>;
+  pictureProps?: HTMLAttributes<'picture'>;
   srcPc: string;
   srcSp: string;
-  pictureProps?: HTMLAttributes<'picture'>;
-  imageProps?: Omit<HTMLAttributes<'img'>, 'src'>;
 }
-const { srcPc, srcSp, imageProps, pictureProps } = Astro.props;
+const { imageProps, pictureProps, srcPc, srcSp } = Astro.props;
 const buffers = {
   pc: fs.readFileSync(assetPath(srcPc)),
   sp: fs.readFileSync(assetPath(srcSp)),
@@ -24,17 +26,21 @@ const data = {
   sp: getFileData(srcSp),
 };
 
-const attrPc: Omit<HTMLAttributes<'img'>, 'src'> = {
-  width: size.pc.width,
+const alt = imageProps?.alt ?? '';
+if (imageProps?.alt) {
+  delete imageProps.alt;
+}
+
+const attributePc: Omit<HTMLAttributes<'img'>, 'src'> = {
   height: size.sp.height,
-  alt: '',
+  width: size.pc.width,
   ...imageProps,
 };
 
-const attrSp: HTMLAttributes<'source'> = {
-  width: size.sp.width,
+const attributeSp: HTMLAttributes<'source'> = {
   height: size.sp.height,
   media: `(max-width: ${breakpoints.sp}px)`,
+  width: size.sp.width,
 };
 ---
 
@@ -42,25 +48,30 @@ const attrSp: HTMLAttributes<'source'> = {
   {
     data.sp.ext !== '.svg' && (
       <source
-        media={attrSp.media}
+        height={attributeSp.height}
+        media={attributeSp.media}
         srcset={`${data.sp.assetDir}/${data.sp.name}.avif`}
-        width={attrSp.width}
-        height={attrSp.height}
         type="image/avif"
+        width={attributeSp.width}
       />
     )
   }
-  <source srcset={`${data.sp.assetDir}/${data.sp.name}${data.sp.ext}`} {...attrSp} />
+  <source srcset={`${data.sp.assetDir}/${data.sp.name}${data.sp.ext}`} {...attributeSp} />
 
   {
     data.pc.ext !== '.svg' && (
       <source
+        height={attributePc.height}
         srcset={`${data.pc.assetDir}/${data.pc.name}.avif`}
-        width={attrPc.width}
-        height={attrPc.height}
         type="image/avif"
+        width={attributePc.width}
       />
     )
   }
-  <img src={`${data.pc.assetDir}/${data.pc.name}${data.pc.ext}`} decoding="async" {...attrPc} />
+  <img
+    alt={alt}
+    decoding="async"
+    src={`${data.pc.assetDir}/${data.pc.name}${data.pc.ext}`}
+    {...attributePc}
+  />
 </picture>

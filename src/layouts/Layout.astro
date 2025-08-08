@@ -1,25 +1,26 @@
 ---
-import { Env } from '@/constants/env';
+import { assetsDir, baseDir, imgDir, siteUrl, svgSpritePath } from '@root/project.config';
+import { Font } from 'astro:assets';
+
 import Footer from '@/components/projects/Footer.astro';
 import Header from '@/components/projects/Header.astro';
-import { siteUrl, baseDir, assetsDir, imgDir, svgSpritePath } from '@root/project.config';
-import { Font } from 'astro:assets';
+import { Env } from '@/constants/env';
 interface Props {
-  id: string;
-  title: string;
   description: string;
+  id: string;
   keywords?: string;
   ogImage?: string;
-  ogType?: 'website' | 'article' | 'blog' | 'product' | 'profile';
+  ogType?: 'article' | 'blog' | 'product' | 'profile' | 'website';
+  title: string;
 }
 
 const {
-  id,
-  title,
-  keywords,
   description,
+  id,
+  keywords,
   ogImage = '/ogp.png',
   ogType = 'website',
+  title,
 } = Astro.props;
 
 const url = new URL(Astro.url.pathname, Astro.site);
@@ -29,37 +30,37 @@ const ogp = siteUrl + imgDir + ogImage;
 <html lang="ja">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <meta name="format-detection" content="email=no,telephone=no,address=no">
-    <meta name="description" content={description}>
-    {keywords && <meta name="keywords" content={keywords} />}
-    <meta property="og:locale" content="ja_JP">
-    <meta property="og:type" content={ogType}>
-    <meta property="og:title" content={title}>
-    <meta property="og:site_name" content={title}>
-    <meta property="og:description" content={description}>
-    <meta property="og:url" content={url}>
-    <meta property="og:image" content={ogp}>
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content={url}>
-    <meta name="twitter:title" content={title}>
-    <meta name="twitter:description" content={description}>
-    <meta name="twitter:image" content={ogp}>
-    <meta name="thumbnail" content={ogp}>
-    <meta name="theme-color" content="#FFFFFF">
+    <meta content="width=device-width" name="viewport">
+    <meta content="email=no,telephone=no,address=no" name="format-detection">
+    <meta content={description} name="description">
+    {keywords && <meta content={keywords} name="keywords" />}
+    <meta content="ja_JP" property="og:locale">
+    <meta content={ogType} property="og:type">
+    <meta content={title} property="og:title">
+    <meta content={title} property="og:site_name">
+    <meta content={description} property="og:description">
+    <meta content={url} property="og:url">
+    <meta content={ogp} property="og:image">
+    <meta content="1200" property="og:image:width">
+    <meta content="630" property="og:image:height">
+    <meta content="summary_large_image" name="twitter:card">
+    <meta content={url} name="twitter:url">
+    <meta content={title} name="twitter:title">
+    <meta content={description} name="twitter:description">
+    <meta content={ogp} name="twitter:image">
+    <meta content={ogp} name="thumbnail">
+    <meta content="#FFFFFF" name="theme-color">
     <title>{ title }</title>
-    <link rel="canonical" href={url}>
+    <link href={url} rel="canonical">
     <Font cssVariable="--font-main" preload />
-    <link rel="preload" as="image" href={svgSpritePath} type="image/svg+xml">
-    {Env.isProd && <link rel="stylesheet" href={`${baseDir}${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`} />}
+    <link as="image" href={svgSpritePath} rel="preload" type="image/svg+xml">
+    {Env.isProd && <link href={`${baseDir}${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`} rel="stylesheet" />}
     {Env.isDev ?
       (
-      <script type="module" src="/src/main.ts" is:inline></script>
+      <script is:inline src="/src/main.ts" type="module"></script>
       ) : (
-      <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/vendor.js`} is:inline></script>
-      <script type="module" src={`${baseDir}${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`} is:inline></script>
+      <script is:inline src={`${baseDir}${assetsDir.javascript.outDir}/vendor.js`} type="module"></script>
+      <script is:inline src={`${baseDir}${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`} type="module"></script>
       )
     }
   </head>

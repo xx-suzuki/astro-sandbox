@@ -1,7 +1,8 @@
+import { distDir, tmpDir } from '@root/project.config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import { Env } from '@/constants/env';
-import { tmpDir, distDir } from '@root/project.config';
 
 /**
  * Retrieves the file extension from a given file path.
@@ -9,8 +10,8 @@ import { tmpDir, distDir } from '@root/project.config';
  * @param {string} src - The file path string
  * @returns {string | undefined} - The file extension or undefined if not found
  */
-export const getExtension = (src: string): string | undefined => {
-  const s = src.split('.');
+export const getExtension = (source: string): string | undefined => {
+  const s = source.split('.');
   return s.at(-1);
 };
 
@@ -34,8 +35,8 @@ export const rootPath = process.cwd();
  * @param {string} src - The file path string
  * @returns {string} - The resolved asset path
  */
-export const assetPath = (src: string): string => {
-  return Env.isProd ? path.join(rootPath, distDir + src) : path.join(rootPath, tmpDir + src);
+export const assetPath = (source: string): string => {
+  return Env.isProd ? path.join(rootPath, distDir + source) : path.join(rootPath, tmpDir + source);
 };
 
 /**
@@ -43,14 +44,14 @@ export const assetPath = (src: string): string => {
  * @param {string} src - The file path string
  * @returns {{ ext: string, assetDir: string, name: string }} - Object containing file extension, directory, and name
  */
-export const getFileData = (src: string): { ext: string; assetDir: string; name: string } => {
-  const ext = path.extname(src);
-  const assetDir = path.dirname(src);
-  const name = path.basename(src, ext);
+export const getFileData = (source: string): { assetDir: string; ext: string; name: string } => {
+  const extension = path.extname(source);
+  const assetDir = path.dirname(source);
+  const name = path.basename(source, extension);
 
   return {
-    ext,
     assetDir,
+    ext: extension,
     name,
   };
 };

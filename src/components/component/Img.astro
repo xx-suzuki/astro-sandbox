@@ -1,20 +1,22 @@
 ---
-import fs from 'node:fs';
 import type { HTMLAttributes } from 'astro/types';
+
 import { imageSize } from 'image-size';
+import fs from 'node:fs';
+
 import { assetPath, getFileData } from '@/helper/node/path';
 export type Props = Omit<HTMLAttributes<'img'>, 'src'> & {
-  src: string;
   pictureProps?: HTMLAttributes<'picture'>;
+  src: string;
 };
-const { src, pictureProps, ...restProps } = Astro.props;
+const { alt = '', pictureProps, src, ...restProps } = Astro.props;
 const buffer = fs.readFileSync(assetPath(src));
-const { width, height } = imageSize(buffer);
-const { ext, assetDir, name } = getFileData(src);
-const attr = {
-  width,
+const { height, width } = imageSize(buffer);
+const { assetDir, ext, name } = getFileData(src);
+
+const attribute = {
   height,
-  alt: '',
+  width,
   ...restProps,
 };
 ---
@@ -22,16 +24,16 @@ const attr = {
 <picture {...pictureProps}>
   {
     ext === '.svg' ? (
-      <img src={src} decoding="async" {...attr} />
+      <img alt={alt} decoding="async" src={src} {...attribute} />
     ) : (
       <>
         <source
-          srcset={`${assetDir}/${name}.avif`}
-          width={width}
           height={height}
+          srcset={`${assetDir}/${name}.avif`}
           type="image/avif"
+          width={width}
         />
-        <img src={`${assetDir}/${name}${ext}`} decoding="async" {...attr} />
+        <img alt={alt} decoding="async" src={`${assetDir}/${name}${ext}`} {...attribute} />
       </>
     )
   }

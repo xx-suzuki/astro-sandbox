@@ -6,5 +6,5 @@
  * @returns {number[]} - Array of numbers from start to end
  */
 export const range = (start: number, end: number): number[] => {
-  return [...Array(end - start + 1)].map((_, i) => start + i);
+  return Array.from({ length: end - start + 1 }, (_, index) => start + index);
 };

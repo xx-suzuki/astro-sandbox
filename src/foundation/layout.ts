@@ -1,19 +1,20 @@
+import { breakpoints, designSize } from '@root/project.config';
+
 import { MediaQueryList as MQL } from '@/constants/media-query-list';
 import { decimalPart } from '@/helper/math';
 import { debounce } from '@/helper/utils';
-import { breakpoints, designSize } from '@root/project.config';
 
 const { body } = document;
 
 class Layout {
+  public documentHeight = 0;
+  public documentWidth = 0;
+  public isPC = false;
   public isSP = false;
   public isTAB = false;
-  public isPC = false;
-  public documentWidth = 0;
-  public documentHeight = 0;
-  public windowWidth = 0;
-  public windowHeight = 0;
   public scrollBarWidth = 0;
+  public windowHeight = 0;
+  public windowWidth = 0;
 
   constructor() {
     this.handleResize = this.handleResize.bind(this);

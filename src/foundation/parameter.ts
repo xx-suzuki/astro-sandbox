@@ -1,6 +1,8 @@
-import * as EssentialsPlugin from '@tweakpane/plugin-essentials';
 import type { FpsGraphBladeApi } from '@tweakpane/plugin-essentials';
+
+import * as EssentialsPlugin from '@tweakpane/plugin-essentials';
 import { Pane } from 'tweakpane';
+
 import { Env } from '@/constants/env';
 import { decimalPart } from '@/helper/math';
 
@@ -17,14 +19,18 @@ class Parameter {
   // ----------------------------------
   // Style
   public PARAMS = {
-    fast: 0.25,
     base: 0.35,
-    slow: 0.6,
+    fast: 0.25,
     loose: 1.2,
+    slow: 0.6,
   };
 
-  private layerElm: HTMLDivElement | null = null;
-  private pane: Pane | null = null;
+  get getPane() {
+    return this.pane;
+  }
+  private layerElm: HTMLDivElement | undefined = undefined;
+
+  private pane: Pane | undefined = undefined;
 
   constructor() {
     this.updateStyleVariables();
@@ -48,19 +54,19 @@ class Parameter {
         `,
     });
     this.pane = new Pane({
-      title: 'Debug',
       container: this.layerElm,
       expanded: false, // 初期表示
+      title: 'Debug',
     });
     this.pane.registerPlugin(EssentialsPlugin);
 
     // ----------------------------------
     // FPS monitor
     const fpsGraph = this.pane.addBlade({
-      view: 'fpsgraph',
+      index: -1,
       label: 'FPS',
       lineCount: 2,
-      index: -1,
+      view: 'fpsgraph',
     }) as FpsGraphBladeApi;
     const render = () => {
       fpsGraph.begin();
@@ -71,18 +77,7 @@ class Parameter {
 
     // ----------------------------------
     // insert panel
-    body.appendChild(this.layerElm);
-  }
-
-  get getPane() {
-    return this.pane;
-  }
-
-  private updateStyleVariables() {
-    html.style.setProperty('--duration-fast', `${this.PARAMS.fast}s`);
-    html.style.setProperty('--duration-base', `${this.PARAMS.base}s`);
-    html.style.setProperty('--duration-slow', `${this.PARAMS.slow}s`);
-    html.style.setProperty('--duration-loose', `${this.PARAMS.loose}s`);
+    body.append(this.layerElm);
   }
 
   private bindStyleVariables() {
@@ -94,8 +89,8 @@ class Parameter {
       folder
         .addBinding(this.PARAMS, 'fast', {
           label: 'Fast',
+          max: 3,
           min: 0.15,
-          max: 3.0,
           step: 0.05,
         })
         .on('change', (v) => {
@@ -105,8 +100,8 @@ class Parameter {
       folder
         .addBinding(this.PARAMS, 'base', {
           label: 'Base',
+          max: 3,
           min: 0.15,
-          max: 3.0,
           step: 0.05,
         })
         .on('change', (v) => {
@@ -116,8 +111,8 @@ class Parameter {
       folder
         .addBinding(this.PARAMS, 'slow', {
           label: 'Slow',
+          max: 3,
           min: 0.15,
-          max: 3.0,
           step: 0.05,
         })
         .on('change', (v) => {
@@ -127,8 +122,8 @@ class Parameter {
       folder
         .addBinding(this.PARAMS, 'loose', {
           label: 'Loose',
+          max: 3,
           min: 0.15,
-          max: 3.0,
           step: 0.05,
         })
         .on('change', (v) => {
@@ -139,6 +134,13 @@ class Parameter {
         this.updateStyleVariables();
       });
     }
+  }
+
+  private updateStyleVariables() {
+    html.style.setProperty('--duration-fast', `${this.PARAMS.fast}s`);
+    html.style.setProperty('--duration-base', `${this.PARAMS.base}s`);
+    html.style.setProperty('--duration-slow', `${this.PARAMS.slow}s`);
+    html.style.setProperty('--duration-loose', `${this.PARAMS.loose}s`);
   }
 }
 

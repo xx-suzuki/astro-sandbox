@@ -1,22 +1,12 @@
 /**
- * Removes an element from the DOM
- * @function
- * @param {Element} element - The element to be removed
- */
-export const remove = (element: Element) => {
-  const parent = element.parentNode;
-  parent?.removeChild(element);
-};
-
-/**
  * Gets the position of an element relative to the document.
  */
-export const offset = (element: HTMLElement): { top: number; left: number } => {
+export const offset = (element: HTMLElement): { left: number; top: number } => {
   const rect = element.getBoundingClientRect();
   const scrollLeft = window.scrollX;
   const scrollTop = window.scrollY;
 
-  const isFixed = window.getComputedStyle(element).position === 'fixed';
+  const isFixed = globalThis.getComputedStyle(element).position === 'fixed';
 
   let targetPosLeft = rect.left;
   let targetPosTop = rect.top;
@@ -28,8 +18,8 @@ export const offset = (element: HTMLElement): { top: number; left: number } => {
   }
 
   return {
-    top: targetPosTop,
     left: targetPosLeft,
+    top: targetPosTop,
   };
 };
 
@@ -43,7 +33,7 @@ export const decodeHtmlEntities = (html: string): string => {
     return parser.parseFromString(html, 'text/html').documentElement.textContent || '';
   }
 
-  return html.replace(/>([\s\S]*?)</g, (_, text) => {
+  return html.replaceAll(/>([\s\S]*?)</g, (_, text) => {
     const decoded = parser.parseFromString(text, 'text/html').documentElement.textContent || '';
     return `>${decoded}<`;
   });
@@ -53,30 +43,33 @@ export const decodeHtmlEntities = (html: string): string => {
  * Splits the text content of an element into individual characters wrapped in <span> tags.
  */
 export const splitText = (element: HTMLElement) => {
-  const plainText = element.innerText;
+  const plainText = element.textContent ?? '';
   const textWithTags = element.innerHTML.trim();
   const newTextWithTags = decodeHtmlEntities(textWithTags);
   const regex = /(<[^>]+>)|(\s*[^<>\s][^<>]*\s*)|(\s+)/g;
-  const matches = Array.from(newTextWithTags.matchAll(regex));
+  const matches = [...newTextWithTags.matchAll(regex)];
   let result = '';
 
   element.innerHTML = '';
 
-  matches.forEach((match) => {
-    if (match[0].startsWith('<') && match[0].endsWith('>')) {
-      result += match[0];
+  for (const match of matches) {
+    const chunk = match[0];
+
+    if (chunk.startsWith('<') && chunk.endsWith('>')) {
+      result += chunk;
     } else {
-      match[0].split('').forEach((char) => {
+      const split = [...chunk];
+      for (const char of split) {
         const glyph = char === ' ' ? '&nbsp;' : char;
         result += `<span aria-hidden="true" style="display: inline-block;">${glyph}</span>`;
-      });
+      }
     }
-  });
+  }
   result += `<span class="u-sr-only">${plainText}</span>`;
 
   const parser = new DOMParser().parseFromString(result, 'text/html');
 
   while (parser.body.firstChild) {
-    element.appendChild(parser.body.firstChild);
+    element.append(parser.body.firstChild);
   }
 };

@@ -1,6 +1,6 @@
 class Browser {
-  public device = '';
   public browser = '';
+  public device = '';
   public isIos = false;
   public isMobile = false;
   public isTouch = false;
@@ -10,6 +10,30 @@ class Browser {
     this.setDevice();
     this.setBrowser();
     this.addClass();
+  }
+
+  private addClass() {
+    const mobileCls = this.isMobile ? 'mobile' : 'desktop';
+    const touchCls = this.isTouch ? 'touch' : 'mouse';
+
+    const cls = [this.browser, this.device, mobileCls, touchCls];
+    document.documentElement.classList.add(...cls);
+  }
+
+  private setBrowser() {
+    if (this.ua.includes('trident/7') || this.ua.includes('msie')) {
+      this.browser = 'ie11';
+    } else if (this.ua.includes('edge')) {
+      this.browser = 'edge';
+    } else if (this.ua.includes('chrome')) {
+      this.browser = 'chrome';
+    } else if (this.ua.includes('safari')) {
+      this.browser = 'safari';
+    } else if (this.ua.includes('firefox')) {
+      this.browser = 'firefox';
+    } else {
+      this.browser = 'unknown';
+    }
   }
 
   private setDevice() {
@@ -29,31 +53,7 @@ class Browser {
 
     this.isIos = this.device === 'iphone' || this.device === 'iPad';
     this.isMobile = this.isIos || this.device === 'android';
-    this.isTouch = 'ontouchstart' in window;
-  }
-
-  private setBrowser() {
-    if (this.ua.includes('trident/7') || this.ua.includes('msie')) {
-      this.browser = 'ie11';
-    } else if (this.ua.includes('edge')) {
-      this.browser = 'edge';
-    } else if (this.ua.includes('chrome')) {
-      this.browser = 'chrome';
-    } else if (this.ua.includes('safari')) {
-      this.browser = 'safari';
-    } else if (this.ua.includes('firefox')) {
-      this.browser = 'firefox';
-    } else {
-      this.browser = 'unknown';
-    }
-  }
-
-  private addClass() {
-    const mobileCls = this.isMobile ? 'mobile' : 'desktop';
-    const touchCls = this.isTouch ? 'touch' : 'mouse';
-
-    const cls = [this.browser, this.device, mobileCls, touchCls];
-    document.documentElement.classList.add(...cls);
+    this.isTouch = 'ontouchstart' in globalThis;
   }
 }
 
