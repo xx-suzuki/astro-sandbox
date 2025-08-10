@@ -1,46 +1,46 @@
-import path from 'node:path';
 import type { PreRenderedAsset } from 'rollup';
+import type { Plugin, UserConfigExport } from 'vite';
+
+import path from 'node:path';
 import { visualizer } from 'rollup-plugin-visualizer';
-import type { UserConfigExport, Plugin } from 'vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { outDir, assetsDir, tmpDir } from './project.config.ts';
+
+import { assetsDir, outDir, tmpDir } from './project.config.ts';
 const isInit = process.env.BUILD_BY === 'vite';
 
 const viteConfig: UserConfigExport = {
   base: '/',
-  publicDir: tmpDir,
-  plugins: [tsconfigPaths(), visualizer(), ignoreAssetWarnings()],
   build: {
-    outDir,
+    chunkSizeWarningLimit: 3000,
     cssCodeSplit: false,
-    sourcemap: false,
     emptyOutDir: false,
     minify: 'terser',
-    terserOptions: {
-      mangle: true,
-      toplevel: true,
-      compress: {
-        drop_console: true,
-      },
-    },
+    outDir,
     rollupOptions: {
       input: {
         main: './src/main.ts',
       },
       output: {
+        assetFileNames: (chunkInfo: PreRenderedAsset) => resolveAssetFileName(chunkInfo),
+        chunkFileNames: `${assetsDir.javascript.outDir}/[name].js`,
+        entryFileNames: `${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`,
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
             return 'vendor';
           }
           return;
         },
-        entryFileNames: `${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`,
-        chunkFileNames: `${assetsDir.javascript.outDir}/[name].js`,
-        assetFileNames: (chunkInfo: PreRenderedAsset) => resolveAssetFileName(chunkInfo),
       },
     },
-    chunkSizeWarningLimit: 3000,
+    sourcemap: false,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+      },
+      mangle: true,
+      toplevel: true,
+    },
   },
   css: {
     preprocessorOptions: {
@@ -49,6 +49,8 @@ const viteConfig: UserConfigExport = {
       },
     },
   },
+  plugins: [tsconfigPaths(), visualizer(), ignoreAssetWarnings()],
+  publicDir: tmpDir,
 };
 
 export default defineConfig(isInit ? viteConfig : {});
@@ -74,7 +76,6 @@ const resolveAssetFileName = (chunkInfo: PreRenderedAsset) => {
 
 function ignoreAssetWarnings(): Plugin {
   return {
-    name: 'intercept-console-warn',
     apply: 'build',
     configResolved() {
       const original = console.warn;
@@ -86,5 +87,6 @@ function ignoreAssetWarnings(): Plugin {
         original(...args);
       };
     },
+    name: 'intercept-console-warn',
   };
 }

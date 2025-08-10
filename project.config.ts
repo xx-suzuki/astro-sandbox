@@ -18,21 +18,21 @@ export const outDir = `${distDir}${baseDir}`;
 export const tmpDir = '.tmp';
 
 export const assetsDir = {
-  javascript: {
-    outDir: `assets/js`,
-    outName: 'bundle',
-  },
-  styles: {
-    outDir: 'assets/css',
-    outName: 'styles',
-  },
   images: {
     outDir: 'assets/images',
     outName: '[name]',
   },
+  javascript: {
+    outDir: `assets/js`,
+    outName: 'bundle',
+  },
   sprite: {
     outDir: 'assets/images',
     outName: 'sprite',
+  },
+  styles: {
+    outDir: 'assets/css',
+    outName: 'styles',
   },
 };
 
@@ -41,16 +41,16 @@ export const imgDir = `${baseDir}${assetsDir.images.outDir}`;
 export const svgSpritePath = `${baseDir}${assetsDir.sprite.outDir}/${assetsDir.sprite.outName}.svg`;
 
 export const breakpoints = {
-  sp: 768 - 0.02,
-  pc: 768,
-  tab: 1024,
   desktop: 1440,
   huge: 1920,
+  pc: 768,
+  sp: 768 - 0.02,
+  tab: 1024,
 };
 
 export const designSize = {
-  sp: 375,
   pc: 1440,
+  sp: 375,
 };
 
 // ----------------------------------
@@ -61,17 +61,17 @@ export const cleanUp = isDev ? [tmpDir] : [tmpDir, distDir];
 // image-min.ts
 export const imageMin = {
   base: 'src/assets/images',
-  outDir: `${tmpDir}/${assetsDir.images.outDir}`,
   files: 'src/assets/images/**/*.{jpg,jpeg,png,gif,svg,webp}',
+  outDir: `${tmpDir}/${assetsDir.images.outDir}`,
 };
 
 // ----------------------------------
 // svg-sprite.ts
 export const svgSprite = {
   base: 'src/assets/svg-sprite',
+  files: 'src/assets/svg-sprite/*.svg',
   outDir: `${tmpDir}/${assetsDir.sprite.outDir}`,
   outName: assetsDir.sprite.outName,
-  files: 'src/assets/svg-sprite/*.svg',
 };
 
 // ----------------------------------
@@ -113,7 +113,7 @@ export const staticCopy = [
 // ----------------------------------
 // relocate-astro-fonts.ts
 export const relocateAstroFonts = {
-  distDir,
   baseDir,
+  distDir,
   targetFontPath: 'assets/fonts',
 };

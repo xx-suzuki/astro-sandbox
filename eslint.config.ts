@@ -1,10 +1,10 @@
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import globals from 'globals';
-import astro from 'eslint-plugin-astro';
 import astroParser from 'astro-eslint-parser';
-import unicorn from 'eslint-plugin-unicorn';
+import astro from 'eslint-plugin-astro';
 import perfectionist from 'eslint-plugin-perfectionist';
+import unicorn from 'eslint-plugin-unicorn';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -15,17 +15,6 @@ export default tseslint.config(
   ...astro.configs['flat/jsx-a11y-recommended'],
 
   {
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
     ignores: [
       'dist/*',
       '.tmp/*',
@@ -34,6 +23,17 @@ export default tseslint.config(
       'public/*',
       'src/layouts/Layout.astro',
     ],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+      parser: tseslint.parser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
   },
 
   // ----------------------------------
@@ -52,6 +52,17 @@ export default tseslint.config(
   },
 
   // ----------------------------------
+  // JS
+  {
+    files: ['**/*.{js,cjs,mjs}'],
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+      },
+    },
+  },
+
+  // ----------------------------------
   // Types
   {
     files: ['**/*.d.ts'],
@@ -66,6 +77,6 @@ export default tseslint.config(
     rules: {
       'unicorn/filename-case': 'off',
       'unicorn/prevent-abbreviations': 'off',
-    }
-  }
+    },
+  },
 );

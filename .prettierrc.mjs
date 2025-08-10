@@ -1,19 +1,19 @@
 /** @type {import('prettier').Config} */
 export default {
-  printWidth: 100,
-  tabWidth: 2,
-  useTabs: false,
-  semi: true,
-  singleQuote: true,
   bracketSpacing: true,
-  plugins: ['prettier-plugin-astro'],
   overrides: [
     {
       files: '*.astro',
-      printWidth: 200,
       options: {
         parser: 'astro',
       },
+      printWidth: 200,
     },
   ],
+  plugins: ['prettier-plugin-astro'],
+  printWidth: 100,
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  useTabs: false,
 };

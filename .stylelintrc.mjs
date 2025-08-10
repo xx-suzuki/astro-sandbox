@@ -1,28 +1,9 @@
+/* eslint unicorn/no-null: "off" */
 /** @type {import('stylelint').Config} */
 export default {
-  plugins: ['stylelint-scss', 'stylelint-prettier'],
   extends: ['stylelint-config-recess-order', 'stylelint-config-recommended-scss'],
+  plugins: ['stylelint-scss', 'stylelint-prettier'],
   rules: {
-    'no-empty-source': null,
-    'block-no-empty': null,
-    'font-family-no-missing-generic-family-keyword': null,
-    'no-descending-specificity': null,
-    'selector-id-pattern': null,
-    'color-function-notation': 'legacy',
-    'property-no-unknown': [
-      true,
-      {
-        ignoreProperties: ['initial-scale'],
-      },
-    ],
-    'selector-pseudo-element-colon-notation': 'double',
-    'rule-empty-line-before': [
-      'always',
-      {
-        except: ['after-single-line-comment', 'first-nested'],
-        ignore: ['after-comment'],
-      },
-    ],
     'at-rule-empty-line-before': [
       'always',
       {
@@ -31,7 +12,27 @@ export default {
         ignoreAtRules: ['if', 'else'],
       },
     ],
-    'scss/selector-no-union-class-name': true,
+    'block-no-empty': undefined,
+    'color-function-notation': 'legacy',
+    'font-family-no-missing-generic-family-keyword': null,
+    'no-descending-specificity': null,
+    'no-empty-source': null,
+    'property-no-unknown': [
+      true,
+      {
+        ignoreProperties: ['initial-scale'],
+      },
+    ],
+    'rule-empty-line-before': [
+      'always',
+      {
+        except: ['after-single-line-comment', 'first-nested'],
+        ignore: ['after-comment'],
+      },
+    ],
     'scss/no-global-function-names': null,
+    'scss/selector-no-union-class-name': true,
+    'selector-id-pattern': null,
+    'selector-pseudo-element-colon-notation': 'double',
   },
 };

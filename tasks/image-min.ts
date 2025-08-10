@@ -31,8 +31,10 @@ const options: Options = {
   // Sharp settings
   png: {
     compressionLevel: 9,
+    quality: 80,
     adaptiveFiltering: true,
-    progressive: true,
+    palette: true,
+    effort: 10,
   },
   jpeg: {
     quality: 85,
