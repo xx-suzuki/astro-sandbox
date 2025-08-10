@@ -1,29 +1,31 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import type { HTMLBeautifyOptions } from 'js-beautify';
+
+import { htmlPrettify as config } from '@root/project.config';
 import fg from 'fast-glob';
 import beautify from 'js-beautify';
-import type { HTMLBeautifyOptions } from 'js-beautify';
-import { htmlPrettify as config } from '@root/project.config';
+import { readFile, writeFile } from 'node:fs/promises';
+
 import { consoleDone, consoleExist } from './helper/drop-console';
 
 // https://www.npmjs.com/package/js-beautify
 const beautifyConfig: HTMLBeautifyOptions = {
-  indent_size: 2,
-  max_preserve_newlines: 0,
-  indent_inner_html: true,
-  extra_liners: [],
   content_unformatted: ['style', 'blockquote', 'script'],
+  extra_liners: [],
+  indent_inner_html: true,
+  indent_size: 2,
   inline: ['span', 'strong', 'b', 'small', 'del', 's', 'code', 'br', 'wbr'],
+  max_preserve_newlines: 0,
 };
 
 const readWrite = async (file: string): Promise<void> => {
-  const data = await readFile(file, 'utf-8');
+  const data = await readFile(file, 'utf8');
   const res = beautify.html(data, beautifyConfig);
 
   try {
     await writeFile(file, res);
     consoleDone('html-prettify', file);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -34,11 +36,13 @@ const init = async (): Promise<void> => {
     return consoleExist('HTML');
   }
 
-  await Promise.all(files.map(readWrite));
+  await Promise.all(files.map((f) => readWrite(f)));
 };
 
 /** init */
-init().catch((e) => {
-  console.trace(e);
+try {
+  await init();
+} catch (error) {
+  console.trace(error);
   process.exitCode = 1;
-});
+}

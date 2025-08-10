@@ -1,14 +1,14 @@
+import { staticCopy as config, isDev } from '@root/project.config';
+import { consoleExist, consoleSize } from '@root/tasks/helper/drop-console';
+import { isIgnoreFile } from '@root/tasks/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
-import { isDev, staticCopy as config } from '@root/project.config';
-import { consoleSize, consoleExist } from '@root/tasks/helper/drop-console';
-import { isIgnoreFile } from '@root/tasks/helper/utils';
 
-type ConfigItem = {
+interface ConfigItem {
   base: string;
   outDir: string;
   useProduction: boolean;
-};
+}
 
 const targets: string | string[] =
   process.argv[2] || config.map(({ base }: ConfigItem) => `${base}/**`);
@@ -42,11 +42,13 @@ const init = async (): Promise<void> => {
     return consoleExist('Static');
   }
 
-  await Promise.all(files.map(copyStaticFile));
+  await Promise.all(files.map((f) => copyStaticFile(f)));
 };
 
 /** init */
-init().catch((e) => {
-  console.trace(e);
+try {
+  await init();
+} catch (error) {
+  console.trace(error);
   process.exitCode = 1;
-});
+}

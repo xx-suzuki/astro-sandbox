@@ -1,43 +1,39 @@
-import readline from 'node:readline';
-import fs from 'fs-extra';
 import { select } from '@inquirer/prompts';
 import { fontAwesome as config } from '@root/project.config';
-import { createFolder } from '@root/tasks/helper/utils';
 import { consoleError, consoleGenerate } from '@root/tasks/helper/drop-console';
+import { createFolder } from '@root/tasks/helper/utils';
+import fs from 'fs-extra';
+import readline from 'node:readline';
 
-// ----------------------------------
-// Types
-type SvgData = {
-  lastModified: number;
-  raw: string;
-  viewBox: [number, number, number, number];
-  width: number;
-  height: number;
-  path: string | string[];
-};
-
-type SvgCollection = {
-  [family: string]: {
-    [style: string]: SvgData;
-  };
-};
-
-type IconData = {
+interface IconData {
   family: string;
   style: string;
-};
+}
 
 type IconMap = Record<string, IconData>;
 
 type JsonData = Record<
   string,
   {
-    svgs: SvgCollection;
     familyStylesByLicense: {
       pro: IconData[];
     };
+    svgs: SvgCollection;
   }
 >;
+
+type SvgCollection = Record<string, Record<string, SvgData>>;
+
+// ----------------------------------
+// Types
+interface SvgData {
+  height: number;
+  lastModified: number;
+  path: string | string[];
+  raw: string;
+  viewBox: [number, number, number, number];
+  width: number;
+}
 
 // ----------------------------------
 // Util Functions
@@ -48,8 +44,8 @@ const rl = readline.createInterface({
 
 const askQuestion = async (choices: string[]): Promise<string> => {
   return select({
-    message: 'Please choose a style:',
     choices: choices.map((choice) => ({ value: choice })),
+    message: 'Please choose a style:',
   });
 };
 
@@ -57,17 +53,17 @@ const getIconData = (jsonData: JsonData, name: string) => {
   const iconData = jsonData[name];
   if (!iconData) {
     consoleError(`Icon "${name}" not found in JSON data.`);
-    return null;
+    return;
   }
 
   const svg: SvgCollection = iconData.svgs;
   const families: IconData[] = iconData.familyStylesByLicense.pro;
 
-  const choices: IconMap = families.reduce<IconMap>((acc, item) => {
+  const choices: IconMap = {};
+  for (const item of families) {
     const key = `${item.family}-${item.style}`;
-    acc[key] = item;
-    return acc;
-  }, {});
+    choices[key] = item;
+  }
 
   return {
     choices,
@@ -75,13 +71,13 @@ const getIconData = (jsonData: JsonData, name: string) => {
   };
 };
 
-const loadJsonFile = (filePath: string): JsonData | null => {
+const loadJsonFile = (filePath: string): JsonData | undefined => {
   try {
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const fileContent = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(fileContent) as JsonData;
   } catch (error) {
     consoleError(`Failed to load or parse JSON file: ${(error as Error).message}`);
-    return null;
+    return;
   }
 };
 
@@ -141,7 +137,10 @@ const init = async () => {
   });
 };
 
-init().catch((error) => {
+/** init */
+try {
+  await init();
+} catch (error) {
   console.trace(error);
   process.exitCode = 1;
-});
+}

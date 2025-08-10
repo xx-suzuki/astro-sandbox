@@ -1,26 +1,29 @@
-import path from 'node:path';
+import { relocateAstroFonts as config } from '@root/project.config';
+import { consoleDone, consoleExist, consoleSize } from '@root/tasks/helper/drop-console';
+import { removeEmptyDir } from '@root/tasks/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
-import { relocateAstroFonts as config } from '@root/project.config';
-import { consoleDone, consoleSize, consoleExist } from '@root/tasks/helper/drop-console';
-import { removeEmptyDir } from '@root/tasks/helper/utils';
+import path from 'node:path';
 
 interface Options {
-  distDir: string;
   baseDir: string;
+  distDir: string;
   targetFontPath: string;
 }
 
 async function init(options: Options) {
-  const { distDir, baseDir, targetFontPath } = options;
+  const { baseDir, distDir, targetFontPath } = options;
 
-  const htmlFiles = await fg('**/*.html', { cwd: distDir, absolute: true });
+  const htmlFiles = await fg('**/*.html', { absolute: true, cwd: distDir });
 
   for (const htmlPath of htmlFiles) {
-    const content = await fs.readFile(htmlPath, 'utf-8');
-    const updatedContent = content.replace(/\/_astro\/fonts\/([^"')]+)/g, `/${targetFontPath}/$1`);
+    const content = await fs.readFile(htmlPath, 'utf8');
+    const updatedContent = content.replaceAll(
+      /\/_astro\/fonts\/([^"')]+)/g,
+      `/${targetFontPath}/$1`,
+    );
     if (content !== updatedContent) {
-      await fs.writeFile(htmlPath, updatedContent, 'utf-8');
+      await fs.writeFile(htmlPath, updatedContent, 'utf8');
     }
   }
 
@@ -30,7 +33,7 @@ async function init(options: Options) {
 
   if (await fs.pathExists(fromDir)) {
     await fs.ensureDir(outDir);
-    const fontFiles = await fg('**/*.{woff2,woff,ttf}', { cwd: fromDir, absolute: true });
+    const fontFiles = await fg('**/*.{woff2,woff,ttf}', { absolute: true, cwd: fromDir });
     for (const file of fontFiles) {
       const relative = path.relative(fromDir, file);
       const dest = path.join(outDir, relative);
@@ -47,7 +50,9 @@ async function init(options: Options) {
 }
 
 /** init */
-init(config).catch((e) => {
-  console.trace(e);
+try {
+  await init(config);
+} catch (error) {
+  console.trace(error);
   process.exitCode = 1;
-});
+}

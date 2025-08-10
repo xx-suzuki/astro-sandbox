@@ -1,11 +1,11 @@
-import path from 'node:path';
 import fs from 'fs-extra';
+import path from 'node:path';
 
 /** check ignore file */
-const defaultIgnoreFiles: string[] = ['.gitkeep', '.DS_Store', 'Thumbs.db', 'ehthumbs.db'];
+const defaultIgnoreFiles = new Set(['.DS_Store', '.gitkeep', 'ehthumbs.db', 'Thumbs.db']);
 
 export const isIgnoreFile = (src: string): boolean => {
-  return defaultIgnoreFiles.includes(path.basename(src));
+  return defaultIgnoreFiles.has(path.basename(src));
 };
 
 /** Creating Folders */
@@ -18,7 +18,7 @@ export const createFolder = (dir: string): void => {
 /** Creating Files */
 export const createFile = (
   outputDir: string,
-  data: string | Buffer,
+  data: Buffer | string,
   filename: string,
 ): Promise<boolean> => {
   const filePath = path.join(outputDir, filename);
@@ -48,7 +48,7 @@ export const removeEmptyDir = async (dir: string): Promise<boolean> => {
     if (stat.isDirectory()) {
       const childEmpty = await removeEmptyDir(fullPath);
       if (!childEmpty) isEmpty = false;
-    } else if (!defaultIgnoreFiles.includes(entry)) {
+    } else if (!defaultIgnoreFiles.has(entry)) {
       isEmpty = false;
     }
   }

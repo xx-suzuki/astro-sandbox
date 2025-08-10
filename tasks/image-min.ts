@@ -1,13 +1,14 @@
-import path from 'node:path';
+import type { AvifOptions, GifOptions, JpegOptions, PngOptions, WebpOptions } from 'sharp';
+import type { Config as SvgOptions } from 'svgo';
+
+import { imageMin as config } from '@root/project.config';
+import { consoleExist, consoleSize, consoleSizeCompare } from '@root/tasks/helper/drop-console';
+import { createFolder, isIgnoreFile } from '@root/tasks/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
+import path from 'node:path';
 import sharp from 'sharp';
-import type { PngOptions, JpegOptions, GifOptions, WebpOptions, AvifOptions } from 'sharp';
 import { optimize } from 'svgo';
-import type { Config as SvgOptions } from 'svgo';
-import { imageMin as config } from '@root/project.config';
-import { consoleSizeCompare, consoleSize, consoleExist } from '@root/tasks/helper/drop-console';
-import { isIgnoreFile, createFolder } from '@root/tasks/helper/utils';
 
 /**
  * Options
@@ -16,33 +17,32 @@ import { isIgnoreFile, createFolder } from '@root/tasks/helper/utils';
  */
 
 interface Options {
-  png: PngOptions;
-  jpeg: JpegOptions;
-  gif: GifOptions;
-  webp: WebpOptions;
   avif: AvifOptions;
+  gif: GifOptions;
+  jpeg: JpegOptions;
+  png: PngOptions;
   svg: SvgOptions;
+  webp: WebpOptions;
 }
 
 type SharpKeys = Exclude<keyof Options, 'svg'>;
 
 const options: Options = {
-  // ----------------------------------
-  // Sharp settings
-  png: {
-    compressionLevel: 9,
-    quality: 80,
-    adaptiveFiltering: true,
-    palette: true,
-    effort: 10,
+  avif: {
+    quality: 70,
   },
+  gif: {},
   jpeg: {
     quality: 85,
   },
-  gif: {},
-  webp: {},
-  avif: {
-    quality: 70,
+  // ----------------------------------
+  // Sharp settings
+  png: {
+    adaptiveFiltering: true,
+    compressionLevel: 9,
+    effort: 10,
+    palette: true,
+    quality: 80,
   },
   // ----------------------------------
   // SVGO settings
@@ -50,6 +50,7 @@ const options: Options = {
     multipass: true,
     plugins: ['preset-default'],
   },
+  webp: {},
 };
 
 const targets = process.argv[2] || config.files;
@@ -118,11 +119,13 @@ const init = async (): Promise<void> => {
     return consoleExist('Image');
   }
 
-  await Promise.all(files.map(imageMin));
+  await Promise.all(files.map((f) => imageMin(f)));
 };
 
 /** init */
-init().catch((e) => {
-  console.trace(e);
+try {
+  await init();
+} catch (error) {
+  console.trace(error);
   process.exitCode = 1;
-});
+}

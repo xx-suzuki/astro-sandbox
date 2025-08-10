@@ -1,9 +1,9 @@
+import { validateHtml as config } from '@root/project.config';
+import { consoleDone, consoleError, consoleExist } from '@root/tasks/helper/drop-console';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import { HtmlValidate } from 'html-validate';
 import { MLEngine } from 'markuplint';
-import { validateHtml as config } from '@root/project.config';
-import { consoleDone, consoleExist, consoleError } from '@root/tasks/helper/drop-console';
 
 const htmlValidate = new HtmlValidate({
   extends: ['html-validate:recommended'],
@@ -30,13 +30,13 @@ const init = async (): Promise<void> => {
       if (htmlReport.valid) {
         stream.write(`✨ No errors or warnings.\n`);
       } else {
-        htmlReport.results.forEach((result) => {
-          result.messages.forEach((msg) => {
+        for (const result of htmlReport.results) {
+          for (const msg of result.messages) {
             stream.write(
               `\n[${msg.severity === 2 ? 'error' : 'warning'}] line: ${msg.line || 'N/A'}\n${msg.message}\n`,
             );
-          });
-        });
+          }
+        }
       }
 
       // markuplint
@@ -49,7 +49,7 @@ const init = async (): Promise<void> => {
 
         stream.write(`\nmarkuplint:\n`);
 
-        if (result) {
+        if (result && result.violations.length > 0) {
           for (const v of result.violations) {
             stream.write(`[${v.severity}] ${v.line}:${v.col} ${v.message} (${v.ruleId})\n`);
           }
@@ -67,7 +67,9 @@ const init = async (): Promise<void> => {
 };
 
 /** init */
-init().catch((e) => {
-  console.trace(e);
+try {
+  await init();
+} catch (error) {
+  console.trace(error);
   process.exitCode = 1;
-});
+}

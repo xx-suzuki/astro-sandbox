@@ -1,18 +1,11 @@
-import fs from 'fs-extra';
 import { cleanUp as config } from '@root/project.config';
-import { consoleDone, consoleError } from '@root/tasks/helper/drop-console';
+import { consoleDone } from '@root/tasks/helper/drop-console';
+import fs from 'fs-extra';
 
-const init = async (): Promise<void> => {
-  try {
-    await Promise.all(config.map((target: string) => fs.remove(target)));
-    consoleDone();
-  } catch (err) {
-    consoleError(String(err));
-  }
-};
-
-/** init */
-init().catch((e) => {
-  console.trace(e);
+try {
+  await Promise.all(config.map((target: string) => fs.remove(target)));
+  consoleDone();
+} catch (error) {
+  console.trace(error);
   process.exitCode = 1;
-});
+}

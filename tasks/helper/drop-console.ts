@@ -1,5 +1,5 @@
-import path from 'node:path';
 import fs from 'fs-extra';
+import path from 'node:path';
 import color from 'picocolors';
 import prettyBytes from 'pretty-bytes';
 
@@ -37,7 +37,7 @@ export const consoleGenerate = (task: string = taskName): void => {
   console.log(`${color.gray(`[${task}]`)} ${color.blue('Generate')}`);
 };
 
-export const consoleDone = (task: string = taskName, file: string = ''): void => {
+export const consoleDone = (task: string = taskName, file = ''): void => {
   console.log(`${color.gray(`[${task}]`)} ${color.blue(file)}${color.white(' Done✨')}`);
 };
 
