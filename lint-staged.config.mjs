@@ -4,15 +4,15 @@ export default {
     'eslint -c eslint.config.ts --fix',
     'prettier --write --no-error-on-unmatched-pattern',
   ],
+  './cli/**/*.ts': [
+    'eslint -c eslint.config.ts --fix',
+    'prettier --write --no-error-on-unmatched-pattern',
+  ],
   './src/**/*.{scss,css}': [
     'stylelint --config .stylelintrc.mjs --fix --aei',
     'prettier --write --no-error-on-unmatched-pattern',
   ],
   './src/**/*.{ts,tsx,astro}': [
-    'eslint -c eslint.config.ts --fix',
-    'prettier --write --no-error-on-unmatched-pattern',
-  ],
-  './tasks/**/*.ts': [
     'eslint -c eslint.config.ts --fix',
     'prettier --write --no-error-on-unmatched-pattern',
   ],

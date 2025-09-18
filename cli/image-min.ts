@@ -1,9 +1,9 @@
 import type { AvifOptions, GifOptions, JpegOptions, PngOptions, WebpOptions } from 'sharp';
 import type { Config as SvgOptions } from 'svgo';
 
+import { consoleExist, consoleSize, consoleSizeCompare } from '@root/cli/helper/drop-console';
+import { createFolder, isIgnoreFile } from '@root/cli/helper/utils';
 import { imageMin as config } from '@root/project.config';
-import { consoleExist, consoleSize, consoleSizeCompare } from '@root/tasks/helper/drop-console';
-import { createFolder, isIgnoreFile } from '@root/tasks/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';

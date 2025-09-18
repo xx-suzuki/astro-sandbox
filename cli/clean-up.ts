@@ -1,5 +1,5 @@
+import { consoleDone } from '@root/cli/helper/drop-console';
 import { cleanUp as config } from '@root/project.config';
-import { consoleDone } from '@root/tasks/helper/drop-console';
 import fs from 'fs-extra';
 
 try {

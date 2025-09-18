@@ -1,9 +1,9 @@
 import type { Config } from 'svg-sprite';
 import type { CustomPlugin, Config as SVGOConfig } from 'svgo';
 
+import { consoleExist, consoleGenerate } from '@root/cli/helper/drop-console';
+import { createFolder } from '@root/cli/helper/utils';
 import { svgSprite as config } from '@root/project.config';
-import { consoleExist, consoleGenerate } from '@root/tasks/helper/drop-console';
-import { createFolder } from '@root/tasks/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';

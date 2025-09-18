@@ -1,6 +1,6 @@
+import { consoleExist, consoleSize } from '@root/cli/helper/drop-console';
+import { isIgnoreFile } from '@root/cli/helper/utils';
 import { staticCopy as config, isDev } from '@root/project.config';
-import { consoleExist, consoleSize } from '@root/tasks/helper/drop-console';
-import { isIgnoreFile } from '@root/tasks/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 

@@ -1,5 +1,5 @@
+import { consoleDone, consoleError, consoleExist } from '@root/cli/helper/drop-console';
 import { validateHtml as config } from '@root/project.config';
-import { consoleDone, consoleError, consoleExist } from '@root/tasks/helper/drop-console';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import { HtmlValidate } from 'html-validate';

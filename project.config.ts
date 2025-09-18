@@ -77,7 +77,7 @@ export const svgSprite = {
 // ----------------------------------
 // font-awesome.ts
 export const fontAwesome = {
-  file: 'tasks/font-awesome/icon-families.json',
+  file: 'cli/font-awesome/icon-families.json',
   outDir: 'src/assets/svg-sprite',
 };
 

@@ -1,6 +1,6 @@
+import { consoleDone, consoleExist, consoleSize } from '@root/cli/helper/drop-console';
+import { removeEmptyDir } from '@root/cli/helper/utils';
 import { relocateAstroFonts as config } from '@root/project.config';
-import { consoleDone, consoleExist, consoleSize } from '@root/tasks/helper/drop-console';
-import { removeEmptyDir } from '@root/tasks/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';

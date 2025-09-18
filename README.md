@@ -55,7 +55,7 @@ npm run dev
 │   ├── styles/         # SCSS files
 │   └── types/          # Type definitions
 ├── static/             # Static assets
-├── tasks/              # Processing for npm scripts
+├── cli/                # Processing for npm scripts
 └── project.config.ts   # Common project settings
 ```
 
@@ -92,7 +92,7 @@ SVGからSpriteデータを生成します。
 アイコン名は下記から探してください。  
 https://fontawesome.com/
 
-また、有料ユーザーは`/tasks/font-awesome/icon-families.json`を有料版のjsonに差し替えると使用できます。
+また、有料ユーザーは`/cli/font-awesome/icon-families.json`を有料版のjsonに差し替えると使用できます。
 
 ### W3C Validate
 
