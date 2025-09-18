@@ -2,10 +2,11 @@ import fs from 'fs-extra';
 import path from 'node:path';
 
 /** check ignore file */
-const defaultIgnoreFiles = new Set(['.DS_Store', '.gitkeep', 'ehthumbs.db', 'Thumbs.db']);
-
 export const isIgnoreFile = (src: string): boolean => {
-  return defaultIgnoreFiles.has(path.basename(src));
+  const base = path.basename(src).toLowerCase();
+  return (
+    ['.ds_store', '.gitkeep', 'ehthumbs.db', 'thumbs.db'].includes(base) || base.startsWith('._')
+  );
 };
 
 /** Creating Folders */
@@ -48,7 +49,7 @@ export const removeEmptyDir = async (dir: string): Promise<boolean> => {
     if (stat.isDirectory()) {
       const childEmpty = await removeEmptyDir(fullPath);
       if (!childEmpty) isEmpty = false;
-    } else if (!defaultIgnoreFiles.has(entry)) {
+    } else if (!isIgnoreFile(entry)) {
       isEmpty = false;
     }
   }
