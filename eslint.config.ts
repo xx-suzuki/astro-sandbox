@@ -3,10 +3,11 @@ import astroParser from 'astro-eslint-parser';
 import astro from 'eslint-plugin-astro';
 import perfectionist from 'eslint-plugin-perfectionist';
 import unicorn from 'eslint-plugin-unicorn';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
+export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
   tseslint.configs.stylistic,
