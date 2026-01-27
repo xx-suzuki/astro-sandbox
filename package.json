@@ -42,6 +42,8 @@
     "check": "run-p \"check:*\"",
     "check:ts": "tsc --noEmit",
     "check:astro": "astro check",
+    "audit": "run-p \"audit:*\"",
+    "audit:a11y": "run-s build:astro beautify:html w3c",
     "fix": "run-p \"fix:*\"",
     "fix:eslint": "eslint -c eslint.config.ts \"./src/**/*.{ts,tsx,astro}\" --fix",
     "fix:stylelint": "stylelint --config .stylelintrc.mjs \"./src/**/*.{scss,css}\" --fix --aei",
