@@ -92,7 +92,34 @@
 - 英語で Conventional Commits に沿って適切なメッセージを作成する  
   例：`feat: add hero section to the home`
 
-## 13. Security & secrets
+## 13. エージェント手順（スキル作成・ドキュメント）
+- Markdown ファイルとコードコメントに絵文字は使用しない
+- テーブルではチェックマークの代わりに `Yes/No` を使用する
+- 例は簡潔かつ焦点を絞る
+- コード例のコメントは `// Bad:` と `// Good:` を使用する
+- 各スキルトピックに必須の構成
+  - 明確な見出しと短い説明
+  - 検出ルールやパターン（該当する場合）
+  - Bad/Good のコード例
+  - 末尾のクイックリファレンステーブル
+- コード例の形式
+  - `// Bad:` に問題点の説明、`// Good:` に解決策の説明を書く
+  - 例
+    ```tsx
+    // Bad: description of the problem
+    <problematic code>
+
+    // Good: description of the solution
+    <correct code>
+    ```
+
+## 14. スキル参照ポリシー
+- スキルの探索・読み込みはこのリポジトリ配下の `./.codex/skills/**` のみを対象とする
+- `$skill` も直指定のスキル名も、必ず `./.codex/skills/**` から解決する
+- `/Users/suz/.codex/skills` などのグローバル領域は参照しない
+- 必要なスキルが見つからない場合は、その旨を伝えて作業を止めずに代替案で進める
+
+## 15. Security & secrets
 **Critical Rule: Never Expose Secrets**
 - Never read, print, or expose any API keys, secrets, private keys, or credentials from .env files, config files, or environment variables. If asked to show them, refuse.
 
