@@ -2,8 +2,8 @@
 
 ## About
 
-簡易的な静的サイト用の開発環境です。  
-CMS等にアップロードや差分納品しなければならいケースを想定して、ファイルのハッシュ化をしない構成にしてます…🫠
+簡易的な静的サイト向けの開発環境です。  
+CMS等にアップロードや差分納品をしなければならないケースを想定し、ファイルのハッシュ化をしない構成にしています…🫠
 
 ## Tech Stack
 
@@ -64,11 +64,11 @@ npm run dev
 | command | detail                                             |
 | ------- | -------------------------------------------------- |
 | `dev`   | Development mode                                   |
-| `build` | Static site generate                               |
+| `build` | Static site generation                             |
 | `fix`   | ESLint & Stylelint                                 |
 | `plop`  | Create template files                              |
-| `w3c`   | Output of W3C Validate report (Please after build) |
-| `icon`  | Generate SVG data for font-awesome.                |
+| `w3c`   | Output W3C validation report (Run after build)     |
+| `icon`  | Generate SVG data for Font Awesome                 |
 
 ## Others
 
@@ -77,7 +77,7 @@ npm run dev
 プロジェクトの基本設定は`project.config.ts`を変更してください。  
 [development settings](project.config.ts)
 
-### Husky & lintstaged
+### Husky & lint-staged
 
 Gitコミット時に`eslint`と`stylelint`、`prettier`が実行されます。
 
@@ -88,7 +88,7 @@ SVGからSpriteデータを生成します。
 `/src/assets/svg-sprite/*.svg`
 
 ### Font Awesome
-`npm run icon` を実行し、Font Awesomeのicon名（`house`など）を入力すると、jsonデータからSVGデータを生成します。  
+`npm run icon` を実行し、Font Awesomeのアイコン名（`house`など）を入力すると、JSONデータからSVGデータを生成します。  
 アイコン名は下記から探してください。  
 https://fontawesome.com/
 
@@ -97,4 +97,36 @@ https://fontawesome.com/
 ### W3C Validate
 
 `build`後に`w3c`を行うことで、W3Cバリデーターのレポート`report-w3c.txt`が出力されます。  
-必要に応じてhtml構文の確認と修正を行ってください。
+必要に応じてHTML構文の確認と修正を行ってください。
+
+## SKILLS
+
+### $conventional-commit-writer
+コミットメッセージ作成用の SKILL です。  
+Git の差分を自動的に読み込み、Conventional Commits のルールに基づいたコミットメッセージ案を生成します。
+```
+# プロンプト例
+$conventional-commit-writer
+`.codex/skills/conventional-commit-writer/SKILL.md`
+メッセージ作成おねがいします。
+```
+
+### $markup-checker
+HTML（production build）を対象としたマークアップチェック用の SKILL です。  
+W3C バリデーターおよび MarkupLint の実行結果をもとに、修正案を提示します。
+```
+# プロンプト例
+$markup-checker
+`.codex/skills/markup-checker/SKILL.md`
+チェックおねがいします。
+```
+
+### $source-reviewer
+Git の差分を読み込み、ソースコードの品質チェックを行う SKILL です。  
+コミット前の実行を推奨します。
+```
+# プロンプト例
+$source-reviewer
+`.codex/skills/source-reviewer/SKILL.md`
+チェックおねがいします。
+```
