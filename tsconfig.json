@@ -5,13 +5,14 @@
     "jsx": "react",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": ["ESNext", "DOM"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "sourceMap": true,
     "esModuleInterop": true,
     "noEmit": true,
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["src/*"],
+      "@cli/*": ["cli/*"],
       "@root/*": ["./*"]
     },
     "types": ["vitest/globals"]

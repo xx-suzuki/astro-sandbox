@@ -1,5 +1,5 @@
 import type { PreRenderedAsset } from 'rollup';
-import type { Plugin, UserConfigExport } from 'vite';
+import type { Plugin, PluginOption, UserConfigExport } from 'vite';
 
 import path from 'node:path';
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -42,14 +42,7 @@ const viteConfig: UserConfigExport = {
       toplevel: true,
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      },
-    },
-  },
-  plugins: [tsconfigPaths(), visualizer(), ignoreAssetWarnings()],
+  plugins: [tsconfigPaths(), visualizer() as unknown as PluginOption, ignoreAssetWarnings()],
   publicDir: tmpDir,
 };
 

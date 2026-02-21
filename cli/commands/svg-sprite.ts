@@ -1,8 +1,8 @@
 import type { Config } from 'svg-sprite';
 import type { CustomPlugin, Config as SVGOConfig } from 'svgo';
 
-import { consoleExist, consoleGenerate } from '@root/cli/helper/drop-console';
-import { createFolder } from '@root/cli/helper/utils';
+import { consoleExist, consoleGenerate } from '@cli/helper/drop-console';
+import { createFolder } from '@cli/helper/utils';
 import { svgSprite as config } from '@root/project.config';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
@@ -72,13 +72,11 @@ const encodeSVG = (svg: string) => {
   return svg.replaceAll(/<\?xml.*?\?>\s*/g, '');
 };
 
-/* init */
-const spriter = new svgSprite(options);
-
-const init = async (): Promise<void> => {
-  const files = fg.sync(config.files);
+export const runSvgSprite = async (targets?: string | string[]): Promise<void> => {
+  const files = fg.sync(targets || config.files);
   const rootPath = process.cwd();
   const scssPath = path.join(rootPath, 'src/styles/setting/variable', '_svg.scss');
+  const spriter = new svgSprite(options);
   await fs.writeFile(scssPath, '', 'utf8');
 
   if (files.length === 0) {
@@ -122,11 +120,3 @@ const init = async (): Promise<void> => {
 
   consoleGenerate();
 };
-
-/** init */
-try {
-  await init();
-} catch (error) {
-  console.trace(error);
-  process.exitCode = 1;
-}

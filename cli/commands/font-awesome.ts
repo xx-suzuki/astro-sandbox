@@ -1,6 +1,6 @@
+import { consoleError, consoleGenerate } from '@cli/helper/drop-console';
+import { createFolder } from '@cli/helper/utils';
 import { select } from '@inquirer/prompts';
-import { consoleError, consoleGenerate } from '@root/cli/helper/drop-console';
-import { createFolder } from '@root/cli/helper/utils';
 import { fontAwesome as config } from '@root/project.config';
 import fs from 'fs-extra';
 import readline from 'node:readline';

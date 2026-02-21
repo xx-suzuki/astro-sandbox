@@ -1,8 +1,8 @@
 import type { AvifOptions, GifOptions, JpegOptions, PngOptions, WebpOptions } from 'sharp';
 import type { Config as SvgOptions } from 'svgo';
 
-import { consoleExist, consoleSize, consoleSizeCompare } from '@root/cli/helper/drop-console';
-import { createFolder, isIgnoreFile } from '@root/cli/helper/utils';
+import { consoleExist, consoleSize, consoleSizeCompare } from '@cli/helper/drop-console';
+import { createFolder, isIgnoreFile } from '@cli/helper/utils';
 import { imageMin as config } from '@root/project.config';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
@@ -53,8 +53,6 @@ const options: Options = {
   webp: {},
 };
 
-const targets = process.argv[2] || config.files;
-
 /** functions */
 const isSharpFormat = (format: string): format is keyof sharp.FormatEnum => {
   return Object.keys(sharp.format).includes(format);
@@ -87,7 +85,7 @@ const imageMin = async (file: string): Promise<void> => {
     const { data } = optimize(String(binaryData), options.svg);
     await fs.outputFile(outFile, data);
     consoleSizeCompare(file, outFile);
-  } else if (imgExt.includes(fileExt)) {
+  } else if (fileExt && imgExt.includes(fileExt)) {
     // Images
     const ext = fileExt === 'jpg' ? 'jpeg' : fileExt;
     const src = sharp(file);
@@ -112,20 +110,13 @@ const imageMin = async (file: string): Promise<void> => {
   }
 };
 
-const init = async (): Promise<void> => {
-  const files = fg.sync(targets);
+export const runImageMin = async (targets?: string | string[]): Promise<void> => {
+  const actualTargets = targets || config.files;
+  const files = fg.sync(actualTargets);
 
-  if (!process.argv[2] && files.length === 0) {
+  if (!targets && files.length === 0) {
     return consoleExist('Image');
   }
 
   await Promise.all(files.map((f) => imageMin(f)));
 };
-
-/** init */
-try {
-  await init();
-} catch (error) {
-  console.trace(error);
-  process.exitCode = 1;
-}

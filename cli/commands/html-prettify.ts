@@ -1,11 +1,10 @@
 import type { HTMLBeautifyOptions } from 'js-beautify';
 
+import { consoleDone, consoleExist } from '@cli/helper/drop-console';
 import { htmlPrettify as config } from '@root/project.config';
 import fg from 'fast-glob';
 import beautify from 'js-beautify';
 import { readFile, writeFile } from 'node:fs/promises';
-
-import { consoleDone, consoleExist } from './helper/drop-console';
 
 // https://www.npmjs.com/package/js-beautify
 const beautifyConfig: HTMLBeautifyOptions = {

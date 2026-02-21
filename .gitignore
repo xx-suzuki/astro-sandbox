@@ -26,11 +26,10 @@ pnpm-debug.log*
 !.yarn/plugins
 .pnp.*
 
-# Report
+# temporary files
 stats.html
 report-w3c.txt
-
-# temporary files
+coverage/*
 .tmp/
 src/types/svg-sprite.ts
 src/styles/setting/variable/_breakpoint.scss

@@ -1,25 +1,32 @@
-import { consoleDone, consoleError, consoleExist } from '@root/cli/helper/drop-console';
+import { consoleDone, consoleError, consoleExist } from '@cli/helper/drop-console';
 import { validateHtml as config } from '@root/project.config';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import { HtmlValidate } from 'html-validate';
 import { MLEngine } from 'markuplint';
+import { pathToFileURL } from 'node:url';
 
 const htmlValidate = new HtmlValidate({
   extends: ['html-validate:recommended'],
 });
 
-const init = async (): Promise<void> => {
+const init = async ({
+  files,
+  ignore,
+}: {
+  files: string | string[];
+  ignore: string[];
+}): Promise<void> => {
   await fs.remove('./report-w3c.txt');
 
-  const files = fg.sync(config.files, { ignore: config.ignore });
-  if (files.length === 0) {
+  const htmlFiles = fg.sync(files, { ignore });
+  if (htmlFiles.length === 0) {
     return consoleExist('HTML');
   }
 
   const stream = fs.createWriteStream('./report-w3c.txt', { flags: 'a' });
 
-  for (const file of files) {
+  for (const file of htmlFiles) {
     try {
       const htmlContent = fs.readFileSync(file, 'utf8');
       stream.write(`===========================\n>> ${file}\n`);
@@ -66,10 +73,20 @@ const init = async (): Promise<void> => {
   consoleDone();
 };
 
-/** init */
-try {
-  await init();
-} catch (error) {
-  console.trace(error);
-  process.exitCode = 1;
+export const runValidateHtml = async (
+  options: { files: string | string[]; ignore: string[] } = config,
+): Promise<void> => {
+  await init(options);
+};
+
+const isDirectRun =
+  typeof process.argv[1] === 'string' && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isDirectRun) {
+  try {
+    await runValidateHtml();
+  } catch (error) {
+    console.trace(error);
+    process.exitCode = 1;
+  }
 }

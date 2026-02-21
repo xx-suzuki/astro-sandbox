@@ -1,9 +1,10 @@
-import { consoleDone, consoleExist, consoleSize } from '@root/cli/helper/drop-console';
-import { removeEmptyDir } from '@root/cli/helper/utils';
+import { consoleDone, consoleExist, consoleSize } from '@cli/helper/drop-console';
+import { removeEmptyDir } from '@cli/helper/utils';
 import { relocateAstroFonts as config } from '@root/project.config';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 interface Options {
   baseDir: string;
@@ -49,10 +50,18 @@ async function init(options: Options) {
   }
 }
 
-/** init */
-try {
-  await init(config);
-} catch (error) {
-  console.trace(error);
-  process.exitCode = 1;
+export const runRelocateAstroFonts = async (options: Options = config): Promise<void> => {
+  await init(options);
+};
+
+const isDirectRun =
+  typeof process.argv[1] === 'string' && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isDirectRun) {
+  try {
+    await runRelocateAstroFonts();
+  } catch (error) {
+    console.trace(error);
+    process.exitCode = 1;
+  }
 }
