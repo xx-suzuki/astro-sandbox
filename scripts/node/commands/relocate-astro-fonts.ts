@@ -1,6 +1,6 @@
-import { consoleDone, consoleExist, consoleSize } from '@cli/helper/drop-console';
-import { removeEmptyDir } from '@cli/helper/utils';
-import { relocateAstroFonts as config } from '@root/project.config';
+import { baseDir, distDir } from '@root/project.config';
+import { consoleDone, consoleExist, consoleSize } from '@scripts-node/helper/drop-console';
+import { removeEmptyDir } from '@scripts-node/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';
@@ -12,6 +12,16 @@ interface Options {
   targetFontPath: string;
 }
 
+// ----------------------------------
+// Config
+const config: Options = {
+  baseDir,
+  distDir,
+  targetFontPath: 'assets/fonts',
+};
+
+// ----------------------------------
+// Functions
 async function init(options: Options) {
   const { baseDir, distDir, targetFontPath } = options;
 
@@ -54,6 +64,7 @@ export const runRelocateAstroFonts = async (options: Options = config): Promise<
   await init(options);
 };
 
+/* c8 ignore start */
 const isDirectRun =
   typeof process.argv[1] === 'string' && import.meta.url === pathToFileURL(process.argv[1]).href;
 
@@ -65,3 +76,4 @@ if (isDirectRun) {
     process.exitCode = 1;
   }
 }
+/* c8 ignore end */

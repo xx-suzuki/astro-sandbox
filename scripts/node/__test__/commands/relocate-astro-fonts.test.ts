@@ -27,13 +27,13 @@ vi.mock('fs-extra', () => ({
   },
 }));
 
-vi.mock('@cli/helper/drop-console', () => ({
+vi.mock('@scripts-node/helper/drop-console', () => ({
   consoleDone: consoleDoneMock,
   consoleExist: consoleExistMock,
   consoleSize: consoleSizeMock,
 }));
 
-vi.mock('@cli/helper/utils', () => ({
+vi.mock('@scripts-node/helper/utils', () => ({
   removeEmptyDir: removeEmptyDirMock,
 }));
 
@@ -55,7 +55,7 @@ describe('relocate-astro-fonts', () => {
       .mockResolvedValueOnce(['/abs/dist/index.html'])
       .mockResolvedValueOnce(['/abs/dist/_astro/fonts/a.woff2']);
 
-    const { runRelocateAstroFonts } = await import('@cli/commands/relocate-astro-fonts');
+    const { runRelocateAstroFonts } = await import('@scripts-node/commands/relocate-astro-fonts');
     await runRelocateAstroFonts({
       baseDir: '/',
       distDir: '/abs/dist',
@@ -71,7 +71,7 @@ describe('relocate-astro-fonts', () => {
   it('runRelocateAstroFonts => missing source dir', async () => {
     pathExistsMock.mockResolvedValue(false);
 
-    const { runRelocateAstroFonts } = await import('@cli/commands/relocate-astro-fonts');
+    const { runRelocateAstroFonts } = await import('@scripts-node/commands/relocate-astro-fonts');
     await runRelocateAstroFonts({
       baseDir: '/',
       distDir: '/abs/dist',
@@ -79,5 +79,23 @@ describe('relocate-astro-fonts', () => {
     });
 
     expect(consoleExistMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('runRelocateAstroFonts => skip html write when no replacement', async () => {
+    fgMock.mockResolvedValueOnce(['/abs/dist/index.html']).mockResolvedValueOnce([]);
+    readFileMock.mockResolvedValue('<html><body>No fonts</body></html>');
+
+    const { runRelocateAstroFonts } = await import('@scripts-node/commands/relocate-astro-fonts');
+    await runRelocateAstroFonts({
+      baseDir: '/',
+      distDir: '/abs/dist',
+      targetFontPath: 'assets/fonts',
+    });
+
+    expect(writeFileMock).not.toHaveBeenCalledWith(
+      '/abs/dist/index.html',
+      expect.anything(),
+      'utf8',
+    );
   });
 });

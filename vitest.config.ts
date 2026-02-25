@@ -26,7 +26,7 @@ export default defineConfig({
         test: {
           ...sharedTestConfig,
           environment: 'node',
-          include: ['cli/__test__/**/*.test.ts'],
+          include: ['scripts/node/__test__/**/*.test.ts'],
           name: 'cli',
         },
       },

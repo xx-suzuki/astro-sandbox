@@ -1,10 +1,16 @@
 import type { HTMLBeautifyOptions } from 'js-beautify';
 
-import { consoleDone, consoleExist } from '@cli/helper/drop-console';
-import { htmlPrettify as config } from '@root/project.config';
+import { consoleDone, consoleExist } from '@scripts-node/helper/drop-console';
 import fg from 'fast-glob';
 import beautify from 'js-beautify';
 import { readFile, writeFile } from 'node:fs/promises';
+
+// ----------------------------------
+// Config
+const config = {
+  files: 'dist/**/*.html',
+  ignore: ['**/assets/**'],
+};
 
 // https://www.npmjs.com/package/js-beautify
 const beautifyConfig: HTMLBeautifyOptions = {
@@ -16,6 +22,8 @@ const beautifyConfig: HTMLBeautifyOptions = {
   max_preserve_newlines: 0,
 };
 
+// ----------------------------------
+// Functions
 const readWrite = async (file: string): Promise<void> => {
   const data = await readFile(file, 'utf8');
   const res = beautify.html(data, beautifyConfig);
@@ -38,7 +46,8 @@ const init = async (): Promise<void> => {
   await Promise.all(files.map((f) => readWrite(f)));
 };
 
-/** init */
+// ----------------------------------
+// Init
 try {
   await init();
 } catch (error) {

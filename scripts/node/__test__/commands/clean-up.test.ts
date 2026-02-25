@@ -16,7 +16,7 @@ describe('clean-up', () => {
     expect(await fs.pathExists(testDir)).toBe(true);
 
     // Init
-    const { cleanDir } = await import('@cli/commands/clean-up');
+    const { cleanDir } = await import('@scripts-node/commands/clean-up');
     await cleanDir(['.test']);
 
     // Inspect
@@ -27,7 +27,7 @@ describe('clean-up', () => {
     // Mock
     const removeSpy = vi.spyOn(fs, 'remove').mockResolvedValue();
     // Init
-    const { cleanDir } = await import('@cli/commands/clean-up');
+    const { cleanDir } = await import('@scripts-node/commands/clean-up');
     await cleanDir([]);
 
     // Inspect
@@ -36,14 +36,14 @@ describe('clean-up', () => {
 
   it('runCleanUp => success', async () => {
     const removeSpy = vi.spyOn(fs, 'remove').mockResolvedValue();
-    vi.doMock('@cli/helper/drop-console', () => ({
+    vi.doMock('@scripts-node/helper/drop-console', () => ({
       consoleDone: vi.fn(),
     }));
-    const drop = await import('@cli/helper/drop-console');
+    const drop = await import('@scripts-node/helper/drop-console');
     const consoleDoneSpy = vi.spyOn(drop, 'consoleDone');
 
     // Init
-    const { runCleanUp } = await import('@cli/commands/clean-up');
+    const { runCleanUp } = await import('@scripts-node/commands/clean-up');
     await runCleanUp('development');
 
     // Inspect
@@ -55,10 +55,10 @@ describe('clean-up', () => {
   it('runCleanUp => error', async () => {
     vi.spyOn(fs, 'remove').mockRejectedValue(new Error('remove failed'));
     const traceSpy = vi.spyOn(console, 'trace').mockImplementation(() => 0);
-    vi.doMock('@cli/helper/drop-console', () => ({ consoleDone: vi.fn() }));
+    vi.doMock('@scripts-node/helper/drop-console', () => ({ consoleDone: vi.fn() }));
 
     // Init
-    const { runCleanUp } = await import('@cli/commands/clean-up');
+    const { runCleanUp } = await import('@scripts-node/commands/clean-up');
     await runCleanUp('development');
 
     // Inspect
@@ -67,7 +67,7 @@ describe('clean-up', () => {
   });
 
   it('getCleanUpTargets => returns targets by mode', async () => {
-    const { getCleanUpTargets } = await import('@cli/commands/clean-up');
+    const { getCleanUpTargets } = await import('@scripts-node/commands/clean-up');
 
     expect(getCleanUpTargets('development')).toEqual(['.tmp']);
     expect(getCleanUpTargets('production')).toEqual(['.tmp', 'dist']);

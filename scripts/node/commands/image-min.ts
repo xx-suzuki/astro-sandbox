@@ -1,20 +1,17 @@
 import type { AvifOptions, GifOptions, JpegOptions, PngOptions, WebpOptions } from 'sharp';
 import type { Config as SvgOptions } from 'svgo';
 
-import { consoleExist, consoleSize, consoleSizeCompare } from '@cli/helper/drop-console';
-import { createFolder, isIgnoreFile } from '@cli/helper/utils';
-import { imageMin as config } from '@root/project.config';
+import { applyMode } from '@scripts-node/core/context';
+import { startWatch } from '@scripts-node/core/watch';
+import { parseCommandCliArgs } from '@scripts-node/helper/cli-args';
+import { consoleExist, consoleSize, consoleSizeCompare } from '@scripts-node/helper/drop-console';
+import { createFolder, isIgnoreFile } from '@scripts-node/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
 import { optimize } from 'svgo';
-
-/**
- * Options
- * @see https://sharp.pixelplumbing.com/api-output
- * @see https://github.com/svg/svgo
- */
 
 interface Options {
   avif: AvifOptions;
@@ -27,6 +24,18 @@ interface Options {
 
 type SharpKeys = Exclude<keyof Options, 'svg'>;
 
+// ----------------------------------
+// config
+const config = {
+  base: 'src/assets/images',
+  files: 'src/assets/images/**/*.{jpg,jpeg,png,gif,svg,webp}',
+  outDir: '.tmp/assets/images',
+};
+
+const imageTargetPattern = /\.(jpg|jpeg|png|gif|svg|webp)$/i;
+
+// https://sharp.pixelplumbing.com/api-output
+// https://github.com/svg/svgo
 const options: Options = {
   avif: {
     quality: 70,
@@ -35,8 +44,6 @@ const options: Options = {
   jpeg: {
     quality: 85,
   },
-  // ----------------------------------
-  // Sharp settings
   png: {
     adaptiveFiltering: true,
     compressionLevel: 9,
@@ -44,8 +51,6 @@ const options: Options = {
     palette: true,
     quality: 80,
   },
-  // ----------------------------------
-  // SVGO settings
   svg: {
     multipass: true,
     plugins: ['preset-default'],
@@ -53,31 +58,28 @@ const options: Options = {
   webp: {},
 };
 
-/** functions */
+// ----------------------------------
+// functions
 const isSharpFormat = (format: string): format is keyof sharp.FormatEnum => {
   return Object.keys(sharp.format).includes(format);
 };
 
 const imageMin = async (file: string): Promise<void> => {
-  // ----------------------------------
   // ignore
   if (isIgnoreFile(file)) return;
 
-  // ----------------------------------
   // files
   const imgExt = ['jpg', 'jpeg', 'png', 'gif'];
   const svgExt = ['svg'];
   const fileExtname = path.extname(file);
-  const fileExt = fileExtname && fileExtname.slice(1);
+  const fileExt = fileExtname && fileExtname.slice(1).toLowerCase();
   const fileName = path.basename(file, fileExtname);
 
-  // ----------------------------------
   // dir
   const outFile = file.replace(config.base, config.outDir);
   const outDir = path.dirname(outFile);
   createFolder(outDir);
 
-  // ----------------------------------
   // image-min
   if (fileExt && svgExt.includes(fileExt)) {
     // SVG
@@ -111,8 +113,17 @@ const imageMin = async (file: string): Promise<void> => {
 };
 
 export const runImageMin = async (targets?: string | string[]): Promise<void> => {
-  const actualTargets = targets || config.files;
-  const files = fg.sync(actualTargets);
+  const files = (() => {
+    if (!targets) return fg.sync(config.files);
+
+    const targetList = Array.isArray(targets) ? targets : [targets];
+    const resolved = targetList.flatMap((target) => {
+      if (fs.existsSync(target)) return [target];
+      return fg.sync(target);
+    });
+
+    return [...new Set(resolved)];
+  })();
 
   if (!targets && files.length === 0) {
     return consoleExist('Image');
@@ -120,3 +131,37 @@ export const runImageMin = async (targets?: string | string[]): Promise<void> =>
 
   await Promise.all(files.map((f) => imageMin(f)));
 };
+
+/* c8 ignore start */
+const isDirectRun =
+  typeof process.argv[1] === 'string' && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isDirectRun) {
+  try {
+    const cliArgs = parseCommandCliArgs(process.argv.slice(2), {
+      allowWatch: true,
+      fallbackMode: 'production',
+    });
+    applyMode(cliArgs.mode);
+
+    await (cliArgs.watch
+      ? startWatch({
+          initialRun: cliArgs.initialRun,
+          patterns: [config.base],
+          run: async (changedFile) => {
+            if (changedFile && !imageTargetPattern.test(changedFile)) {
+              return;
+            }
+            await runImageMin(changedFile || undefined);
+          },
+          watchOptions: {
+            usePolling: true,
+          },
+        })
+      : runImageMin(cliArgs.targets.length > 0 ? cliArgs.targets : undefined));
+  } catch (error) {
+    console.trace(error);
+    process.exitCode = 1;
+  }
+}
+/* c8 ignore end */

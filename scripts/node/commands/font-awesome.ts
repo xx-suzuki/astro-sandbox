@@ -1,7 +1,6 @@
-import { consoleError, consoleGenerate } from '@cli/helper/drop-console';
-import { createFolder } from '@cli/helper/utils';
 import { select } from '@inquirer/prompts';
-import { fontAwesome as config } from '@root/project.config';
+import { consoleError, consoleGenerate } from '@scripts-node/helper/drop-console';
+import { createFolder } from '@scripts-node/helper/utils';
 import fs from 'fs-extra';
 import readline from 'node:readline';
 
@@ -23,9 +22,6 @@ type JsonData = Record<
 >;
 
 type SvgCollection = Record<string, Record<string, SvgData>>;
-
-// ----------------------------------
-// Types
 interface SvgData {
   height: number;
   lastModified: number;
@@ -34,6 +30,13 @@ interface SvgData {
   viewBox: [number, number, number, number];
   width: number;
 }
+
+// ----------------------------------
+// Config
+const config = {
+  file: 'scripts/node/data/icon-families.json',
+  outDir: 'src/assets/svg-sprite',
+};
 
 // ----------------------------------
 // Util Functions

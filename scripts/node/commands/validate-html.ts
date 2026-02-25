@@ -1,15 +1,23 @@
-import { consoleDone, consoleError, consoleExist } from '@cli/helper/drop-console';
-import { validateHtml as config } from '@root/project.config';
+import { consoleDone, consoleError, consoleExist } from '@scripts-node/helper/drop-console';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import { HtmlValidate } from 'html-validate';
 import { MLEngine } from 'markuplint';
 import { pathToFileURL } from 'node:url';
 
+// ----------------------------------
+// Config
+const config = {
+  files: 'dist/**/*.html',
+  ignore: ['**/assets/**'],
+};
+
 const htmlValidate = new HtmlValidate({
   extends: ['html-validate:recommended'],
 });
 
+// ----------------------------------
+// Functions
 const init = async ({
   files,
   ignore,
@@ -79,6 +87,7 @@ export const runValidateHtml = async (
   await init(options);
 };
 
+/* c8 ignore start */
 const isDirectRun =
   typeof process.argv[1] === 'string' && import.meta.url === pathToFileURL(process.argv[1]).href;
 
@@ -90,3 +99,4 @@ if (isDirectRun) {
     process.exitCode = 1;
   }
 }
+/* c8 ignore end */

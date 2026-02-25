@@ -19,7 +19,10 @@ function SpriteMock() {
   };
 }
 
-const spriteCtorMock = vi.fn(SpriteMock);
+const spriteCtorMock = vi.fn((options?: unknown) => {
+  void options;
+  return SpriteMock();
+});
 
 vi.mock('fast-glob', () => ({
   default: {
@@ -44,11 +47,11 @@ vi.mock('svgo', () => ({
   optimize: optimizeMock,
 }));
 
-vi.mock('@cli/helper/utils', () => ({
+vi.mock('@scripts-node/helper/utils', () => ({
   createFolder: createFolderMock,
 }));
 
-vi.mock('@cli/helper/drop-console', () => ({
+vi.mock('@scripts-node/helper/drop-console', () => ({
   consoleExist: consoleExistMock,
   consoleGenerate: consoleGenerateMock,
 }));
@@ -65,7 +68,7 @@ describe('svg-sprite', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     syncMock.mockReturnValue([]);
-    writeFileMock.mockResolvedValue();
+    writeFileMock.mockImplementation(async () => 'ok');
     readFileSyncMock.mockReturnValue('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
     optimizeMock.mockReturnValue({ data: '<svg></svg>' });
     compileAsyncMock.mockResolvedValue({
@@ -81,7 +84,7 @@ describe('svg-sprite', () => {
   });
 
   it('runSvgSprite => no files', async () => {
-    const { runSvgSprite } = await import('@cli/commands/svg-sprite');
+    const { runSvgSprite } = await import('@scripts-node/commands/svg-sprite');
     await runSvgSprite();
 
     expect(consoleExistMock).toHaveBeenCalledWith('SVG');
@@ -89,7 +92,7 @@ describe('svg-sprite', () => {
 
   it('runSvgSprite => generate sprite, types and scss', async () => {
     syncMock.mockReturnValue(['src/assets/svg-sprite/home icon.svg']);
-    const { runSvgSprite } = await import('@cli/commands/svg-sprite');
+    const { runSvgSprite } = await import('@scripts-node/commands/svg-sprite');
     await runSvgSprite();
 
     expect(spriteCtorMock).toHaveBeenCalledTimes(1);
@@ -97,5 +100,39 @@ describe('svg-sprite', () => {
     expect(writeFileSyncMock).toHaveBeenCalled();
     expect(createFolderMock).toHaveBeenCalled();
     expect(consoleGenerateMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('runSvgSprite => transform callback and custom plugin work', async () => {
+    syncMock.mockReturnValue(['src/assets/svg-sprite/icon.svg']);
+    const { runSvgSprite } = await import('@scripts-node/commands/svg-sprite');
+    await runSvgSprite();
+
+    const passedOptions = spriteCtorMock.mock.calls[0]?.[0] as
+      | undefined
+      | {
+          svg?: { transform?: ((svg: string) => string)[] };
+        };
+    const transform = passedOptions?.svg?.transform?.[0] as (svg: string) => string;
+    const transformed = transform('<svg></svg>');
+    expect(transformed).toBe('<svg></svg>');
+
+    const svgoConfigArg = optimizeMock.mock.calls[0]?.[1];
+    const customPlugin = svgoConfigArg?.plugins?.find(
+      (plugin: { name?: string }) => plugin?.name === 'removeSymbolXmlns',
+    ) as {
+      fn: () => {
+        element: {
+          enter: (node: { attributes: { xmlns?: string }; name: string }) => void;
+        };
+      };
+    };
+    const visitor = customPlugin.fn();
+    const node = { attributes: { xmlns: 'http://www.w3.org/2000/svg' }, name: 'symbol' };
+    visitor.element.enter(node);
+    expect(node.attributes.xmlns).toBeUndefined();
+
+    const untouched = { attributes: { xmlns: 'http://www.w3.org/2000/svg' }, name: 'g' };
+    visitor.element.enter(untouched);
+    expect(untouched.attributes.xmlns).toBe('http://www.w3.org/2000/svg');
   });
 });

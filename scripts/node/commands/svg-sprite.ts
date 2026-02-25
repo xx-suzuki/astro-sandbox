@@ -1,14 +1,27 @@
 import type { Config } from 'svg-sprite';
 import type { CustomPlugin, Config as SVGOConfig } from 'svgo';
 
-import { consoleExist, consoleGenerate } from '@cli/helper/drop-console';
-import { createFolder } from '@cli/helper/utils';
-import { svgSprite as config } from '@root/project.config';
+import { applyMode } from '@scripts-node/core/context';
+import { startWatch } from '@scripts-node/core/watch';
+import { parseCommandCliArgs } from '@scripts-node/helper/cli-args';
+import { consoleExist, consoleGenerate } from '@scripts-node/helper/drop-console';
+import { createFolder } from '@scripts-node/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import svgSprite from 'svg-sprite';
 import { optimize } from 'svgo';
+
+// ----------------------------------
+// Config
+const config = {
+  files: 'src/assets/svg-sprite/*.svg',
+  outDir: '.tmp/assets/images',
+  outName: 'sprite',
+};
+
+const svgFilePattern = /\.svg$/i;
 
 const removeSymbolXmlns: CustomPlugin = {
   fn: () => {
@@ -68,6 +81,8 @@ const options: Config = {
   },
 };
 
+// ----------------------------------
+// Functions
 const encodeSVG = (svg: string) => {
   return svg.replaceAll(/<\?xml.*?\?>\s*/g, '');
 };
@@ -120,3 +135,35 @@ export const runSvgSprite = async (targets?: string | string[]): Promise<void> =
 
   consoleGenerate();
 };
+
+/* c8 ignore start */
+const isDirectRun =
+  typeof process.argv[1] === 'string' && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isDirectRun) {
+  try {
+    const cliArgs = parseCommandCliArgs(process.argv.slice(2), {
+      allowWatch: true,
+      fallbackMode: 'production',
+    });
+    applyMode(cliArgs.mode);
+
+    await (cliArgs.watch
+      ? startWatch({
+          initialRun: cliArgs.initialRun,
+          patterns: ['src/assets/svg-sprite'],
+          run: async (changedFile) => {
+            if (changedFile && !svgFilePattern.test(changedFile)) return;
+            await runSvgSprite();
+          },
+          watchOptions: {
+            usePolling: true,
+          },
+        })
+      : runSvgSprite(cliArgs.targets.length > 0 ? cliArgs.targets : undefined));
+  } catch (error) {
+    console.trace(error);
+    process.exitCode = 1;
+  }
+}
+/* c8 ignore end */

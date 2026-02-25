@@ -1,6 +1,6 @@
 import type { Stats } from 'node:fs';
 
-import * as dropConsole from '@cli/helper/drop-console';
+import * as dropConsole from '@scripts-node/helper/drop-console';
 import fs from 'fs-extra';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 

@@ -4,7 +4,7 @@ export default {
     'eslint -c eslint.config.ts --fix',
     'prettier --write --no-error-on-unmatched-pattern',
   ],
-  './cli/**/*.ts': [
+  './scripts/node/**/*.ts': [
     'eslint -c eslint.config.ts --fix',
     'prettier --write --no-error-on-unmatched-pattern',
   ],

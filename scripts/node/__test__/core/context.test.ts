@@ -1,4 +1,4 @@
-import { applyMode, resolveMode } from '@cli/context';
+import { applyMode, resolveMode } from '@scripts-node/core/context';
 import { describe, expect, it } from 'vitest';
 
 describe('context', () => {
