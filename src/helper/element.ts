@@ -44,13 +44,13 @@ export const decodeHtmlEntities = (html: string): string => {
  */
 export const splitText = (element: HTMLElement) => {
   const plainText = element.textContent ?? '';
-  const textWithTags = element.innerHTML.trim();
+  const textWithTags = element.getHTML().trim();
   const newTextWithTags = decodeHtmlEntities(textWithTags);
   const regex = /(<[^>]+>)|(\s*[^<>\s][^<>]*\s*)|(\s+)/g;
   const matches = [...newTextWithTags.matchAll(regex)];
   let result = '';
 
-  element.innerHTML = '';
+  element.replaceChildren();
 
   for (const match of matches) {
     const chunk = match[0];

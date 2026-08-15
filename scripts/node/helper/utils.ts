@@ -1,7 +1,9 @@
 import fs from 'fs-extra';
 import path from 'node:path';
 
-/** check ignore file */
+/**
+check ignore file
+*/
 export const isIgnoreFile = (src: string): boolean => {
   const base = path.basename(src).toLowerCase();
   return (
@@ -9,14 +11,18 @@ export const isIgnoreFile = (src: string): boolean => {
   );
 };
 
-/** Creating Folders */
+/**
+Creating Folders
+*/
 export const createFolder = (dir: string): void => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 };
 
-/** Creating Files */
+/**
+Creating Files
+*/
 export const createFile = (
   outputDir: string,
   data: Buffer | string,
@@ -47,8 +53,8 @@ export const removeEmptyDir = async (dir: string): Promise<boolean> => {
     const stat = await fs.stat(fullPath);
 
     if (stat.isDirectory()) {
-      const childEmpty = await removeEmptyDir(fullPath);
-      if (!childEmpty) isEmpty = false;
+      const isChildEmpty = await removeEmptyDir(fullPath);
+      if (!isChildEmpty) isEmpty = false;
     } else if (!isIgnoreFile(entry)) {
       isEmpty = false;
     }

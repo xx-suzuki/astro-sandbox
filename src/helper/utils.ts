@@ -25,14 +25,13 @@ export const objectMerge = <T extends PlainObject, U extends PlainObject>(
       const sourceValue = source[key];
 
       // If both values are objects, merge them recursively
-      if (isObject(targetValue) && isObject(sourceValue)) {
-        target[key as keyof T] = objectMerge(
-          { ...targetValue } as PlainObject,
-          sourceValue as PlainObject,
-        ) as T[keyof T];
-      } else {
-        target[key as keyof T] = sourceValue as unknown as T[keyof T];
-      }
+      target[key as keyof T] =
+        isObject(targetValue) && isObject(sourceValue)
+          ? (objectMerge(
+              { ...targetValue } as PlainObject,
+              sourceValue as PlainObject,
+            ) as T[keyof T])
+          : (sourceValue as unknown as T[keyof T]);
     }
   }
 

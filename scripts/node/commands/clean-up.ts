@@ -12,7 +12,7 @@ export const getCleanUpTargets = (mode: AppMode): string[] => {
 };
 
 export async function cleanDir(targets: string[]) {
-  if (!targets || targets.length <= 0) return;
+  if (!targets || targets.length === 0) return;
   for (const t of targets) {
     await fs.remove(t);
   }

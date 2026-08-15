@@ -140,7 +140,9 @@ const init = async () => {
   });
 };
 
-/** init */
+/**
+init
+*/
 try {
   await init();
 } catch (error) {

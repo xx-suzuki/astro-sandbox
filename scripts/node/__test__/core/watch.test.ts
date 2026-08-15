@@ -21,8 +21,8 @@ describe('watch', () => {
     process.exitCode = 0;
 
     closeMock.mockImplementation(async () => {
-      const stateDone = true;
-      void stateDone;
+      const isStateDone = true;
+      void isStateDone;
     });
     onMock.mockImplementation((event: string, handler: (arg?: unknown) => void) => {
       callbacks[event] = handler;
@@ -46,8 +46,8 @@ describe('watch', () => {
 
   it('startWatch => enqueue initial/add/change and close by SIGINT', async () => {
     const runMock = vi.fn(async () => {
-      const stateRan = true;
-      void stateRan;
+      const isStateRan = true;
+      void isStateRan;
     });
     const traceSpy = vi.spyOn(console, 'trace').mockImplementation(() => 0);
     const { startWatch } = await import('@scripts-node/core/watch');
@@ -87,8 +87,8 @@ describe('watch', () => {
         throw new Error('task failed');
       })
       .mockImplementationOnce(async () => {
-        const stateRecovered = true;
-        void stateRecovered;
+        const isStateRecovered = true;
+        void isStateRecovered;
       });
     const traceSpy = vi.spyOn(console, 'trace').mockImplementation(() => 0);
     const { startWatch } = await import('@scripts-node/core/watch');

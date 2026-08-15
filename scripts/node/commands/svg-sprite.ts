@@ -73,7 +73,7 @@ const options: Config = {
   svg: {
     transform: [
       (svg) => {
-        const { data } = optimize(String(svg), svgoConfig);
+        const { data } = optimize(svg, svgoConfig);
         return data;
       },
     ],

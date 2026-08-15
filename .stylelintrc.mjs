@@ -1,5 +1,7 @@
 /* eslint unicorn/no-null: "off" */
-/** @type {import('stylelint').Config} */
+/**
+@type {import('stylelint').Config}
+*/
 export default {
   extends: ['stylelint-config-recess-order', 'stylelint-config-recommended-scss'],
   plugins: ['stylelint-scss', 'stylelint-prettier'],

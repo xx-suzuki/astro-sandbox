@@ -4,9 +4,13 @@ import '@/foundation/layout';
 import '@/foundation/browser';
 import '@/styles/styles.scss';
 
-/** Init */
+/**
+Init
+*/
 const onDOMContentLoaded = async () => {
-  /** Foundation */
+  /**
+  Foundation
+  */
   console.log('init');
 
   if (Env.isDev) {

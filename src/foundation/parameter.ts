@@ -81,59 +81,61 @@ class Parameter {
   }
 
   private bindStyleVariables() {
-    if (this.pane) {
-      const folder = this.pane.addFolder({
-        title: 'CSS Duration',
-      });
-
-      folder
-        .addBinding(this.PARAMS, 'fast', {
-          label: 'Fast',
-          max: 3,
-          min: 0.15,
-          step: 0.05,
-        })
-        .on('change', (v) => {
-          this.PARAMS.fast = decimalPart(Number(v.value), 3);
-        });
-
-      folder
-        .addBinding(this.PARAMS, 'base', {
-          label: 'Base',
-          max: 3,
-          min: 0.15,
-          step: 0.05,
-        })
-        .on('change', (v) => {
-          this.PARAMS.base = decimalPart(Number(v.value), 3);
-        });
-
-      folder
-        .addBinding(this.PARAMS, 'slow', {
-          label: 'Slow',
-          max: 3,
-          min: 0.15,
-          step: 0.05,
-        })
-        .on('change', (v) => {
-          this.PARAMS.slow = decimalPart(Number(v.value), 3);
-        });
-
-      folder
-        .addBinding(this.PARAMS, 'loose', {
-          label: 'Loose',
-          max: 3,
-          min: 0.15,
-          step: 0.05,
-        })
-        .on('change', (v) => {
-          this.PARAMS.loose = decimalPart(Number(v.value), 3);
-        });
-
-      folder.on('change', () => {
-        this.updateStyleVariables();
-      });
+    if (!this.pane) {
+      return;
     }
+
+    const folder = this.pane.addFolder({
+      title: 'CSS Duration',
+    });
+
+    folder
+      .addBinding(this.PARAMS, 'fast', {
+        label: 'Fast',
+        max: 3,
+        min: 0.15,
+        step: 0.05,
+      })
+      .on('change', (v) => {
+        this.PARAMS.fast = decimalPart(Number(v.value), 3);
+      });
+
+    folder
+      .addBinding(this.PARAMS, 'base', {
+        label: 'Base',
+        max: 3,
+        min: 0.15,
+        step: 0.05,
+      })
+      .on('change', (v) => {
+        this.PARAMS.base = decimalPart(Number(v.value), 3);
+      });
+
+    folder
+      .addBinding(this.PARAMS, 'slow', {
+        label: 'Slow',
+        max: 3,
+        min: 0.15,
+        step: 0.05,
+      })
+      .on('change', (v) => {
+        this.PARAMS.slow = decimalPart(Number(v.value), 3);
+      });
+
+    folder
+      .addBinding(this.PARAMS, 'loose', {
+        label: 'Loose',
+        max: 3,
+        min: 0.15,
+        step: 0.05,
+      })
+      .on('change', (v) => {
+        this.PARAMS.loose = decimalPart(Number(v.value), 3);
+      });
+
+    folder.on('change', () => {
+      this.updateStyleVariables();
+    });
   }
 
   private updateStyleVariables() {

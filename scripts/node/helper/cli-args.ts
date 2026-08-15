@@ -21,13 +21,13 @@ export const parseCommandCliArgs = (
   },
 ): CommandCliArgs => {
   const argv = args.filter((arg) => arg !== '--');
-  const stateDevelop = argv.some((arg) => isShortFlag(arg, 'd') || isLongFlag(arg, 'develop'));
-  const stateProduction = argv.some(
+  const isStateDevelop = argv.some((arg) => isShortFlag(arg, 'd') || isLongFlag(arg, 'develop'));
+  const isStateProduction = argv.some(
     (arg) => isShortFlag(arg, 'p') || isLongFlag(arg, 'production'),
   );
-  const stateWatch = argv.some((arg) => isShortFlag(arg, 'w') || isLongFlag(arg, 'watch'));
-  const stateInitial = argv.some((arg) => isLongFlag(arg, 'initial'));
-  const stateNoInitial = argv.some((arg) => isLongFlag(arg, 'no-initial'));
+  const isStateWatch = argv.some((arg) => isShortFlag(arg, 'w') || isLongFlag(arg, 'watch'));
+  const isStateInitial = argv.some((arg) => isLongFlag(arg, 'initial'));
+  const isStateNoInitial = argv.some((arg) => isLongFlag(arg, 'no-initial'));
 
   const unknownFlags = argv.filter(
     (arg) =>
@@ -47,25 +47,25 @@ export const parseCommandCliArgs = (
     throw new Error(`Unknown option: ${unknownFlags.join(', ')}`);
   }
 
-  if (stateInitial && stateNoInitial) {
+  if (isStateInitial && isStateNoInitial) {
     throw new Error('Use either --initial or --no-initial.');
   }
 
-  if (stateWatch && !allowWatch) {
+  if (isStateWatch && !allowWatch) {
     throw new Error('This command does not support --watch.');
   }
 
   const mode = resolveMode(
-    { develop: stateDevelop, production: stateProduction },
-    stateWatch ? 'development' : fallbackMode,
+    { develop: isStateDevelop, production: isStateProduction },
+    isStateWatch ? 'development' : fallbackMode,
   );
 
   const targets = argv.filter((arg) => !arg.startsWith('-'));
 
   return {
-    initialRun: stateWatch ? stateInitial : !stateNoInitial,
+    initialRun: isStateWatch ? isStateInitial : !isStateNoInitial,
     mode,
     targets,
-    watch: stateWatch,
+    watch: isStateWatch,
   };
 };
