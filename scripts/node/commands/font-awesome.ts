@@ -1,8 +1,9 @@
-import { select } from '@inquirer/prompts';
+import { input, select } from '@inquirer/prompts';
+import { fontAwesome as config } from '@root/project.config';
+import { isDirectRun, runCommandCli } from '@scripts-node/core/cli';
 import { consoleError, consoleGenerate } from '@scripts-node/helper/drop-console';
 import { createFolder } from '@scripts-node/helper/utils';
 import fs from 'fs-extra';
-import readline from 'node:readline';
 
 interface IconData {
   family: string;
@@ -32,19 +33,7 @@ interface SvgData {
 }
 
 // ----------------------------------
-// Config
-const config = {
-  file: 'scripts/node/data/icon-families.json',
-  outDir: 'src/assets/svg-sprite',
-};
-
-// ----------------------------------
 // Util Functions
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
 const askQuestion = async (choices: string[]): Promise<string> => {
   return select({
     choices: choices.map((choice) => ({ value: choice })),
@@ -123,29 +112,21 @@ const processIconSelection = async (
 
 // ----------------------------------
 // Init
-const init = async () => {
+export const runFontAwesome = async (): Promise<void> => {
   const jsonData = loadJsonFile(config.file);
-  if (!jsonData) {
-    rl.close();
-    return;
-  }
+  if (!jsonData) return;
 
-  rl.question('Please enter icon name: ', async (name) => {
-    const data = getIconData(jsonData, name);
-    if (data) {
-      await processIconSelection(name, data);
-    }
+  const name = await input({ message: 'Please enter icon name:' });
+  const data = getIconData(jsonData, name);
+  if (!data) return;
 
-    rl.close();
-  });
+  await processIconSelection(name, data);
 };
 
-/**
-init
-*/
-try {
-  await init();
-} catch (error) {
-  console.trace(error);
-  process.exitCode = 1;
+if (isDirectRun(import.meta.url)) {
+  await runCommandCli({
+    allowWatch: false,
+    moduleUrl: import.meta.url,
+    run: async () => runFontAwesome(),
+  });
 }

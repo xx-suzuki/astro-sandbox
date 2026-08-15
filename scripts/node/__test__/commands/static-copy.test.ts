@@ -49,7 +49,7 @@ describe('static-copy', () => {
     vi.clearAllMocks();
     syncMock.mockReturnValue([]);
     existsSyncMock.mockReturnValue(false);
-    copyMock.mockResolvedValue();
+    copyMock.mockResolvedValue(undefined);
     isIgnoreFileMock.mockReturnValue(false);
   });
 

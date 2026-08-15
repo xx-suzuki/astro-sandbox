@@ -40,7 +40,3 @@ export const consoleGenerate = (task: string = taskName): void => {
 export const consoleDone = (task: string = taskName, file = ''): void => {
   console.log(`${color.gray(`[${task}]`)} ${color.blue(file)}${color.white(' Done✨')}`);
 };
-
-export const consolePreview = (url: string, task: string = taskName): void => {
-  console.log(`${color.gray(`[${task}]`)} Preview >> ${color.yellow(url)}`);
-};

@@ -1,26 +1,18 @@
 import type { Config } from 'svg-sprite';
 import type { CustomPlugin, Config as SVGOConfig } from 'svgo';
 
-import { applyMode } from '@scripts-node/core/context';
-import { startWatch } from '@scripts-node/core/watch';
-import { parseCommandCliArgs } from '@scripts-node/helper/cli-args';
+import { svgSprite as config } from '@root/project.config';
+import { isDirectRun, runCommandCli } from '@scripts-node/core/cli';
 import { consoleExist, consoleGenerate } from '@scripts-node/helper/drop-console';
 import { createFolder } from '@scripts-node/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import svgSprite from 'svg-sprite';
 import { optimize } from 'svgo';
 
 // ----------------------------------
 // Config
-const config = {
-  files: 'src/assets/svg-sprite/*.svg',
-  outDir: '.tmp/assets/images',
-  outName: 'sprite',
-};
-
 const svgFilePattern = /\.svg$/i;
 
 const removeSymbolXmlns: CustomPlugin = {
@@ -89,14 +81,15 @@ const encodeSVG = (svg: string) => {
 
 export const runSvgSprite = async (targets?: string | string[]): Promise<void> => {
   const files = fg.sync(targets || config.files);
-  const rootPath = process.cwd();
-  const scssPath = path.join(rootPath, 'src/styles/setting/variable', '_svg.scss');
-  const spriter = new svgSprite(options);
-  await fs.writeFile(scssPath, '', 'utf8');
 
+  // 生成物を空にしてしまわないよう、対象 0 件のときは何も書き換えない
   if (files.length === 0) {
     return consoleExist('SVG');
   }
+
+  const rootPath = process.cwd();
+  const scssPath = path.join(rootPath, config.scssPath);
+  const spriter = new svgSprite(options);
 
   const types: string[] = [];
   const svgSources: Record<string, string> = {};
@@ -118,10 +111,10 @@ export const runSvgSprite = async (targets?: string | string[]): Promise<void> =
   }
 
   // for types
-  const typesPath = path.join(rootPath, 'src/types', 'svg-sprite.ts');
+  const typesPath = path.join(rootPath, config.typesPath);
   const unionType = types.map((name) => `'${name}'`).join(' | ');
   const tsContent = `// prettier-ignore\nexport type SvgSpriteNames = ${unionType};\n`;
-  createFolder(path.join(rootPath, 'src/types'));
+  createFolder(path.dirname(typesPath));
   await fs.writeFile(typesPath, tsContent, 'utf8');
 
   // for scss
@@ -136,34 +129,17 @@ export const runSvgSprite = async (targets?: string | string[]): Promise<void> =
   consoleGenerate();
 };
 
-/* c8 ignore start */
-const isDirectRun =
-  typeof process.argv[1] === 'string' && import.meta.url === pathToFileURL(process.argv[1]).href;
-
-if (isDirectRun) {
-  try {
-    const cliArgs = parseCommandCliArgs(process.argv.slice(2), {
-      allowWatch: true,
-      fallbackMode: 'production',
-    });
-    applyMode(cliArgs.mode);
-
-    await (cliArgs.watch
-      ? startWatch({
-          initialRun: cliArgs.initialRun,
-          patterns: ['src/assets/svg-sprite'],
-          run: async (changedFile) => {
-            if (changedFile && !svgFilePattern.test(changedFile)) return;
-            await runSvgSprite();
-          },
-          watchOptions: {
-            usePolling: true,
-          },
-        })
-      : runSvgSprite(cliArgs.targets.length > 0 ? cliArgs.targets : undefined));
-  } catch (error) {
-    console.trace(error);
-    process.exitCode = 1;
-  }
+if (isDirectRun(import.meta.url)) {
+  await runCommandCli({
+    moduleUrl: import.meta.url,
+    // 変更ファイル単位ではなく常に全スプライトを再生成する
+    run: async ({ changedFile, targets }) => {
+      if (changedFile) return runSvgSprite();
+      await runSvgSprite(targets.length > 0 ? targets : undefined);
+    },
+    watch: {
+      patterns: [config.base],
+      shouldRun: (changedFile) => svgFilePattern.test(changedFile),
+    },
+  });
 }
-/* c8 ignore end */

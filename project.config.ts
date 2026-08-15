@@ -18,6 +18,9 @@ export const outDir = `${distDir}${baseDir}`;
 export const tmpDir = '.tmp';
 
 export const assetsDir = {
+  fonts: {
+    outDir: 'assets/fonts',
+  },
   images: {
     outDir: 'assets/images',
     outName: '[name]',
@@ -51,4 +54,69 @@ export const breakpoints = {
 export const designSize = {
   pc: 1440,
   sp: 375,
+};
+
+// ----------------------------------
+// image-min.ts
+export const imageMin = {
+  base: 'src/assets/images',
+  files: 'src/assets/images/**/*.{jpg,jpeg,png,gif,svg,webp}',
+  outDir: `${tmpDir}/${assetsDir.images.outDir}`,
+};
+
+// ----------------------------------
+// svg-sprite.ts
+export const svgSprite = {
+  base: 'src/assets/svg-sprite',
+  files: 'src/assets/svg-sprite/*.svg',
+  outDir: `${tmpDir}/${assetsDir.sprite.outDir}`,
+  outName: assetsDir.sprite.outName,
+  // 生成物。直接編集しない
+  scssPath: 'src/styles/setting/variable/_svg.scss',
+  typesPath: 'src/types/svg-sprite.ts',
+};
+
+// ----------------------------------
+// static-copy.ts
+export const staticCopy = [
+  {
+    base: 'static/assets',
+    outDir: `${tmpDir}/assets`,
+    useProduction: true,
+  },
+  {
+    base: 'static/root',
+    outDir: tmpDir,
+    useProduction: true,
+  },
+];
+
+// ----------------------------------
+// html-prettify.ts
+export const htmlPrettify = {
+  files: `${distDir}/**/*.html`,
+  ignore: ['**/assets/**'],
+};
+
+// ----------------------------------
+// validate-html.ts
+export const validateHtml = {
+  files: `${distDir}/**/*.html`,
+  ignore: ['**/assets/**'],
+  report: 'report-w3c.txt',
+};
+
+// ----------------------------------
+// relocate-astro-fonts.ts
+export const relocateAstroFonts = {
+  baseDir,
+  distDir,
+  targetFontPath: assetsDir.fonts.outDir,
+};
+
+// ----------------------------------
+// font-awesome.ts
+export const fontAwesome = {
+  file: 'scripts/node/data/icon-families.json',
+  outDir: svgSprite.base,
 };

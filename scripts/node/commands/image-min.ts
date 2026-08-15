@@ -8,15 +8,14 @@ import type {
 } from 'sharp';
 import type { Config as SvgOptions } from 'svgo';
 
-import { applyMode } from '@scripts-node/core/context';
-import { startWatch } from '@scripts-node/core/watch';
-import { parseCommandCliArgs } from '@scripts-node/helper/cli-args';
+import { imageMin as config } from '@root/project.config';
+import { isDirectRun, runCommandCli } from '@scripts-node/core/cli';
 import { consoleExist, consoleSize, consoleSizeCompare } from '@scripts-node/helper/drop-console';
+import { resolveTargets } from '@scripts-node/helper/targets';
 import { createFolder, isIgnoreFile } from '@scripts-node/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
 import { optimize } from 'svgo';
 
@@ -33,12 +32,6 @@ type SharpKeys = Exclude<keyof Options, 'svg'>;
 
 // ----------------------------------
 // config
-const config = {
-  base: 'src/assets/images',
-  files: 'src/assets/images/**/*.{jpg,jpeg,png,gif,svg,webp}',
-  outDir: '.tmp/assets/images',
-};
-
 const imageTargetPattern = /\.(jpg|jpeg|png|gif|svg|webp)$/i;
 
 // https://sharp.pixelplumbing.com/api-output
@@ -121,17 +114,7 @@ const imageMin = async (file: string): Promise<void> => {
 };
 
 export const runImageMin = async (targets?: string | string[]): Promise<void> => {
-  const files = (() => {
-    if (!targets) return fg.sync(config.files);
-
-    const targetList = Array.isArray(targets) ? targets : [targets];
-    const resolved = targetList.flatMap((target) => {
-      if (fs.existsSync(target)) return [target];
-      return fg.sync(target);
-    });
-
-    return [...new Set(resolved)];
-  })();
+  const files = targets ? resolveTargets(targets) : fg.sync(config.files);
 
   if (!targets && files.length === 0) {
     return consoleExist('Image');
@@ -140,36 +123,16 @@ export const runImageMin = async (targets?: string | string[]): Promise<void> =>
   await Promise.all(files.map((f) => imageMin(f)));
 };
 
-/* c8 ignore start */
-const isDirectRun =
-  typeof process.argv[1] === 'string' && import.meta.url === pathToFileURL(process.argv[1]).href;
-
-if (isDirectRun) {
-  try {
-    const cliArgs = parseCommandCliArgs(process.argv.slice(2), {
-      allowWatch: true,
-      fallbackMode: 'production',
-    });
-    applyMode(cliArgs.mode);
-
-    await (cliArgs.watch
-      ? startWatch({
-          initialRun: cliArgs.initialRun,
-          patterns: [config.base],
-          run: async (changedFile) => {
-            if (changedFile && !imageTargetPattern.test(changedFile)) {
-              return;
-            }
-            await runImageMin(changedFile || undefined);
-          },
-          watchOptions: {
-            usePolling: true,
-          },
-        })
-      : runImageMin(cliArgs.targets.length > 0 ? cliArgs.targets : undefined));
-  } catch (error) {
-    console.trace(error);
-    process.exitCode = 1;
-  }
+if (isDirectRun(import.meta.url)) {
+  await runCommandCli({
+    moduleUrl: import.meta.url,
+    run: async ({ changedFile, targets }) => {
+      if (changedFile) return runImageMin(changedFile);
+      await runImageMin(targets.length > 0 ? targets : undefined);
+    },
+    watch: {
+      patterns: [config.base],
+      shouldRun: (changedFile) => imageTargetPattern.test(changedFile),
+    },
+  });
 }
-/* c8 ignore end */

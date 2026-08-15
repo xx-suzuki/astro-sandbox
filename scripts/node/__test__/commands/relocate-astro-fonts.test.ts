@@ -42,11 +42,11 @@ describe('relocate-astro-fonts', () => {
     vi.clearAllMocks();
     fgMock.mockResolvedValue([]);
     readFileMock.mockResolvedValue('<html><link href="/_astro/fonts/a.woff2"></html>');
-    writeFileMock.mockResolvedValue();
+    writeFileMock.mockResolvedValue(undefined);
     pathExistsMock.mockResolvedValue(true);
-    ensureDirMock.mockResolvedValue();
-    copyMock.mockResolvedValue();
-    removeMock.mockResolvedValue();
+    ensureDirMock.mockResolvedValue(undefined);
+    copyMock.mockResolvedValue(undefined);
+    removeMock.mockResolvedValue(undefined);
     removeEmptyDirMock.mockResolvedValue(true);
   });
 

@@ -19,7 +19,7 @@ function SpriteMock() {
   };
 }
 
-const spriteCtorMock = vi.fn((options?: unknown) => {
+const spriteCtorMock = vi.fn(function (options?: unknown) {
   void options;
   return SpriteMock();
 });
@@ -58,9 +58,12 @@ vi.mock('@scripts-node/helper/drop-console', () => ({
 
 vi.mock('@root/project.config', () => ({
   svgSprite: {
+    base: 'src/assets/svg-sprite',
     files: 'src/assets/svg-sprite/*.svg',
     outDir: '.tmp/assets/images',
     outName: 'sprite',
+    scssPath: 'src/styles/setting/variable/_svg.scss',
+    typesPath: 'src/types/svg-sprite.ts',
   },
 }));
 
@@ -88,6 +91,14 @@ describe('svg-sprite', () => {
     await runSvgSprite();
 
     expect(consoleExistMock).toHaveBeenCalledWith('SVG');
+  });
+
+  it('runSvgSprite => keeps generated files when no svg exists', async () => {
+    const { runSvgSprite } = await import('@scripts-node/commands/svg-sprite');
+    await runSvgSprite();
+
+    expect(writeFileMock).not.toHaveBeenCalled();
+    expect(writeFileSyncMock).not.toHaveBeenCalled();
   });
 
   it('runSvgSprite => generate sprite, types and scss', async () => {

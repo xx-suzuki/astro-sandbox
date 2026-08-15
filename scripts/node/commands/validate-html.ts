@@ -1,17 +1,13 @@
+import { validateHtml as config } from '@root/project.config';
+import { isDirectRun, runCommandCli } from '@scripts-node/core/cli';
 import { consoleDone, consoleError, consoleExist } from '@scripts-node/helper/drop-console';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import { HtmlValidate } from 'html-validate';
 import { MLEngine } from 'markuplint';
-import { pathToFileURL } from 'node:url';
 
 // ----------------------------------
 // Config
-const config = {
-  files: 'dist/**/*.html',
-  ignore: ['**/assets/**'],
-};
-
 const htmlValidate = new HtmlValidate({
   extends: ['html-validate:recommended'],
 });
@@ -21,18 +17,20 @@ const htmlValidate = new HtmlValidate({
 const init = async ({
   files,
   ignore,
+  report,
 }: {
   files: string | string[];
   ignore: string[];
+  report: string;
 }): Promise<void> => {
-  await fs.remove('./report-w3c.txt');
+  await fs.remove(report);
 
   const htmlFiles = fg.sync(files, { ignore });
   if (htmlFiles.length === 0) {
     return consoleExist('HTML');
   }
 
-  const stream = fs.createWriteStream('./report-w3c.txt', { flags: 'a' });
+  const stream = fs.createWriteStream(report, { flags: 'a' });
 
   for (const file of htmlFiles) {
     try {
@@ -75,28 +73,28 @@ const init = async ({
 
       stream.write(`\n`);
     } catch (error) {
-      consoleError(error as string);
+      consoleError(error instanceof Error ? error.message : String(error));
     }
   }
+
+  // 書き込み完了を待たないとレポート末尾が欠ける
+  await new Promise<void>((resolve) => {
+    stream.end(resolve);
+  });
+
   consoleDone();
 };
 
 export const runValidateHtml = async (
-  options: { files: string | string[]; ignore: string[] } = config,
+  options: { files: string | string[]; ignore: string[]; report: string } = config,
 ): Promise<void> => {
   await init(options);
 };
 
-/* c8 ignore start */
-const isDirectRun =
-  typeof process.argv[1] === 'string' && import.meta.url === pathToFileURL(process.argv[1]).href;
-
-if (isDirectRun) {
-  try {
-    await runValidateHtml();
-  } catch (error) {
-    console.trace(error);
-    process.exitCode = 1;
-  }
+if (isDirectRun(import.meta.url)) {
+  await runCommandCli({
+    allowWatch: false,
+    moduleUrl: import.meta.url,
+    run: async () => runValidateHtml(),
+  });
 }
-/* c8 ignore end */

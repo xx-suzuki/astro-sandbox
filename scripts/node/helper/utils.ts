@@ -20,28 +20,6 @@ export const createFolder = (dir: string): void => {
   }
 };
 
-/**
-Creating Files
-*/
-export const createFile = (
-  outputDir: string,
-  data: Buffer | string,
-  filename: string,
-): Promise<boolean> => {
-  const filePath = path.join(outputDir, filename);
-  createFolder(outputDir);
-
-  return new Promise((resolve, reject) => {
-    fs.writeFile(filePath, data, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(true);
-      }
-    });
-  });
-};
-
 export const removeEmptyDir = async (dir: string): Promise<boolean> => {
   if (!(await fs.pathExists(dir))) return false;
 

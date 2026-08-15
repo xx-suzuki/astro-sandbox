@@ -7,8 +7,18 @@ export interface CommandCliArgs {
   watch: boolean;
 }
 
-const isLongFlag = (arg: string, name: string): boolean => arg === `--${name}`;
-const isShortFlag = (arg: string, name: string): boolean => arg === `-${name}`;
+const flags = {
+  develop: ['--develop', '-d'],
+  initial: ['--initial'],
+  noInitial: ['--no-initial'],
+  production: ['--production', '-p'],
+  watch: ['--watch', '-w'],
+} as const;
+
+const knownFlags = new Set<string>(Object.values(flags).flat());
+
+const hasFlag = (argv: string[], name: keyof typeof flags): boolean =>
+  argv.some((arg) => (flags[name] as readonly string[]).includes(arg));
 
 export const parseCommandCliArgs = (
   args: string[],
@@ -21,28 +31,13 @@ export const parseCommandCliArgs = (
   },
 ): CommandCliArgs => {
   const argv = args.filter((arg) => arg !== '--');
-  const isStateDevelop = argv.some((arg) => isShortFlag(arg, 'd') || isLongFlag(arg, 'develop'));
-  const isStateProduction = argv.some(
-    (arg) => isShortFlag(arg, 'p') || isLongFlag(arg, 'production'),
-  );
-  const isStateWatch = argv.some((arg) => isShortFlag(arg, 'w') || isLongFlag(arg, 'watch'));
-  const isStateInitial = argv.some((arg) => isLongFlag(arg, 'initial'));
-  const isStateNoInitial = argv.some((arg) => isLongFlag(arg, 'no-initial'));
+  const isStateDevelop = hasFlag(argv, 'develop');
+  const isStateProduction = hasFlag(argv, 'production');
+  const isStateWatch = hasFlag(argv, 'watch');
+  const isStateInitial = hasFlag(argv, 'initial');
+  const isStateNoInitial = hasFlag(argv, 'noInitial');
 
-  const unknownFlags = argv.filter(
-    (arg) =>
-      arg.startsWith('-') &&
-      ![
-        '--develop',
-        '--initial',
-        '--no-initial',
-        '--production',
-        '--watch',
-        '-d',
-        '-p',
-        '-w',
-      ].includes(arg),
-  );
+  const unknownFlags = argv.filter((arg) => arg.startsWith('-') && !knownFlags.has(arg));
   if (unknownFlags.length > 0) {
     throw new Error(`Unknown option: ${unknownFlags.join(', ')}`);
   }

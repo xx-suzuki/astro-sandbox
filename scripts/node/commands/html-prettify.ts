@@ -1,17 +1,14 @@
 import type { HTMLBeautifyOptions } from 'js-beautify';
 
-import { consoleDone, consoleExist } from '@scripts-node/helper/drop-console';
+import { htmlPrettify as config } from '@root/project.config';
+import { isDirectRun, runCommandCli } from '@scripts-node/core/cli';
+import { consoleDone, consoleError, consoleExist } from '@scripts-node/helper/drop-console';
 import fg from 'fast-glob';
 import beautify from 'js-beautify';
 import { readFile, writeFile } from 'node:fs/promises';
 
 // ----------------------------------
 // Config
-const config = {
-  files: 'dist/**/*.html',
-  ignore: ['**/assets/**'],
-};
-
 // https://www.npmjs.com/package/js-beautify
 const beautifyConfig: HTMLBeautifyOptions = {
   content_unformatted: ['style', 'blockquote', 'script'],
@@ -32,12 +29,16 @@ const readWrite = async (file: string): Promise<void> => {
     await writeFile(file, res);
     consoleDone('html-prettify', file);
   } catch (error) {
-    console.error(error);
+    // 整形に失敗したまま成功扱いでビルドを通さない
+    consoleError(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
   }
 };
 
-const init = async (): Promise<void> => {
-  const files = fg.sync(config.files, { ignore: config.ignore });
+export const runHtmlPrettify = async (
+  options: { files: string | string[]; ignore: string[] } = config,
+): Promise<void> => {
+  const files = fg.sync(options.files, { ignore: options.ignore });
 
   if (files.length === 0) {
     return consoleExist('HTML');
@@ -46,11 +47,10 @@ const init = async (): Promise<void> => {
   await Promise.all(files.map((f) => readWrite(f)));
 };
 
-// ----------------------------------
-// Init
-try {
-  await init();
-} catch (error) {
-  console.trace(error);
-  process.exitCode = 1;
+if (isDirectRun(import.meta.url)) {
+  await runCommandCli({
+    allowWatch: false,
+    moduleUrl: import.meta.url,
+    run: async () => runHtmlPrettify(),
+  });
 }

@@ -84,14 +84,4 @@ describe('drop-console', () => {
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('test.txt'));
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('Done'));
   });
-
-  it('consolePreview => functionality test', () => {
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => 0);
-
-    dropConsole.consolePreview('http://localhost:3000', 'task');
-
-    expect(logSpy).toHaveBeenCalledTimes(1);
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('Preview >>'));
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('http://localhost:3000'));
-  });
 });

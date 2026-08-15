@@ -12,7 +12,7 @@ const copyMock = vi.fn();
 const existsSyncMock = vi.fn();
 const optimizeMock = vi.fn();
 
-const toFileMock = vi.fn().mockResolvedValue();
+const toFileMock = vi.fn().mockResolvedValue(undefined);
 const toFormatMock = vi.fn(() => ({ toFile: toFileMock }));
 const avifMock = vi.fn(() => ({ toFile: toFileMock }));
 const sharpFnMock = vi.fn(() => ({
@@ -74,8 +74,8 @@ describe('image-min', () => {
     syncMock.mockReturnValue([]);
     existsSyncMock.mockReturnValue(false);
     isIgnoreFileMock.mockReturnValue(false);
-    outputFileMock.mockResolvedValue();
-    copyMock.mockResolvedValue();
+    outputFileMock.mockResolvedValue(undefined);
+    copyMock.mockResolvedValue(undefined);
     readFileSyncMock.mockReturnValue('<svg />');
     optimizeMock.mockReturnValue({ data: '<svg/>' });
     (sharpFnMock as unknown as { format: Record<string, object> }).format = {

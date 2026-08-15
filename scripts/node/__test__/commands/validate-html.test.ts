@@ -4,6 +4,7 @@ const syncMock = vi.fn();
 const removeMock = vi.fn();
 const readFileSyncMock = vi.fn();
 const writeMock = vi.fn();
+const endMock = vi.fn((done: () => void) => done());
 const consoleDoneMock = vi.fn();
 const consoleErrorMock = vi.fn();
 const consoleExistMock = vi.fn();
@@ -29,6 +30,7 @@ vi.mock('fast-glob', () => ({
 vi.mock('fs-extra', () => ({
   default: {
     createWriteStream: vi.fn(() => ({
+      end: endMock,
       write: writeMock,
     })),
     readFileSync: readFileSyncMock,
@@ -53,11 +55,11 @@ vi.mock('@scripts-node/helper/drop-console', () => ({
 describe('validate-html', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    removeMock.mockResolvedValue();
+    removeMock.mockResolvedValue(undefined);
     syncMock.mockReturnValue([]);
     readFileSyncMock.mockReturnValue('<html></html>');
     validateStringMock.mockResolvedValue({ results: [], valid: true });
-    toMLFileMock.mockResolvedValue();
+    toMLFileMock.mockResolvedValue(undefined);
     execMock.mockResolvedValue({ violations: [] });
   });
 
@@ -66,6 +68,7 @@ describe('validate-html', () => {
     await runValidateHtml({
       files: 'dist/**/*.html',
       ignore: ['**/assets/**'],
+      report: 'report-w3c.txt',
     });
 
     expect(consoleExistMock).toHaveBeenCalledWith('HTML');
@@ -78,9 +81,10 @@ describe('validate-html', () => {
     await runValidateHtml({
       files: 'dist/**/*.html',
       ignore: ['**/assets/**'],
+      report: 'report-w3c.txt',
     });
 
-    expect(removeMock).toHaveBeenCalledWith('./report-w3c.txt');
+    expect(removeMock).toHaveBeenCalledWith('report-w3c.txt');
     expect(validateStringMock).toHaveBeenCalledWith('<html></html>');
     expect(writeMock).toHaveBeenCalled();
     expect(consoleDoneMock).toHaveBeenCalledTimes(1);
@@ -110,6 +114,7 @@ describe('validate-html', () => {
     await runValidateHtml({
       files: 'dist/**/*.html',
       ignore: ['**/assets/**'],
+      report: 'report-w3c.txt',
     });
 
     expect(writeMock).toHaveBeenCalled();
@@ -126,6 +131,7 @@ describe('validate-html', () => {
     await runValidateHtml({
       files: 'dist/**/*.html',
       ignore: ['**/assets/**'],
+      report: 'report-w3c.txt',
     });
 
     expect(consoleErrorMock).toHaveBeenCalled();
@@ -141,8 +147,22 @@ describe('validate-html', () => {
     await runValidateHtml({
       files: 'dist/**/*.html',
       ignore: ['**/assets/**'],
+      report: 'report-w3c.txt',
     });
 
     expect(writeMock).toHaveBeenCalledWith(expect.stringContaining('✨ No violations.'));
+  });
+
+  it('runValidateHtml => closes the report stream', async () => {
+    syncMock.mockReturnValue(['dist/index.html']);
+
+    const { runValidateHtml } = await import('@scripts-node/commands/validate-html');
+    await runValidateHtml({
+      files: 'dist/**/*.html',
+      ignore: ['**/assets/**'],
+      report: 'report-w3c.txt',
+    });
+
+    expect(endMock).toHaveBeenCalledTimes(1);
   });
 });
