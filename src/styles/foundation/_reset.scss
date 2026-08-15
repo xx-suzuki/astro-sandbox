@@ -56,3 +56,13 @@ summary {
 summary::-webkit-details-marker {
   display: none;
 }
+
+dialog {
+  max-width: none;
+  max-height: none;
+  padding: inherit;
+
+  &::backdrop {
+    background: transparent;
+  }
+}
