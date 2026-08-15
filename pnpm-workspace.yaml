@@ -13,3 +13,10 @@ supportedArchitectures:
 # npm の package.json overrides は pnpm では無効。pnpm は parent>child 構文で指定する。
 overrides:
   '@markuplint/file-resolver>minimatch': '^10.2.2'
+
+# 公開直後の版を避ける（サプライチェーン対策）
+minimumReleaseAge: 4320 # 3 days
+
+# 信頼レベルが下がった版を弾く。30 日より古い版は対象外
+trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 43200 # 30 days
