@@ -1,67 +1,214 @@
-# Global AGENT Guidance
+# AGENTS.md
 
-このリポジトリで作業するエージェント向けのグローバル方針です。プロジェクト配下すべてに適用します。
+このリポジトリで作業するエージェント（Codex・Claude Code等）向けのグローバル方針です。プロジェクト配下すべてに適用します。
+
+---
 
 ## Language Policy
+
 - 常に日本語で応答してください。
-- 回答はわかりやすく簡潔に、箇条書きと箇条書きの入れ子、改行を使用して整理すること。
+- 回答はわかりやすく簡潔に、箇条書きと改行を使って整理すること。
+
+---
 
 ## 1. 技術スタック / 前提
-- Astro + TypeScript + SCSS（FLOCSS/BEM）
-- 依存管理は npm（`npm ci` 前提）
-- TypeScript は strict 相当（`astro/tsconfigs/strictest`）
+
+- 静的サイト用の開発環境。CMS へのアップロードや差分納品を想定し、**出力ファイル名をハッシュ化しない**構成を維持すること。
+- フレームワーク: Astro 5（`output` は静的生成、`trailingSlash: 'always'`、`compressHTML: false`）
+- ビルド: Vite 6 / Rollup（`build:vite` は `BUILD_BY=vite` で JS バンドルを生成）
+- 言語: TypeScript（`astro/tsconfigs/strictest` 準拠）
+- CSS: SCSS + FLOCSS + BEM（`destyle.css` ベース、PostCSS / autoprefixer / postcss-sort-media-queries）
+- Node タスク: `scripts/node/**` の TypeScript を `tsx` で直接実行
+- テスト: Vitest（`cli` / `frontend` の 2 プロジェクト構成）
+- 静的解析: ESLint（flat config）/ Stylelint / Prettier / markuplint / html-validate
+- 雛形生成: Plop（`plopfile.ts`）
+- Git フック: husky + lint-staged
+- ランタイム: Node.js `^24` / pnpm `^11`。`package.json` の `devEngines` で `onFail: "error"` 固定のため、**npm / yarn は使わない**。
+- パッケージマネージャ設定は `pnpm-workspace.yaml`（`overrides` は npm 形式ではなく pnpm の `parent>child` 構文を使う）。
+
+---
 
 ## 2. ディレクトリ方針
-- `src/pages/`：ページ（Astro ルーティング）
-- `src/layouts/`：ページ共通レイアウト
-- `src/components/component/`：汎用コンポーネント
-- `src/components/projects/`：プロジェクト固有コンポーネント
-- `src/styles/`：FLOCSS 構成
-  - `foundation/` `layout/` `object/component|project|utility/`
-- `src/assets/images/`：画像
-- `src/assets/svg-sprite/`：SVG Sprite の元ファイル
-- `project.config.ts`：パス/出力設定の単一ソース
 
-## 3. パス / import ルール
-- `@/*` は `src/*`
-- `@root/*` はリポジトリ直下
-- 例：`@/components/...`、`@root/project.config`
+- `src/abstracts/` : 抽象クラス（`Module` 基底クラスなど）
+- `src/assets/` : ビルドで加工する画像・SVG スプライト元データ（`svg-sprite/*.svg`）
+- `src/components/component/` : 汎用 Astro コンポーネント（FLOCSS の `c-`）
+- `src/components/projects/` : プロジェクト固有 Astro コンポーネント（FLOCSS の `p-`）
+- `src/constants/` : 定数（`as const` のオブジェクト）
+- `src/features/` : 機能単位のモジュール
+- `src/foundation/` : サイト全体で動く基盤スクリプト（`main.ts` から import）
+- `src/helper/` : 汎用ヘルパー。`src/helper/node/` はビルド時（Astro フロントマター等）で使うもの
+- `src/layouts/` : ページ構造の Astro コンポーネント
+- `src/pages/` : Astro のルーティング対象
+- `src/styles/` : SCSS（`setting` / `tool` / `foundation` / `layout` / `object` の FLOCSS 構成）
+- `src/types/` : 型定義
+- `scripts/node/commands/` : npm scripts から実行するタスク本体
+- `scripts/node/core/` : タスク共通基盤（`context.ts` = モード解決、`watch.ts` = chokidar 監視）
+- `scripts/node/helper/` : タスク用ヘルパー（`cli-args.ts` = 引数解析 など）
+- `scripts/node/__test__/` : `commands` / `core` / `helper` のディレクトリ構成をミラーしたテスト
+- `static/` : そのままコピーする静的ファイル（`static/assets` → `.tmp/assets`、`static/root` → `.tmp`）
+- `plop/` : Plop のテンプレート（`.hbs`）
+- `.tmp/` : Astro の `publicDir`（生成物。直接編集しない）
+- `dist/` : ビルド出力（直接編集しない）
+- `project.config.ts` : プロジェクト共通設定の単一の情報源
+- `.agents/skills/` : このリポジトリのスキル
 
-## 4. Astro / TypeScript コーディング規約
-- Astro のページは `Layout.astro` を基本レイアウトとして使用
-- フロントマターは `const` を基本とし、必要最小限の宣言に留める
-- 使い捨ての値・関数はインライン化を優先
-- `any` は使用禁止、型は可能な限り明示
-- 型定義は `type` を優先（必要時のみ定義）
-- ローカル関数は短い場合は `function` も許容（既存コードに準拠）
-- 変数命名は役割先頭（`stateX` / `setX` / `refX` / `onX`）
+**パスエイリアス**（`tsconfig.json`）
 
-## 5. SCSS / 命名規約
-- FLOCSS 構成を厳守
-- BEM を基本とするクラス名
-  - `p-`（project） / `c-`（component） / `l-`（layout） / `u-`（utility）
-- `@use` でのモジュール参照を基本とする
+| エイリアス | 対象 |
+|---|---|
+| `@/*` | `src/*` |
+| `@scripts-node/*` | `scripts/node/*` |
+| `@root/*` | リポジトリルート |
 
-## 6. 生成・ビルド・検証
-- 開発：`npm run dev`
-- ビルド：`npm run build`
-- 静的解析：`npm run check`
-- 自動修正：`npm run fix`
-- テスト：`npm test`
-- 画像最適化 / SVG Sprite / 静的コピーは npm script に含まれる
+相対パスではなく上記エイリアスを使うこと（SCSS の `@use` は相対パスのままでよい）。
 
-## 7. 変更時の注意
-- `dist/` や `.tmp/` など生成物は直接編集しない
-- 画像や SVG の追加は所定フォルダに配置し、既存のスクリプトで反映
-- `project.config.ts` の設定を優先して参照する
+**生成物のため直接編集しないファイル**（`.gitignore` 済み）
 
-## 8. Change policy
-- 1PRは目的を1つに絞る
-- 既存の設計・命名に合わせる（大規模リファクタは別PR）
-- 変更前に「何を変えるか」→ 変更後に「何が変わったか」を短く示す
+- `src/styles/setting/variable/_breakpoint.scss`（Plop 生成）
+- `src/styles/setting/variable/_path.scss`（Plop 生成）
+- `src/styles/setting/variable/_svg.scss`（svg-sprite 生成）
+- `src/types/svg-sprite.ts`（svg-sprite 生成）
 
-## 9. プルリクのフォーマット
+値を変えたい場合は `project.config.ts` または `plop/styles/*.hbs`、`scripts/node/commands/svg-sprite.ts` を修正すること。
+
+---
+
+## 3. 実装ルール
+
+- 既存コードの書き方・命名・責務分割に合わせること。
+- 不要なモダン化や大規模な書式統一を勝手に行わないこと。
+- 自明な説明コメントは避け、WHY が非自明な場合のみコメントを残すこと。
+
+**プロジェクト固有ルール**
+
+- パス・ブレークポイント・出力ディレクトリなどの設定値は `project.config.ts` に集約し、各所へハードコードしないこと。
+- 出力ファイル名にハッシュを付けないこと（差分納品の前提が崩れる）。
+- Astro コンポーネントは `interface Props` を定義し、`Astro.props` から分割代入して既定値を与えること。
+- クラス付与は `class:list` を使い、`addClass` / `modifier` のような外部からの追加クラスを受け取れる形に揃えること。
+- ブラウザ実行スクリプトは `src/main.ts` を起点にし、環境判定は `src/constants/env.ts` の `Env` を使うこと（`import.meta.env` を直接散らさない）。
+- DOM を扱うクラスは `src/abstracts/module.ts` の `Module` を継承すること。
+- 状態クラスは `src/constants/state-classes.ts` の `StateClasses` を経由し、文字列リテラルを直書きしないこと。
+- SCSS の数値は `func.cv-rem()` などの `tool/function` を使い、生の `rem` 計算を書かないこと。
+- 新規 SCSS は FLOCSS の該当レイヤーに置き、同階層の `_index.scss` へ `@use` を追加すること。
+- `src/layouts/Layout.astro` は ESLint の対象外（`eslint.config.ts` の `ignores`）。変更時は手動で確認すること。
+- npm scripts のタスクを追加する場合は `scripts/node/commands/` に実装し、モード解決は `core/context.ts`、監視は `core/watch.ts`、引数解析は `helper/cli-args.ts` を再利用すること。
+- タスクは実処理を `runXxx()` として named export し、テストから直接呼べる形にすること。
+
+---
+
+## 4. コーディングスタイル / 命名規約
+
+**フォーマッタ / リンタ**
+
+- Prettier: シングルクォート、セミコロンあり、2 スペース、`printWidth: 100`（`.astro` のみ `200`）
+- ESLint: flat config（`eslint.config.ts`）。`typescript-eslint` / `perfectionist` / `unicorn` / `eslint-plugin-astro` を使用
+- Stylelint: `stylelint-config-recess-order` + `stylelint-config-recommended-scss`（プロパティ順は recess order）
+- `perfectionist` により import 順・オブジェクトキー順は自然順ソートが強制される。手で並べ替えず `pnpm fix` に任せること。
+- ファイル名にスペースを含めないこと（pre-commit フックで弾かれる）。
+
+**命名**
+
+| 対象 | 規則 | 例 |
+|---|---|---|
+| Astro コンポーネント | PascalCase | `BtnBasic.astro` |
+| TypeScript ファイル | kebab-case | `media-query-list.ts` |
+| SCSS パーシャル | `_kebab-case.scss` | `_btn-basic.scss` |
+| 関数・変数 | camelCase（アロー関数の named export） | `toUpperCamelCase` |
+| 定数オブジェクト | PascalCase + `as const` | `Env` / `StateClasses` |
+| 型・インターフェース | PascalCase | `Props` / `AppMode` |
+
+**CSS 設計（FLOCSS + BEM）**
+
+| プレフィックス | レイヤー | 配置 |
+|---|---|---|
+| なし | Foundation | `src/styles/foundation/` |
+| `l-` | Layout | `src/styles/layout/` |
+| `c-` | Component（汎用） | `src/styles/object/component/` |
+| `p-` | Project（固有） | `src/styles/object/project/` |
+| `u-` | Utility | `src/styles/object/utility/` |
+| `is-` | 状態 | `StateClasses` 経由で付与 |
+
+- BEM は `block__element--modifier`。要素セレクタのネストではなく、クラス名を分けて記述すること（`.c-btn-basic__link` の形）。
+- SCSS ファイル冒頭の `@use`（`setting` / `tool/function` / `tool/mixin`）は既存ファイルの記述順に合わせること。
+
+---
+
+## 5. 開発・ビルド・テスト コマンド
+
+パッケージマネージャは pnpm 固定。
+
+| コマンド | 内容 |
+|---|---|
+| `pnpm dev` | クリーン → 生成タスク → Astro dev + 各種 watch |
+| `pnpm build` | 静的サイト生成（clean → plop → copy → svg → img → astro → vite → fonts → html 整形） |
+| `pnpm preview` | ビルド結果のプレビュー |
+| `pnpm check` | `check:ts`（`tsc --noEmit`）と `check:astro`（`astro check`）を並列実行 |
+| `pnpm fix` | ESLint / Stylelint / Prettier の自動修正（`src` / 設定ファイル / `scripts/node`） |
+| `pnpm test` | Vitest 全プロジェクト + カバレッジ |
+| `pnpm test:cli` | `scripts/node/__test__/**` のみ実行 |
+| `pnpm test:frontend` | `src/**/*.{test,spec}.{ts,tsx}` のみ実行 |
+| `pnpm mul` | markuplint（`src/**/*.astro`） |
+| `pnpm w3c` | W3C バリデーション（`build` 後に実行、`report-w3c.txt` 出力） |
+| `pnpm audit:a11y` | `build:astro` → HTML 整形 → `w3c` |
+| `pnpm icon` | Font Awesome アイコンから SVG データを生成 |
+| `pnpm plop` | 雛形生成（`plop -- scss` / `comp` / `pro`） |
+
+**検証フロー**
+
+変更後は原則この順で実行すること。
+
+```bash
+pnpm fix && pnpm check && pnpm test:cli
 ```
+
+- Astro / SCSS を変更した場合は `pnpm mul`、マークアップ検証まで求められた場合は `pnpm build` 後に `pnpm w3c` を追加する。
+- コミット時は husky + lint-staged で `pnpm check` と ESLint / Stylelint / Prettier が自動実行される。
+
+**テスト方針**
+
+- フレームワークは Vitest。`globals: true` のため `describe` / `it` / `expect` は import 不要だが、既存テストに合わせて `vitest` から明示 import する。
+- Node タスクのテストは `scripts/node/__test__/<layer>/<name>.test.ts` に置き、対象と同じディレクトリ構成をミラーする。
+- import はエイリアス（`@scripts-node/*` / `@root/*`）で書く。
+- 外部ライブラリ（`fs-extra` / `fast-glob` / `sharp` 等）は `vi.mock` でモックし、プロジェクト内のコードは実実行させる。
+- モック定義後に `await import(...)` で対象を読み込む既存パターンに合わせる。
+- フロントエンド側（`frontend` プロジェクト）はテスト未整備で、`setupFiles` に指定された `src/test/setup.ts` も未作成。`src` 配下のテストを追加する場合は先に同ファイルを用意すること。
+
+---
+
+## 6. Git 運用
+
+- ブランチ: `main` から作業ごとに `feature/task-name` を作成（task-name は内容が分かる短い英語）。
+- 1PR は目的を 1 つに絞ること。
+- PR は Draft 状態で作成すること（`gh pr create` は `--draft` を付ける）。Open への切り替えは人間が `gh pr ready` で行う。
+- 大規模リファクタは別タスクとして扱うこと。
+- `vendor/` `node_modules/` など依存物やコア領域の直接編集は避けること。
+- GitHub CLI で改行を含む本文を送るときは `$'...\n...'` 形式を必ず使用すること。
+- issue に紐づく作業は `feature/<issue-number>-<short-name>`、issue がない場合は `feature/<short-name>`。
+- 生成物（`dist/` `.tmp/` `stats.html` `report-w3c.txt` `coverage/` および `.gitignore` 済みの SCSS / 型定義）はコミットしないこと。
+
+---
+
+## 7. コミットメッセージ
+
+- 書式は Conventional Commits（`<type>(<scope>): <subject>`）。subject は英語・小文字始まり・命令形で書く。
+  - 例: `refactor(scripts): migrate npm node tasks from cli to scripts/node and add core/watch architecture`
+  - 例: `chore(deps): update project dependencies and lockfile`
+  - 例: `docs(readme): refine AGENTS text`
+- `type` と `scope` の一覧は `.agents/skills/this-git-commit-writer/references/commit-types.md` を参照すること。
+- `a91cfe8` 以前は `feature:` `modify:` `chore:` などの旧書式が混在するが、新規コミットでは使わない（直近の `3693c13`〜`7a91a4c` が現行書式）。
+- コミット前に既存の git log を確認し、使われている書式に合わせること。
+- 実装とテストを同一コミットに含める場合、scope は主題となる実装レイヤーのみ記載すること。
+- コミット提案時は複数案を提示し、各案の主題・対象ファイルを明記すること。
+- 根拠として示せる場合は具体的なコミットハッシュやファイルパスを提示すること。
+
+---
+
+## 8. プルリクエスト フォーマット
+
+- 常体で簡潔に書き、書く必要のない項目は見出しごと削除すること（空欄や「特になし」だけの節を残さない）。
+
+```md
 ## Summary
 - 
 
@@ -79,53 +226,81 @@
 - 影響範囲・懸念:
 ```
 
-## 10. 依存関係とロックファイル
-- `node_modules/` はコミットしない
-- `package-lock.json` はコミット必須（`npm ci` 前提）
-- 依存関係を追加・更新した場合は `package-lock.json` の更新を含める
+---
 
-## 11. project.config.ts の編集ポリシー
-- 変更時は「影響範囲」を明記する（例: 出力パス、ビルド、アセット参照）
-- 設定の意図が不明確になる変更は避け、必要ならコメントで補足する
+## 9. 依存関係とロックファイル
 
-## 12. コミットメッセージ
-- 英語で Conventional Commits に沿って適切なメッセージを作成する  
-  例：`feat: add hero section to the home`
+- 依存を追加・更新した場合はロックファイル（`package-lock.json` / `pnpm-lock.yaml` / `composer.lock` 等）を更新に含めること。
+- `node_modules/` `vendor/` 等はコミット対象にしないこと。
+- 依存追加は影響範囲を明記し、無関係な一括更新を避けること。
 
-## 13. エージェント手順（スキル作成・ドキュメント）
-- Markdown ファイルとコードコメントに絵文字は使用しない
-- テーブルではチェックマークの代わりに `Yes/No` を使用する
-- 例は簡潔かつ焦点を絞る
-- コード例のコメントは `// Bad:` と `// Good:` を使用する
-- 各スキルトピックに必須の構成
-  - 明確な見出しと短い説明
-  - 検出ルールやパターン（該当する場合）
-  - Bad/Good のコード例
-  - 末尾のクイックリファレンステーブル
-- コード例の形式
-  - `// Bad:` に問題点の説明、`// Good:` に解決策の説明を書く
-  - 例
-    ```tsx
-    // Bad: description of the problem
-    <problematic code>
+---
 
-    // Good: description of the solution
-    <correct code>
-    ```
+## 10. ドキュメント / スキル作成ルール
 
-## 14. スキル参照ポリシー
-- スキルの探索・読み込みはこのリポジトリ配下の `./.codex/skills/**` のみを対象とする
-- `$skill` も直指定のスキル名も、必ず `./.codex/skills/**` から解決する
-- `/Users/{user}/.codex/skills` などのグローバル領域は参照しない
-- 必要なスキルが見つからない場合は、その旨を伝えて作業を止めずに代替案で進める
+- Markdown ファイルとコードコメントに絵文字は使用しないこと。
+- テーブルではチェックマークの代わりに `Yes/No` を使用すること。
+- 例は簡潔かつ焦点を絞ること。
+- コード例のコメントは `// Bad:` と `// Good:` を使用すること。
 
-## 15. Security & secrets
+---
+
+## 11. スキル参照ポリシー
+
+- スキルの探索・読み込みはこのリポジトリ配下の `./.agents/skills/**` のみを対象とすること。
+- リポジトリ外のスキル領域（グローバル領域等）は参照しないこと。
+- 必要なスキルが見つからない場合は、その旨を伝えて代替案で進めること。
+
+## 12. スキルのカスタマイズ方針
+
+ベーススキルをこのプロジェクト固有の内容に書き換える際は、以下の方針に従うこと。
+
+**プロジェクト固有化の手順**
+- `AGENTS.md`（このファイル）と `README.md`、既存コードの実装ルール・命名規則・コミット履歴を確認した上でスキルを更新する。
+- ベーススキルに含まれる `<!-- TODO: ... -->` コメントをプロジェクト固有の内容に置き換える。
+- プロジェクトで使わない手順・観点は削除してよい。
+
+**references への分離ルール**
+
+`SKILL.md` の内容が膨らんだ場合は、以下を目安に `references/` へ分離すること。
+
+| 分離する目安 | 例 |
+|---|---|
+| ルール・チェックリストが 10 項目を超える | レビュー観点一覧、lint ルール一覧 |
+| scope・type など選択肢の一覧が長い | コミット scope 一覧、ブランチ命名規則 |
+| 複数スキルから参照される共通ルール | 検証コマンド一覧、命名規約 |
+| SKILL.md が 100 行を超えて読みづらくなった | フロー本体に集中できるよう補足情報を分離 |
+
+**分離後の参照方法**
+```
+.agents/skills/this-git-commit-writer/
+├── SKILL.md                     ← 実行フロー・判断ルールを記載
+└── references/
+    └── commit-types.md          ← scope 一覧・書式ルールなど
+```
+
+`SKILL.md` 内では `references/commit-types.md を参照` のように明記する。
+
+---
+
+## 13. AI 支援運用
+
+- このファイル（AGENTS.md）と README.md に記載されたルールは、特に再掲しなくても自動的に適用される前提とする。
+- `CLAUDE.md` は `AGENTS.md` へのシンボリックリンクとして管理する。`AGENTS.md` を編集し、`CLAUDE.md` を個別に編集・置換しないこと。
+- コマンド・ディレクトリ構造・テスト方針の仕様を変更した場合は README.md と AGENTS.md の記述を同期すること。
+- 過去の運用や前例に倣うと述べる場合は、具体的な根拠（コミットハッシュ・ファイルパス等）を提示すること。根拠が示せない場合は推測である旨を明記してユーザーに確認を取ること。
+
+---
+
+## 14. Security & Secrets
+
 **Critical Rule: Never Expose Secrets**
-- Never read, print, or expose any API keys, secrets, private keys, or credentials from .env files, config files, or environment variables. If asked to show them, refuse.
 
-**Do NOT:**
-- read `.env` or similar files without explicit approval,
-- print environment variables or full config contents into chat, logs, or comments.
+- API キー、秘密鍵、トークン、パスワード、認証情報を読まない・出力しない・埋め込まないこと。
+- `.env` や類似ファイルは、明示的な承認なしに読まないこと。
+- 環境変数や設定ファイル全文をチャット・ログ・コメントに出力しないこと。
+- SSH 鍵・証明書・機微情報ファイルを安易に開かないこと。
+
 ```json
 {
   "deny": [
@@ -146,6 +321,21 @@
 }
 ```
 
-## Destructive operations
-- データ削除・大規模リネーム・大量ファイル移動・依存一括更新などは、実行前に必ず確認を求めること。
-- ExecPlan には rollback 手順（戻し方）を必ず書くこと。
+---
+
+## 15. Destructive Operations
+
+- データ削除・DB 操作・大規模リネーム・大量ファイル移動・依存一括更新は実行前に必ず確認を求めること。
+- ExecPlan を示す場合は rollback 手順を必ず含めること。
+- 破壊的操作は対象環境を明記した上で承認を取ること。
+
+---
+
+## 16. コスト管理
+
+- **追加料金が発生するような操作は行わないこと**
+  - 有料 API の無断使用
+  - 高コストなモデル（Fable5 等）への自動切り替え
+  - 大量トークンを消費するバッチ処理の自動実行
+  - 外部有料サービスへのリクエスト
+- コストに影響する判断が必要な場合は、**必ず事前に確認を取ること**
