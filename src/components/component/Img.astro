@@ -23,18 +23,14 @@ const attribute = {
 
 <picture {...pictureProps}>
   {
-    ext === '.svg' ? (
-      <img alt={alt} decoding="async" src={src} {...attribute} />
-    ) : (
-      <>
-        <source
-          height={height}
-          srcset={`${assetDir}/${name}.avif`}
-          type="image/avif"
-          width={width}
-        />
-        <img alt={alt} decoding="async" src={`${assetDir}/${name}${ext}`} {...attribute} />
-      </>
+    ext !== '.svg' && (
+      <source height={height} srcset={`${assetDir}/${name}.avif`} type="image/avif" width={width} />
     )
   }
+  <img
+    alt={alt}
+    decoding="async"
+    src={ext === '.svg' ? src : `${assetDir}/${name}${ext}`}
+    {...attribute}
+  />
 </picture>
