@@ -1,4 +1,11 @@
-import type { AvifOptions, GifOptions, JpegOptions, PngOptions, WebpOptions } from 'sharp';
+import type {
+  AvifOptions,
+  FormatEnum,
+  GifOptions,
+  JpegOptions,
+  PngOptions,
+  WebpOptions,
+} from 'sharp';
 import type { Config as SvgOptions } from 'svgo';
 
 import { applyMode } from '@scripts-node/core/context';
@@ -60,7 +67,7 @@ const options: Options = {
 
 // ----------------------------------
 // functions
-const isSharpFormat = (format: string): format is keyof sharp.FormatEnum => {
+const isSharpFormat = (format: string): format is Extract<keyof FormatEnum, string> => {
   return Object.keys(sharp.format).includes(format);
 };
 
@@ -76,7 +83,8 @@ const imageMin = async (file: string): Promise<void> => {
   const fileName = path.basename(file, fileExtname);
 
   // dir
-  const outFile = file.replace(config.base, config.outDir);
+  // 置換文字列に `$&` 等が含まれても解釈されないよう関数形式で渡す
+  const outFile = file.replace(config.base, () => config.outDir);
   const outDir = path.dirname(outFile);
   createFolder(outDir);
 

@@ -1,4 +1,3 @@
-import type { PreRenderedAsset } from 'rollup';
 import type { Plugin, PluginOption, UserConfigExport } from 'vite';
 
 import path from 'node:path';
@@ -22,7 +21,7 @@ const viteConfig: UserConfigExport = {
         main: './src/main.ts',
       },
       output: {
-        assetFileNames: (chunkInfo: PreRenderedAsset) => resolveAssetFileName(chunkInfo),
+        assetFileNames: (chunkInfo) => resolveAssetFileName(chunkInfo),
         chunkFileNames: `${assetsDir.javascript.outDir}/[name].js`,
         entryFileNames: `${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`,
         manualChunks: (id) => {
@@ -48,23 +47,24 @@ const viteConfig: UserConfigExport = {
 
 export default defineConfig(isInit ? viteConfig : {});
 
-const resolveAssetFileName = (chunkInfo: PreRenderedAsset) => {
-  const imgExt = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
-  const cssExt = ['css'];
+// rollup / rolldown で PreRenderedAsset の型が異なるため、参照するプロパティのみを構造的に受け取る
+const resolveAssetFileName = (chunkInfo: { names?: readonly string[] }) => {
+  const imgExtension = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
+  const cssExtension = ['css'];
   const name = chunkInfo.names?.[0];
   if (!name) return '';
 
   const fileExtname = path.extname(name);
-  const fileExt = fileExtname.slice(1);
+  const fileExtension = fileExtname.slice(1);
   const fileName = path.basename(name);
 
-  if (fileExt && imgExt.includes(fileExt)) {
+  if (fileExtension && imgExtension.includes(fileExtension)) {
     return `${assetsDir.images.outDir}/${fileName}`;
-  } else if (fileExt && cssExt.includes(fileExt)) {
-    return `${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`;
-  } else {
-    return `${name}`;
   }
+  if (fileExtension && cssExtension.includes(fileExtension)) {
+    return `${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`;
+  }
+  return name;
 };
 
 function ignoreAssetWarnings(): Plugin {
@@ -72,12 +72,12 @@ function ignoreAssetWarnings(): Plugin {
     apply: 'build',
     configResolved() {
       const original = console.warn;
-      console.warn = (...args: unknown[]) => {
-        const msg = args[0];
-        if (typeof msg === 'string' && msg.includes("didn't resolve at build time")) {
+      console.warn = (...arguments_: unknown[]) => {
+        const message = arguments_[0];
+        if (typeof message === 'string' && message.includes("didn't resolve at build time")) {
           return;
         }
-        original(...args);
+        original(...arguments_);
       };
     },
     name: 'intercept-console-warn',

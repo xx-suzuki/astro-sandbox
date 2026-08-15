@@ -46,7 +46,7 @@ class Layout {
       this.windowWidth > breakpoints.sp
         ? Math.min(this.documentWidth / designSize.pc, 1)
         : this.documentWidth / designSize.sp;
-    document.documentElement.style.setProperty('--size-rate', `${decimalPart(sizeRate, 3)}`);
+    document.documentElement.style.setProperty('--size-rate', String(decimalPart(sizeRate, 3)));
   }
 }
 

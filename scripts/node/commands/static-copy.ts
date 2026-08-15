@@ -47,7 +47,8 @@ const copyStaticFile = async (file: string, mode: AppMode): Promise<void> => {
   if (!target) return;
 
   // Copy
-  const outFile = file.replace(target.base, target.outDir);
+  // 置換文字列に `$&` 等が含まれても解釈されないよう関数形式で渡す
+  const outFile = file.replace(target.base, () => target.outDir);
   await fs.copy(file, outFile);
   consoleSize(outFile);
 };

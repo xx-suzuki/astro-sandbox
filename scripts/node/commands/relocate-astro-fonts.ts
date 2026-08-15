@@ -29,9 +29,10 @@ async function init(options: Options) {
 
   for (const htmlPath of htmlFiles) {
     const content = await fs.readFile(htmlPath, 'utf8');
+    // targetFontPath に `$&` 等が含まれても解釈されないよう関数形式で渡す
     const updatedContent = content.replaceAll(
       /\/_astro\/fonts\/([^"')]+)/g,
-      `/${targetFontPath}/$1`,
+      (_match, fileName: string) => `/${targetFontPath}/${fileName}`,
     );
     if (content !== updatedContent) {
       await fs.writeFile(htmlPath, updatedContent, 'utf8');

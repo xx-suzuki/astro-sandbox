@@ -42,5 +42,5 @@ export const consoleDone = (task: string = taskName, file = ''): void => {
 };
 
 export const consolePreview = (url: string, task: string = taskName): void => {
-  console.log(`${color.gray(`[${task}]`)} Preview >> ${color.yellow(`${url}`)}`);
+  console.log(`${color.gray(`[${task}]`)} Preview >> ${color.yellow(url)}`);
 };

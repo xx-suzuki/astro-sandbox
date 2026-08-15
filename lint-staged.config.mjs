@@ -1,5 +1,5 @@
 export default {
-  '*.{ts,astro}': [() => 'npm run check'],
+  '*.{ts,astro}': [() => 'pnpm run check'],
   './*.{js,mjs,ts}': [
     'eslint -c eslint.config.ts --fix',
     'prettier --write --no-error-on-unmatched-pattern',

@@ -1,0 +1,15 @@
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  sharp: true
+
+# 実 CPU(arm64) と Node の arch がズレる環境でもネイティブモジュール(sharp 等)が
+# 解決できるよう、x64 / arm64 双方のプラットフォームバイナリを取得する。
+supportedArchitectures:
+  cpu:
+    - x64
+    - arm64
+
+# npm の package.json overrides は pnpm では無効。pnpm は parent>child 構文で指定する。
+overrides:
+  '@markuplint/file-resolver>minimatch': '^10.2.2'
