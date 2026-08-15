@@ -22,7 +22,7 @@
 - `interface Props` を定義し、`Astro.props` から分割代入して既定値を与えているか
 - クラス付与に `class:list` を使い、`addClass` / `modifier` を受け取れる形になっているか
 - 汎用コンポーネントを `src/components/component/`、固有コンポーネントを `src/components/projects/` に置いているか
-- markuplint / jsx-a11y に抵触するマークアップになっていないか（`pnpm mul` で確認）
+- markuplint / jsx-a11y に抵触するマークアップになっていないか（`pnpm check:markup` で確認）
 - `src/layouts/Layout.astro` は ESLint 対象外のため、変更時は手動で確認したか
 
 ## SCSS

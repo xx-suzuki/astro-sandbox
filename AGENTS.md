@@ -104,7 +104,7 @@
 - Prettier: シングルクォート、セミコロンあり、2 スペース、`printWidth: 100`（`.astro` のみ `200`）
 - ESLint: flat config（`eslint.config.ts`）。`typescript-eslint` / `perfectionist` / `unicorn` / `eslint-plugin-astro` を使用
 - Stylelint: `stylelint-config-recess-order` + `stylelint-config-recommended-scss`（プロパティ順は recess order）
-- `perfectionist` により import 順・オブジェクトキー順は自然順ソートが強制される。手で並べ替えず `pnpm fix` に任せること。
+- `perfectionist` により import 順・オブジェクトキー順は自然順ソートが強制される。手で並べ替えず `pnpm format` に任せること。
 - ファイル名にスペースを含めないこと（pre-commit フックで弾かれる）。
 
 **命名**
@@ -138,31 +138,58 @@
 
 パッケージマネージャは pnpm 固定。
 
+npm scripts は接頭辞で役割を分けている。
+
+| 接頭辞 | 役割 |
+|---|---|
+| `dev` | ローカル起動 |
+| `build` | 納品生成 |
+| `watch` | 監視（初回生成なし） |
+| `create` | 生成 |
+| `check` | 検証 |
+| `format` | 整形 |
+| `test` | テスト |
+| `report` | ビルド成果物に対するレポート出力 |
+
 | コマンド | 内容 |
 |---|---|
 | `pnpm dev` | クリーン → 生成タスク → Astro dev + 各種 watch |
 | `pnpm build` | 静的サイト生成（clean → plop → copy → svg → img → astro → vite → fonts → html 整形） |
 | `pnpm preview` | ビルド結果のプレビュー |
-| `pnpm check` | `check:ts`（`tsc --noEmit`）と `check:astro`（`astro check`）を並列実行 |
-| `pnpm fix` | ESLint / Stylelint / Prettier の自動修正（`src` / 設定ファイル / `scripts/node`） |
+| `pnpm check` | `check:*` を並列実行（`check:ts` / `check:astro` / `check:markup`） |
+| `pnpm check:ts` | `tsc --noEmit` |
+| `pnpm check:astro` | `astro check` |
+| `pnpm check:markup` | markuplint（`src/**/*.astro`） |
+| `pnpm format` | ESLint / Stylelint / Prettier の自動修正（`src` / 設定ファイル / `scripts/node`）を逐次実行 |
 | `pnpm test` | Vitest 全プロジェクト + カバレッジ |
-| `pnpm test:cli` | `scripts/node/__test__/**` のみ実行 |
+| `pnpm test:scripts` | `scripts/node/__test__/**` のみ実行 |
 | `pnpm test:frontend` | `src/**/*.{test,spec}.{ts,tsx}` のみ実行 |
-| `pnpm mul` | markuplint（`src/**/*.astro`） |
-| `pnpm w3c` | W3C バリデーション（`build` 後に実行、`report-w3c.txt` 出力） |
-| `pnpm audit:a11y` | `build:astro` → HTML 整形 → `w3c` |
-| `pnpm icon` | Font Awesome アイコンから SVG データを生成 |
+| `pnpm report:w3c` | HTML 検証用ビルド（astro → fonts → html 整形）後に W3C バリデーションを実行し `report-w3c.txt` を出力 |
+| `pnpm create:icon` | Font Awesome アイコンから SVG データを生成 |
 | `pnpm plop` | 雛形生成（`plop -- scss` / `comp` / `pro`） |
+
+**`check:*` に追加してよいもの**
+
+`pnpm check` は `run-p "check:*"` で全メンバーを自動実行し、さらに lint-staged 経由で**コミットの度に走る**。そのため `check:*` に置いてよいのは以下を満たすものに限る。
+
+- 静的解析であること（ビルド成果物を前提にしない）
+- ファイルを書き換えないこと（`dist/` `.tmp/` を含め副作用がない）
+
+ビルドを伴う検証は `check:*` ではなく `report:*` に置くこと。`report:w3c` を `check:w3c` にすると、コミットの度にビルドが走り、`dist/` が納品できない状態に上書きされる。
+
+**`report:w3c` がフルビルドを使わない理由**
+
+`build:copy` / `build:svg` / `build:img` / `build:vite` は画像・SVG・JS を生成するだけで HTML を書き換えないため省略している。一方 `build:fonts` は HTML 内のフォントパスを `/_astro/fonts/...` → `/assets/fonts/...` へ書き換えるため**必須**。これを省くと納品されない HTML を検証することになり、`dist/` にハッシュ付きの `_astro/` が残る。
 
 **検証フロー**
 
 変更後は原則この順で実行すること。
 
 ```bash
-pnpm fix && pnpm check && pnpm test:cli
+pnpm format && pnpm check && pnpm test:scripts
 ```
 
-- Astro / SCSS を変更した場合は `pnpm mul`、マークアップ検証まで求められた場合は `pnpm build` 後に `pnpm w3c` を追加する。
+- マークアップ検証まで求められた場合は `pnpm report:w3c` を追加する（内部で検証用ビルドまで行うため、事前の `pnpm build` は不要）。
 - コミット時は husky + lint-staged で `pnpm check` と ESLint / Stylelint / Prettier が自動実行される。
 
 **テスト方針**

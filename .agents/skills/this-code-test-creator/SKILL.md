@@ -41,7 +41,7 @@ description: 本プロジェクトの AGENTS.md・既存テスト規約に沿っ
    - テスト追加のために production コード修正が必要な場合は、勝手に変更せず確認する
 
 6. 検証する
-   - `pnpm fix` → `pnpm check` → 対象テスト（`pnpm test:cli` または `pnpm test:frontend`）の順で進める
+   - `pnpm format` → `pnpm check` → 対象テスト（`pnpm test:scripts` または `pnpm test:frontend`）の順で進める
    - カバレッジまで確認する場合のみ `pnpm test` を使う
    - 失敗した場合は原因を特定し、テストまたは必要最小限の実装を修正して再検証する
 
