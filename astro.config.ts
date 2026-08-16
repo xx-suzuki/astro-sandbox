@@ -14,8 +14,11 @@ export default defineConfig({
   fonts: [
     {
       cssVariable: '--font-main',
+      display: 'swap',
       name: 'Noto Sans JP',
       provider: fontProviders.google(),
+      styles: ['normal'],
+      weights: [300, 500, 700],
     },
   ],
   integrations: [sitemap()],
