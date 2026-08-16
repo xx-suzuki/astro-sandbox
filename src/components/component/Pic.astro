@@ -2,10 +2,9 @@
 import type { HTMLAttributes } from 'astro/types';
 
 import { breakpoints } from '@root/project.config';
-import { imageSize } from 'image-size';
-import fs from 'node:fs';
 
-import { assetPath, getFileData } from '@/helper/node/path';
+import { getImageData } from '@/helper/node/image';
+import { getFileData } from '@/helper/node/path';
 export interface Props {
   imageProps?: Omit<HTMLAttributes<'img'>, 'src'>;
   pictureProps?: HTMLAttributes<'picture'>;
@@ -13,13 +12,9 @@ export interface Props {
   srcSp: string;
 }
 const { imageProps, pictureProps, srcPc, srcSp } = Astro.props;
-const buffers = {
-  pc: fs.readFileSync(assetPath(srcPc)),
-  sp: fs.readFileSync(assetPath(srcSp)),
-};
 const size = {
-  pc: imageSize(buffers.pc),
-  sp: imageSize(buffers.sp),
+  pc: getImageData(srcPc),
+  sp: getImageData(srcSp),
 };
 const data = {
   pc: getFileData(srcPc),

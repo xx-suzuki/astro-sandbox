@@ -1,17 +1,14 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-import { imageSize } from 'image-size';
-import fs from 'node:fs';
-
-import { assetPath, getFileData } from '@/helper/node/path';
+import { getImageData } from '@/helper/node/image';
+import { getFileData } from '@/helper/node/path';
 export type Props = Omit<HTMLAttributes<'img'>, 'src'> & {
   pictureProps?: HTMLAttributes<'picture'>;
   src: string;
 };
 const { alt = '', pictureProps, src, ...restProps } = Astro.props;
-const buffer = fs.readFileSync(assetPath(src));
-const { height, width } = imageSize(buffer);
+const { height, width } = getImageData(src);
 const { assetDir, ext, name } = getFileData(src);
 
 const attribute = {
