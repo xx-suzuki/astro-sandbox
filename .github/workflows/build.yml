@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  # main へのマージで自動実行する場合は下記を有効化する
+  # push:
+  #   branches:
+  #     - main
+  #   paths-ignore:
+  #     - '**.md'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # node / pnpm のバージョンは mise.toml を単一の情報源にする
+      - name: Setup runtime
+        uses: jdx/mise-action@v2
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 生成済み画像を再利用する。restore-keys により、変更のあった画像だけが再生成される
+      - name: Restore image cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/images
+          key: images-${{ hashFiles('src/assets/images/**', 'scripts/node/commands/image-min.ts', 'project.config.ts') }}
+          restore-keys: |
+            images-
+
+      - name: Build
+        run: pnpm build
+
+      - name: Set current datetime as env variable
+        env:
+          TZ: 'Asia/Tokyo'
+        run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d %H:%M')" >> $GITHUB_ENV
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: dist/production
+          folder: dist
+          commit-message: 'production: ${{ env.CURRENT_DATETIME }}'
