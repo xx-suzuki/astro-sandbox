@@ -48,7 +48,7 @@
 - `scripts/node/__test__/` : `commands` / `core` / `helper` のディレクトリ構成をミラーしたテスト
 - `static/` : そのままコピーする静的ファイル（`static/assets` → `.tmp/assets`、`static/root` → `.tmp`）
 - `plop/` : Plop のテンプレート（`.hbs`）
-- `.cache/images/` : 画像生成のキャッシュとマニフェスト（生成物。`clean` の対象外）
+- `.cache/` : 各種キャッシュの集約先（生成物。`clean` の対象外）。`images` = 画像生成とマニフェスト、`astro` / `vite-astro` / `vite` / `vitest` / `tsc` = 各ツール、`eslint` / `stylelint` / `prettier` = 静的解析
 - `.tmp/` : Astro の `publicDir`（生成物。直接編集しない）
 - `dist/` : ビルド出力（直接編集しない）
 - `project.config.ts` : プロジェクト共通設定の単一の情報源
@@ -179,6 +179,16 @@ npm scripts は接頭辞で役割を分けている。
 - ファイルを書き換えないこと（`dist/` `.tmp/` を含め副作用がない）
 
 ビルドを伴う検証は `check:*` ではなく `report:*` に置くこと。`report:w3c` を `check:w3c` にすると、コミットの度にビルドが走り、`dist/` が納品できない状態に上書きされる。
+
+**キャッシュの置き場所**
+
+ツールのキャッシュは `.cache/` に集約している（`node_modules` を削除しても残り、CI では `actions/cache` の対象を 1 箇所にまとめられる）。
+
+- Astro: `astro.config.ts` の `cacheDir`、内部 Vite は `vite.cacheDir`
+- Vite（`build:vite`）/ Vitest: 各設定ファイルの `cacheDir`
+- TypeScript: `tsconfig.json` の `incremental` と `tsBuildInfoFile`（`check:ts` の差分検査）
+- ESLint / Stylelint / Prettier: `package.json` の `--cache-location`。**対象ファイル群ごとに別の場所を指定する**こと（共有すると互いのキャッシュを打ち消す）
+- 例外: ルートの `.astro/` は生成型と dev サーバー情報の置き場で移動できない。pnpm ストアは複数プロジェクトで共有する前提のためグローバルのまま使う
 
 **画像生成のキャッシュ**
 
