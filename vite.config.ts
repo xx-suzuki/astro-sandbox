@@ -41,6 +41,7 @@ const viteConfig: UserConfigExport = {
       toplevel: true,
     },
   },
+  cacheDir: '.cache/vite',
   plugins: [visualizer() as unknown as PluginOption, ignoreAssetWarnings()],
   publicDir: tmpDir,
   resolve: {

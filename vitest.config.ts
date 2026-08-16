@@ -16,6 +16,7 @@ const sharedTestConfig = {
 };
 
 export default defineConfig({
+  cacheDir: '.cache/vitest',
   resolve: {
     tsconfigPaths: true,
   },

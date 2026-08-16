@@ -60,7 +60,6 @@ export const designSize = {
 // image-min.ts
 export const imageMin = {
   base: 'src/assets/images',
-  // 生成物のキャッシュ。.tmp の外に置き、clean-up の対象にしない
   cacheDir: '.cache/images',
   files: 'src/assets/images/**/*.{jpg,jpeg,png,gif,svg,webp}',
   manifest: '.cache/images/manifest.json',
@@ -74,7 +73,6 @@ export const svgSprite = {
   files: 'src/assets/svg-sprite/*.svg',
   outDir: `${tmpDir}/${assetsDir.sprite.outDir}`,
   outName: assetsDir.sprite.outName,
-  // 生成物。直接編集しない
   scssPath: 'src/styles/setting/variable/_svg.scss',
   typesPath: 'src/types/svg-sprite.ts',
 };

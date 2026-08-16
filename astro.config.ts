@@ -7,6 +7,7 @@ const { DEV_PORT } = loadEnv(import.meta.env.MODE, process.cwd(), '');
 
 export default defineConfig({
   base: baseDir,
+  cacheDir: '.cache/astro',
   compressHTML: false,
   devToolbar: {
     enabled: false,
@@ -37,6 +38,7 @@ export default defineConfig({
     build: {
       emptyOutDir: false,
     },
+    cacheDir: '.cache/vite-astro',
     css: {
       devSourcemap: true,
     },

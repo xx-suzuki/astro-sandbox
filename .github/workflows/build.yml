@@ -28,14 +28,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 生成済み画像を再利用する。restore-keys により、変更のあった画像だけが再生成される
-      - name: Restore image cache
+      # 画像・Astro・Vite・Lint のキャッシュは .cache 配下に集約している。
+      # restore-keys により、完全一致しなくても直近のキャッシュを再利用できる
+      - name: Restore build cache
         uses: actions/cache@v4
         with:
-          path: .cache/images
-          key: images-${{ hashFiles('src/assets/images/**', 'scripts/node/commands/image-min.ts', 'project.config.ts') }}
+          path: .cache
+          key: cache-${{ hashFiles('src/assets/images/**', 'pnpm-lock.yaml', 'scripts/node/commands/image-min.ts', 'project.config.ts') }}
           restore-keys: |
-            images-
+            cache-
 
       - name: Build
         run: pnpm build
