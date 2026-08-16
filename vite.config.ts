@@ -1,9 +1,8 @@
-import type { Plugin, PluginOption, UserConfigExport } from 'vite';
+import type { Plugin, PluginOption, Rolldown, UserConfigExport } from 'vite';
 
 import path from 'node:path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { assetsDir, outDir, tmpDir } from './project.config.ts';
 const isInit = process.env.BUILD_BY === 'vite';
@@ -16,7 +15,7 @@ const viteConfig: UserConfigExport = {
     emptyOutDir: false,
     minify: 'terser',
     outDir,
-    rollupOptions: {
+    rolldownOptions: {
       input: {
         main: './src/main.ts',
       },
@@ -36,22 +35,25 @@ const viteConfig: UserConfigExport = {
     terserOptions: {
       compress: {
         drop_console: true,
+        pure_getters: true,
       },
       mangle: true,
       toplevel: true,
     },
   },
-  plugins: [tsconfigPaths(), visualizer() as unknown as PluginOption, ignoreAssetWarnings()],
+  plugins: [visualizer() as unknown as PluginOption, ignoreAssetWarnings()],
   publicDir: tmpDir,
+  resolve: {
+    tsconfigPaths: true,
+  },
 };
 
 export default defineConfig(isInit ? viteConfig : {});
 
-// rollup / rolldown で PreRenderedAsset の型が異なるため、参照するプロパティのみを構造的に受け取る
-const resolveAssetFileName = (chunkInfo: { names?: readonly string[] }) => {
+const resolveAssetFileName = (chunkInfo: Rolldown.PreRenderedAsset) => {
   const imgExtension = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
   const cssExtension = ['css'];
-  const name = chunkInfo.names?.[0];
+  const name = chunkInfo.names[0];
   if (!name) return '';
 
   const fileExtname = path.extname(name);

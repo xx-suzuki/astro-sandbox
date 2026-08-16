@@ -1,5 +1,3 @@
-import tsconfigPaths from 'vite-tsconfig-paths';
-/// <reference types="vitest/config" />
 // @ts-check
 import { defineConfig } from 'vitest/config';
 
@@ -18,7 +16,9 @@ const sharedTestConfig = {
 };
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  resolve: {
+    tsconfigPaths: true,
+  },
   test: {
     projects: [
       {
