@@ -33,6 +33,10 @@ export const consoleError = (text: string, task: string = taskName): void => {
   console.log(`${color.gray(`[${task}]`)} ${color.red(text)}`);
 };
 
+export const consoleCache = (file: string, task: string = taskName): void => {
+  console.log(`${color.gray(`[${task}]`)} ${color.blue(file)} ${color.gray('(cache)')}`);
+};
+
 export const consoleGenerate = (task: string = taskName): void => {
   console.log(`${color.gray(`[${task}]`)} ${color.blue('Generate')}`);
 };
