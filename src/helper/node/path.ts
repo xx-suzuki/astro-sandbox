@@ -2,8 +2,6 @@ import { distDir, tmpDir } from '@root/project.config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { Env } from '@/constants/env';
-
 /**
  * Retrieves the file extension from a given file path.
  * @function
@@ -36,7 +34,9 @@ export const rootPath = process.cwd();
  * @returns {string} - The resolved asset path
  */
 export const assetPath = (source: string): string => {
-  return Env.isProd ? path.join(rootPath, distDir + source) : path.join(rootPath, tmpDir + source);
+  return import.meta.env.PROD
+    ? path.join(rootPath, distDir + source)
+    : path.join(rootPath, tmpDir + source);
 };
 
 /**

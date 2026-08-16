@@ -1,4 +1,3 @@
-import { Env } from '@/constants/env';
 import { Events } from '@/constants/events';
 import '@/foundation/layout';
 import '@/foundation/browser';
@@ -13,7 +12,7 @@ const onDOMContentLoaded = async () => {
   */
   console.log('init');
 
-  if (Env.isDev) {
+  if (import.meta.env.DEV) {
     await import('@/foundation/parameter');
   }
 };

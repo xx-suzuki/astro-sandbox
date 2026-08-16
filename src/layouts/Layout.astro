@@ -4,7 +4,6 @@ import { Font } from 'astro:assets';
 
 import Footer from '@/components/projects/Footer.astro';
 import Header from '@/components/projects/Header.astro';
-import { Env } from '@/constants/env';
 interface Props {
   description: string;
   id: string;
@@ -54,12 +53,11 @@ const ogp = siteUrl + imgDir + ogImage;
     <link href={url} rel="canonical">
     <Font cssVariable="--font-main" preload />
     <link as="image" href={svgSpritePath} rel="preload" type="image/svg+xml">
-    {Env.isProd && <link href={`${baseDir}${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`} rel="stylesheet" />}
-    {Env.isDev ?
+    {import.meta.env.PROD && <link href={`${baseDir}${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`} rel="stylesheet" />}
+    {import.meta.env.DEV ?
       (
       <script is:inline src="/src/main.ts" type="module"></script>
       ) : (
-      <script is:inline src={`${baseDir}${assetsDir.javascript.outDir}/vendor.js`} type="module"></script>
       <script is:inline src={`${baseDir}${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`} type="module"></script>
       )
     }

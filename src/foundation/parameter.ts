@@ -3,7 +3,6 @@ import type { FpsGraphBladeApi } from '@tweakpane/plugin-essentials';
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials';
 import { Pane } from 'tweakpane';
 
-import { Env } from '@/constants/env';
 import { decimalPart } from '@/helper/math';
 
 const html = document.documentElement;
@@ -34,7 +33,7 @@ class Parameter {
 
   constructor() {
     this.updateStyleVariables();
-    if (Env.mode !== 'production') {
+    if (import.meta.env.MODE !== 'production') {
       this.bindPane();
       this.bindStyleVariables();
     }
