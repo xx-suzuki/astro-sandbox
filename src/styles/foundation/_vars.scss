@@ -7,6 +7,12 @@
   --size-rate: 1;
   --scroll-bar: 0px;
 
+  // ビューポート高さ（100vh / 100svh の代わりに使う）
+  --vh100: 100vh;
+  --svh100: 100svh;
+  // 初期表示位置に固定したい要素用（WebView でも伸びない）
+  --svh-min100: 100svh;
+
   // transition
   --duration-fast: 0.25s;
   --duration-base: 0.35s;
@@ -15,4 +21,13 @@
 
   --leading-trim: calc((1em - 1lh) / 2);
   --leading-trim-en: calc((1cap - 1lh) / 2);
+}
+
+// アプリ内 WebView ではメニューバーの表示/非表示で vh / svh / dvh がすべて再計算され、
+// 高さ基準のレイアウトがジャンプするため、JS で固定した --fvh（foundation/viewport.ts）へ切り替える
+html.webview,
+html.webview body {
+  --vh100: calc(var(--fvh, 1vh) * 100);
+  --svh100: calc(var(--fvh, 1vh) * 100);
+  --svh-min100: calc(var(--fvh-min, 1vh) * 100);
 }

@@ -1,6 +1,7 @@
 import { Events } from '@/constants/events';
 import '@/foundation/layout';
 import '@/foundation/browser';
+import '@/foundation/viewport';
 import '@/styles/styles.scss';
 
 /**

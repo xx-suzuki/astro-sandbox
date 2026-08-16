@@ -4,6 +4,7 @@ class Browser {
   public isIos = false;
   public isMobile = false;
   public isTouch = false;
+  public isWebView = false;
   public ua: string = navigator.userAgent.toLowerCase();
 
   constructor() {
@@ -17,10 +18,17 @@ class Browser {
     const touchCls = this.isTouch ? 'touch' : 'mouse';
 
     const cls = [this.browser, this.device, mobileCls, touchCls];
+
+    if (this.isWebView) {
+      cls.push('webview');
+    }
+
     document.documentElement.classList.add(...cls);
   }
 
   private setBrowser() {
+    this.setWebView();
+
     if (this.ua.includes('trident/7') || this.ua.includes('msie')) {
       this.browser = 'ie11';
     } else if (this.ua.includes('edge')) {
@@ -51,9 +59,28 @@ class Browser {
       this.device = 'unknown';
     }
 
-    this.isIos = this.device === 'iphone' || this.device === 'iPad';
+    this.isIos = this.device === 'iphone' || this.device === 'ipad';
     this.isMobile = this.isIos || this.device === 'android';
     this.isTouch = 'ontouchstart' in globalThis;
+  }
+
+  private setWebView() {
+    const webViewTokens = [
+      'instagram',
+      'fbav',
+      'fban',
+      'twitter',
+      ' line/',
+      'micromessenger',
+      'musical_ly',
+      'bytedance',
+    ];
+    const hasToken = webViewTokens.some((token) => this.ua.includes(token));
+    const isIosWebView =
+      this.isIos && this.ua.includes('applewebkit') && !this.ua.includes('safari');
+    const isAndroidWebView = this.device === 'android' && this.ua.includes('; wv)');
+
+    this.isWebView = hasToken || isIosWebView || isAndroidWebView;
   }
 }
 
