@@ -44,10 +44,11 @@
 - `src/types/` : 型定義
 - `scripts/node/commands/` : npm scripts から実行するタスク本体
 - `scripts/node/core/` : タスク共通基盤（`cli.ts` = CLI 起動、`context.ts` = モード解決、`watch.ts` = chokidar 監視）
-- `scripts/node/helper/` : タスク用ヘルパー（`cli-args.ts` = 引数解析、`targets.ts` = 対象ファイル解決 など）
+- `scripts/node/helper/` : タスク用ヘルパー（`cli-args.ts` = 引数解析、`targets.ts` = 対象ファイル解決、`asset-cache.ts` = 生成物キャッシュ など）
 - `scripts/node/__test__/` : `commands` / `core` / `helper` のディレクトリ構成をミラーしたテスト
 - `static/` : そのままコピーする静的ファイル（`static/assets` → `.tmp/assets`、`static/root` → `.tmp`）
 - `plop/` : Plop のテンプレート（`.hbs`）
+- `.cache/images/` : 画像生成のキャッシュとマニフェスト（生成物。`clean` の対象外）
 - `.tmp/` : Astro の `publicDir`（生成物。直接編集しない）
 - `dist/` : ビルド出力（直接編集しない）
 - `project.config.ts` : プロジェクト共通設定の単一の情報源
@@ -84,6 +85,7 @@
 
 - パス・ブレークポイント・出力ディレクトリなどの設定値は `project.config.ts` に集約し、各所へハードコードしないこと。
 - 出力ファイル名にハッシュを付けないこと（差分納品の前提が崩れる）。
+- 画像の寸法は `src/helper/node/image.ts` の `getImageData()` でマニフェストから取得すること（`imageSize()` を各所で呼ばない）。マニフェストに無い画像はエラーになる。
 - Astro コンポーネントは `interface Props` を定義し、`Astro.props` から分割代入して既定値を与えること。
 - クラス付与は `class:list` を使い、`addClass` / `modifier` のような外部からの追加クラスを受け取れる形に揃えること。
 - ブラウザ実行スクリプトは `src/main.ts` を起点にすること。
@@ -177,6 +179,16 @@ npm scripts は接頭辞で役割を分けている。
 - ファイルを書き換えないこと（`dist/` `.tmp/` を含め副作用がない）
 
 ビルドを伴う検証は `check:*` ではなく `report:*` に置くこと。`report:w3c` を `check:w3c` にすると、コミットの度にビルドが走り、`dist/` が納品できない状態に上書きされる。
+
+**画像生成のキャッシュ**
+
+`build:img` / `dev:img` は生成物を `.cache/images/` に保存し、元画像の内容ハッシュが変わらない限り再生成せずコピーで済ませる。
+
+- 判定は内容ハッシュ（mtime は `actions/checkout` で毎回更新されるため CI で使えない）
+- 生成オプション（`image-min.ts` の `options`）を変更すると `optionsHash` が変わり、全件作り直しになる
+- `.cache/images/manifest.json` に幅・高さ・生成物一覧を記録し、Astro コンポーネントはここから寸法を読む
+- 元画像を削除すると、次の全件実行で `.tmp` の生成物とキャッシュ実体も取り除かれる
+- CI では `.cache/images` を `actions/cache` で復元する（`.github/workflows/build.yml`）
 
 **`report:w3c` がフルビルドを使わない理由**
 
