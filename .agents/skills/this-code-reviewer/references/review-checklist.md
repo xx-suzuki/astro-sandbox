@@ -11,7 +11,7 @@
 ## TypeScript
 
 - `astro/tsconfigs/strictest` 前提で型を緩めていないか（不要な `any` / 非 null アサーション）
-- 環境判定に `Env`（`src/constants/env.ts`）を使っているか。`import.meta.env` を各所へ散らしていないか
+- 環境判定に `import.meta.env`（`DEV` / `PROD` / `MODE`）を直接使っているか。定数オブジェクト経由にすると Vite の定数置換が効かず、開発専用コードが出力に残る
 - 状態クラスを `StateClasses` 経由で扱っているか。文字列リテラルの直書きがないか
 - DOM を扱うクラスが `src/abstracts/module.ts` の `Module` を継承しているか
 - helper の配置が正しいか（ビルド時に使うものは `src/helper/node/`）

@@ -14,16 +14,16 @@
 ## 1. 技術スタック / 前提
 
 - 静的サイト用の開発環境。CMS へのアップロードや差分納品を想定し、**出力ファイル名をハッシュ化しない**構成を維持すること。
-- フレームワーク: Astro 5（`output` は静的生成、`trailingSlash: 'always'`、`compressHTML: false`）
-- ビルド: Vite 6 / Rollup（`build:vite` は `BUILD_BY=vite` で JS バンドルを生成）
-- 言語: TypeScript（`astro/tsconfigs/strictest` 準拠）
+- フレームワーク: Astro 7（`output` は静的生成、`trailingSlash: 'always'`、`compressHTML: false`）
+- ビルド: Vite 8 / Rolldown（`build:vite` は `BUILD_BY=vite` で JS バンドルを生成。`vite.config.ts` は `rolldownOptions` を使う）
+- 言語: TypeScript 6 系（`astro/tsconfigs/strictest` 準拠）。TypeScript 7 は `astro check` が依存する programmatic API を未提供のため上げないこと。
 - CSS: SCSS + FLOCSS + BEM（`destyle.css` ベース、PostCSS / autoprefixer / postcss-sort-media-queries）
 - Node タスク: `scripts/node/**` の TypeScript を `tsx` で直接実行
-- テスト: Vitest（`cli` / `frontend` の 2 プロジェクト構成）
+- テスト: Vitest（`scripts` / `frontend` の 2 プロジェクト構成）
 - 静的解析: ESLint（flat config）/ Stylelint / Prettier / markuplint / html-validate
 - 雛形生成: Plop（`plopfile.ts`）
 - Git フック: husky + lint-staged
-- ランタイム: Node.js `^24` / pnpm `^11`。`package.json` の `devEngines` で `onFail: "error"` 固定のため、**npm / yarn は使わない**。
+- ランタイム: Node.js `^26` / pnpm `^11`（バージョンは `mise.toml` で固定）。`package.json` の `devEngines` で `onFail: "error"` 固定のため、**npm / yarn は使わない**。
 - パッケージマネージャ設定は `pnpm-workspace.yaml`（`overrides` は npm 形式ではなく pnpm の `parent>child` 構文を使う）。
 
 ---
@@ -43,8 +43,8 @@
 - `src/styles/` : SCSS（`setting` / `tool` / `foundation` / `layout` / `object` の FLOCSS 構成）
 - `src/types/` : 型定義
 - `scripts/node/commands/` : npm scripts から実行するタスク本体
-- `scripts/node/core/` : タスク共通基盤（`context.ts` = モード解決、`watch.ts` = chokidar 監視）
-- `scripts/node/helper/` : タスク用ヘルパー（`cli-args.ts` = 引数解析 など）
+- `scripts/node/core/` : タスク共通基盤（`cli.ts` = CLI 起動、`context.ts` = モード解決、`watch.ts` = chokidar 監視）
+- `scripts/node/helper/` : タスク用ヘルパー（`cli-args.ts` = 引数解析、`targets.ts` = 対象ファイル解決 など）
 - `scripts/node/__test__/` : `commands` / `core` / `helper` のディレクトリ構成をミラーしたテスト
 - `static/` : そのままコピーする静的ファイル（`static/assets` → `.tmp/assets`、`static/root` → `.tmp`）
 - `plop/` : Plop のテンプレート（`.hbs`）
@@ -86,13 +86,14 @@
 - 出力ファイル名にハッシュを付けないこと（差分納品の前提が崩れる）。
 - Astro コンポーネントは `interface Props` を定義し、`Astro.props` から分割代入して既定値を与えること。
 - クラス付与は `class:list` を使い、`addClass` / `modifier` のような外部からの追加クラスを受け取れる形に揃えること。
-- ブラウザ実行スクリプトは `src/main.ts` を起点にし、環境判定は `src/constants/env.ts` の `Env` を使うこと（`import.meta.env` を直接散らさない）。
+- ブラウザ実行スクリプトは `src/main.ts` を起点にすること。
+- 環境判定は `import.meta.env`（`DEV` / `PROD` / `MODE`）を直接使うこと。定数オブジェクト経由にすると Vite の定数置換がビルド時に効かず、開発専用の動的 import がチャンクとして出力に残る。
 - DOM を扱うクラスは `src/abstracts/module.ts` の `Module` を継承すること。
 - 状態クラスは `src/constants/state-classes.ts` の `StateClasses` を経由し、文字列リテラルを直書きしないこと。
 - SCSS の数値は `func.cv-rem()` などの `tool/function` を使い、生の `rem` 計算を書かないこと。
 - 新規 SCSS は FLOCSS の該当レイヤーに置き、同階層の `_index.scss` へ `@use` を追加すること。
 - `src/layouts/Layout.astro` は ESLint の対象外（`eslint.config.ts` の `ignores`）。変更時は手動で確認すること。
-- npm scripts のタスクを追加する場合は `scripts/node/commands/` に実装し、モード解決は `core/context.ts`、監視は `core/watch.ts`、引数解析は `helper/cli-args.ts` を再利用すること。
+- npm scripts のタスクを追加する場合は `scripts/node/commands/` に実装し、起動処理は `core/cli.ts` の `runCommandCli()` を使うこと（引数解析・モード適用・watch 分岐・例外処理を含む）。
 - タスクは実処理を `runXxx()` として named export し、テストから直接呼べる形にすること。
 
 ---
@@ -115,7 +116,7 @@
 | TypeScript ファイル | kebab-case | `media-query-list.ts` |
 | SCSS パーシャル | `_kebab-case.scss` | `_btn-basic.scss` |
 | 関数・変数 | camelCase（アロー関数の named export） | `toUpperCamelCase` |
-| 定数オブジェクト | PascalCase + `as const` | `Env` / `StateClasses` |
+| 定数オブジェクト | PascalCase + `as const` | `StateClasses` / `Events` |
 | 型・インターフェース | PascalCase | `Props` / `AppMode` |
 
 **CSS 設計（FLOCSS + BEM）**
