@@ -1,5 +1,5 @@
 ---
-import { assetsDir, baseDir, imgDir, siteUrl, svgSpritePath } from '@root/project.config';
+import { assetsDir, baseDir, imgDir, siteUrl } from '@root/project.config';
 import { Font } from 'astro:assets';
 
 import Footer from '@/components/projects/Footer.astro';
@@ -51,8 +51,7 @@ const ogp = siteUrl + imgDir + ogImage;
     <meta content="#FFFFFF" name="theme-color">
     <title>{ title }</title>
     <link href={url} rel="canonical">
-    <Font cssVariable="--font-main" preload />
-    <link as="image" href={svgSpritePath} rel="preload" type="image/svg+xml">
+    <Font cssVariable="--font-main" />
     {import.meta.env.PROD && <link href={`${baseDir}${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`} rel="stylesheet" />}
     {import.meta.env.DEV ?
       (
