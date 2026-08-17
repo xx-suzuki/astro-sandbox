@@ -7,6 +7,9 @@ const { DEV_PORT } = loadEnv(import.meta.env.MODE, process.cwd(), '');
 
 export default defineConfig({
   base: baseDir,
+  build: {
+    inlineStylesheets: 'never',
+  },
   cacheDir: '.cache/astro',
   compressHTML: false,
   devToolbar: {
