@@ -3,12 +3,6 @@ import type { Config } from '@markuplint/ml-config';
 const config: Config = {
   extends: ['markuplint:recommended'],
   nodeRules: [
-    {
-      rules: {
-        'require-accessible-name': false,
-      },
-      selector: 'svg',
-    },
     // BudouX が出力するテキストは静的解析で追えないため、名前解決の対象から外す
     {
       rules: {

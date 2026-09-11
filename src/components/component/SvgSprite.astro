@@ -10,10 +10,23 @@ import type { SvgSpriteNames } from '@/types/svg-sprite';
 
 import { rootPath } from '@/helper/node/path';
 
-export type Props = Omit<HTMLAttributes<'svg'>, 'role'> & {
+export type Props = BaseProps &
+  (
+    | {
+        decorative: false;
+        label: string;
+      }
+    | {
+        decorative?: true;
+        label?: never;
+      }
+  );
+
+type BaseProps = Omit<HTMLAttributes<'svg'>, 'aria-hidden' | 'aria-label' | 'role'> & {
   hash: SvgSpriteNames;
 };
-const { hash, ...restProps } = Astro.props;
+
+const { decorative = true, hash, label, ...restProps } = Astro.props;
 const target = path.join(rootPath, `/src/assets/svg-sprite/${hash}.svg`);
 const buffer = fs.readFileSync(target);
 
@@ -24,6 +37,11 @@ const attribute = {
 };
 ---
 
-<svg role="img" {...attribute}>
+<svg
+  aria-hidden={decorative ? 'true' : undefined}
+  aria-label={decorative ? undefined : label}
+  role={decorative ? undefined : 'img'}
+  {...attribute}
+>
   <use href={`${svgSpritePath}#${hash}`}></use>
 </svg>
