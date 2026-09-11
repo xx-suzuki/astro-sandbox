@@ -11,8 +11,9 @@ const { alt = '', pictureProps, src, ...restProps } = Astro.props;
 const { height, width } = getImageData(src);
 const { assetDir, ext, name } = getFileData(src);
 
-const attribute = {
+const attribute: Omit<HTMLAttributes<'img'>, 'src'> = {
   height,
+  loading: 'lazy',
   width,
   ...restProps,
 };

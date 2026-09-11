@@ -27,7 +27,8 @@ if (imageProps?.alt) {
 }
 
 const attributePc: Omit<HTMLAttributes<'img'>, 'src'> = {
-  height: size.sp.height,
+  height: size.pc.height,
+  loading: 'lazy',
   width: size.pc.width,
   ...imageProps,
 };
