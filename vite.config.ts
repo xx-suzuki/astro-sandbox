@@ -22,6 +22,7 @@ const viteConfig: UserConfigExport = {
       output: {
         assetFileNames: (chunkInfo) => resolveAssetFileName(chunkInfo),
         chunkFileNames: `${assetsDir.javascript.outDir}/[name].js`,
+        comments: { legal: true },
         entryFileNames: `${assetsDir.javascript.outDir}/${assetsDir.javascript.outName}.js`,
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
