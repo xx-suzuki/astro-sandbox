@@ -23,7 +23,7 @@
 - 静的解析: ESLint（flat config）/ Stylelint / Prettier / markuplint / html-validate
 - 雛形生成: Plop（`plopfile.ts`）
 - Git フック: husky + lint-staged
-- ランタイム: Node.js `^26` / pnpm `^11`（バージョンは `mise.toml` で固定）。`package.json` の `devEngines` で `onFail: "error"` 固定のため、**npm / yarn は使わない**。
+- ランタイム: Node.js `^26` / pnpm `^12`（バージョンは `mise.toml` で固定）。`package.json` の `devEngines` で `onFail: "error"` 固定のため、**npm / yarn は使わない**。
 - パッケージマネージャ設定は `pnpm-workspace.yaml`（`overrides` は npm 形式ではなく pnpm の `parent>child` 構文を使う）。
 
 ---
