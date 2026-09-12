@@ -30,7 +30,7 @@ CMS等にアップロードや差分納品をしなければならないケー�
 pnpm install
 ```
 
-> Node.js（`^24`）と pnpm（`^11`）は `package.json` の `devEngines` で固定しています（`onFail: "error"`）。バージョンが合わない場合はインストール時にエラーになります。
+> Node.js（`^26`）と pnpm（`^12`）は `package.json` の `devEngines` で固定しています（`onFail: "error"`）。バージョンが合わない場合はインストール時にエラーになります。
 
 ### Start local server
 
