@@ -38,7 +38,7 @@
 - モード解決を `core/context.ts`、監視を `core/watch.ts`、引数解析を `helper/cli-args.ts` に寄せているか（個別実装の重複がないか）
 - 実処理を `runXxx()` として named export し、テストから直接呼べる形になっているか
 - watch 実行時の多重実行・例外時の `process.exitCode` の扱いが既存タスクと揃っているか
-- 対応する `scripts/node/__test__/<layer>/<name>.test.ts` があるか
+- 対応する `scripts/node/__tests__/<layer>/<name>.test.ts` があるか
 
 ## テスト
 
