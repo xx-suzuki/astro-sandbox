@@ -113,6 +113,23 @@ describe('svg-sprite', () => {
     expect(consoleGenerateMock).toHaveBeenCalledTimes(1);
   });
 
+  it('runSvgSprite => sorts generated union types naturally', async () => {
+    syncMock.mockReturnValue([
+      'src/assets/svg-sprite/logo-tagline.svg',
+      'src/assets/svg-sprite/icon10.svg',
+      'src/assets/svg-sprite/logo.svg',
+      'src/assets/svg-sprite/icon2.svg',
+    ]);
+    const { runSvgSprite } = await import('@scripts-node/commands/svg-sprite');
+    await runSvgSprite();
+
+    expect(writeFileMock).toHaveBeenCalledWith(
+      expect.stringContaining('src/types/svg-sprite.ts'),
+      "// prettier-ignore\nexport type SvgSpriteNames = 'icon2' | 'icon10' | 'logo' | 'logo-tagline';\n",
+      'utf8',
+    );
+  });
+
   it('runSvgSprite => transform callback and custom plugin work', async () => {
     syncMock.mockReturnValue(['src/assets/svg-sprite/icon.svg']);
     const { runSvgSprite } = await import('@scripts-node/commands/svg-sprite');
