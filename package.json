@@ -62,7 +62,7 @@
     "plop": "cross-env NODE_OPTIONS=\"--import tsx\" plop --plopfile=plopfile.ts",
     "prepare": "husky",
     "test": "vitest run --config vitest.config.ts --coverage --reporter=verbose",
-    "test:scripts": "vitest run --config vitest.config.ts --project scripts",
+    "test:backend": "vitest run --config vitest.config.ts --project backend",
     "test:frontend": "vitest run --config vitest.config.ts --project frontend --passWithNoTests"
   },
   "dependencies": {

@@ -76,7 +76,7 @@ export default defineConfig(
   // ----------------------------------
   // Tests
   {
-    files: ['**/__test__/**/*.ts', '**/*.{test,spec}.{ts,tsx}'],
+    files: ['**/__tests__/**/*.ts', '**/*.{test,spec}.{ts,tsx}'],
     rules: {
       // vitest の mockResolvedValue 等は型上 値引数が必須なため、明示的な undefined を許容する
       'unicorn/no-useless-undefined': ['error', { checkArguments: false }],
