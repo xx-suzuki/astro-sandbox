@@ -112,7 +112,7 @@
     "postcss": "^8.5.31",
     "postcss-sort-media-queries": "^6.7.1",
     "prettier": "^3.9.10",
-    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-astro": "^1.1.1",
     "pretty-bytes": "^7.2.0",
     "rollup-plugin-visualizer": "^7.1.1",
     "sharp": "^0.35.5",

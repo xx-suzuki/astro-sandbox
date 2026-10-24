@@ -20,11 +20,9 @@ const attribute: Omit<HTMLAttributes<'img'>, 'src'> = {
 ---
 
 <picture {...pictureProps}>
-  {
-    ext !== '.svg' && (
-      <source height={height} srcset={`${assetDir}/${name}.avif`} type="image/avif" width={width} />
-    )
-  }
+  {ext !== '.svg' && (
+    <source height={height} srcset={`${assetDir}/${name}.avif`} type="image/avif" width={width} />
+  )}
   <img
     alt={alt}
     decoding="async"

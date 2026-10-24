@@ -41,29 +41,25 @@ const attributeSp: HTMLAttributes<'source'> = {
 ---
 
 <picture {...pictureProps}>
-  {
-    data.sp.ext !== '.svg' && (
-      <source
-        height={attributeSp.height}
-        media={attributeSp.media}
-        srcset={`${data.sp.assetDir}/${data.sp.name}.avif`}
-        type="image/avif"
-        width={attributeSp.width}
-      />
-    )
-  }
+  {data.sp.ext !== '.svg' && (
+    <source
+      height={attributeSp.height}
+      media={attributeSp.media}
+      srcset={`${data.sp.assetDir}/${data.sp.name}.avif`}
+      type="image/avif"
+      width={attributeSp.width}
+    />
+  )}
   <source srcset={`${data.sp.assetDir}/${data.sp.name}${data.sp.ext}`} {...attributeSp} />
 
-  {
-    data.pc.ext !== '.svg' && (
-      <source
-        height={attributePc.height}
-        srcset={`${data.pc.assetDir}/${data.pc.name}.avif`}
-        type="image/avif"
-        width={attributePc.width}
-      />
-    )
-  }
+  {data.pc.ext !== '.svg' && (
+    <source
+      height={attributePc.height}
+      srcset={`${data.pc.assetDir}/${data.pc.name}.avif`}
+      type="image/avif"
+      width={attributePc.width}
+    />
+  )}
   <img
     alt={alt}
     decoding="async"
