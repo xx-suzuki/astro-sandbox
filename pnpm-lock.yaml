@@ -176,8 +176,8 @@ importers:
         specifier: ^7.4.2
         version: 7.4.2(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.106.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
       budoux:
-        specifier: ^0.9.3
-        version: 0.9.3
+        specifier: ^0.10.0
+        version: 0.10.0
       destyle.css:
         specifier: ^4.0.1
         version: 4.0.1
@@ -231,8 +231,8 @@ importers:
         specifier: ^10.6.1
         version: 10.6.1(postcss@8.5.31)
       chokidar:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^6.0.0
+        version: 6.0.0
       cross-env:
         specifier: ^10.1.0
         version: 10.1.0
@@ -2119,8 +2119,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
-  budoux@0.9.3:
-    resolution: {integrity: sha512-Kj3eztSzqVzkmh51Hf8Z+vFw5lkEjGJlxtv7J6nMCjVHbInTom2t8XhYNcz479753NR94Ibv3t81roKgkyfTcA==}
+  budoux@0.10.0:
+    resolution: {integrity: sha512-jh9qIGuVLdeuc7z0jRyeSe7zEa7XthNu3QPTnzLpeMXbz4v7Lwx0j0rMK90jHSM/a8kVrTjXoLRHBhyVTfxk6w==}
     hasBin: true
 
   buffer-from@1.1.2:
@@ -2185,6 +2185,10 @@ packages:
   chokidar@5.0.0:
     resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
     engines: {node: '>= 20.19.0'}
+
+  chokidar@6.0.0:
+    resolution: {integrity: sha512-Ec2Z7wpcKBiMpR7DxteoqS/sq5G5d2A4fpxzPv6+fD7xNNdrTghn7L11YwV5EN1B3i72Erc3XVT5FkWIDx90+A==}
+    engines: {node: '>= 22.22'}
 
   chrono-node@2.9.0:
     resolution: {integrity: sha512-glI4YY2Jy6JII5l3d5FN6rcrIbKSQqKPhWsIRYPK2IK8Mm4Q1ZZFdYIaDqglUNf7gNwG+kWIzTn0omzzE0VkvQ==}
@@ -6991,7 +6995,7 @@ snapshots:
       node-releases: 2.0.59
       update-browserslist-db: 1.3.4(browserslist@4.29.4)
 
-  budoux@0.9.3:
+  budoux@0.10.0:
     dependencies:
       commander: 15.0.0
       linkedom: 0.18.14
@@ -7058,6 +7062,10 @@ snapshots:
   chardet@2.2.0: {}
 
   chokidar@5.0.0:
+    dependencies:
+      readdirp: 5.1.1
+
+  chokidar@6.0.0:
     dependencies:
       readdirp: 5.1.1
 

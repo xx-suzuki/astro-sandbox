@@ -68,7 +68,7 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.4.2",
-    "budoux": "^0.9.3",
+    "budoux": "^0.10.0",
     "destyle.css": "^4.0.1",
     "sass": "^1.106.0",
     "typescript": "^6.0.3"
@@ -88,7 +88,7 @@
     "@vitest/coverage-v8": "^5.0.5",
     "astro-eslint-parser": "^3.2.0",
     "autoprefixer": "^10.6.1",
-    "chokidar": "^5.0.0",
+    "chokidar": "^6.0.0",
     "cross-env": "^10.1.0",
     "eslint": "10.13.0",
     "eslint-plugin-astro": "^3.2.1",
