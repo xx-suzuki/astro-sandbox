@@ -140,12 +140,13 @@ const imageMin = async (file: string): Promise<ManifestEntry | undefined> => {
   } else if (fileExt && imgExt.includes(fileExt)) {
     // Images
     const ext = fileExt === 'jpg' ? 'jpeg' : fileExt;
+
+    if (!isSharpFormat(ext)) return;
+
     const src = sharp(file);
     const img = path.join(outDir, fileName + fileExtname);
     // const webp = path.join(outDir, `${fileName}.webp`);
     const avif = path.join(outDir, `${fileName}.avif`);
-
-    if (!isSharpFormat(ext)) return;
 
     await Promise.all([
       src.toFormat(ext, options[ext as SharpKeys]).toFile(img),

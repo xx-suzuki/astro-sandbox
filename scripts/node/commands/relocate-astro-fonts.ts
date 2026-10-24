@@ -1,7 +1,7 @@
 import { relocateAstroFonts as config } from '@root/project.config';
 import { isDirectRun, runCommandCli } from '@scripts-node/core/cli';
 import { consoleDone, consoleExist, consoleSize } from '@scripts-node/helper/drop-console';
-import { removeEmptyDir } from '@scripts-node/helper/utils';
+import { didRemoveEmptyDir } from '@scripts-node/helper/utils';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'node:path';
@@ -46,7 +46,7 @@ async function init(options: Options) {
       await fs.remove(file);
     }
 
-    await removeEmptyDir(astroDir);
+    await didRemoveEmptyDir(astroDir);
     consoleDone();
   } else {
     consoleExist(fromDir);

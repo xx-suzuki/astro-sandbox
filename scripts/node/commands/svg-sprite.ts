@@ -15,7 +15,7 @@ import { optimize } from 'svgo';
 // Config
 const svgFilePattern = /\.svg$/i;
 
-const removeSymbolXmlns: CustomPlugin = {
+const symbolXmlnsRemover: CustomPlugin = {
   fn: () => {
     return {
       element: {
@@ -51,7 +51,7 @@ const svgoConfig: SVGOConfig = {
     {
       name: 'removeTitle',
     },
-    removeSymbolXmlns,
+    symbolXmlnsRemover,
   ],
 };
 

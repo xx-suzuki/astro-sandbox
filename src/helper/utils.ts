@@ -1,18 +1,18 @@
 /**
- * Represents a generic object with string keys and any values.
- */
+Represents a generic object with string keys and any values.
+*/
 type PlainObject = Record<string, unknown>;
 
 /**
- * Checks if a value is an object (excluding arrays).
- */
+Checks if a value is an object (excluding arrays).
+*/
 function isObject(object: unknown): object is PlainObject {
   return Boolean(object) && typeof object === 'object' && !Array.isArray(object);
 }
 
 /**
- * Merges multiple source objects into a target object recursively.
- */
+Merges multiple source objects into a target object recursively.
+*/
 export const objectMerge = <T extends PlainObject, U extends PlainObject>(
   target: T,
   ...sources: U[]
@@ -39,12 +39,12 @@ export const objectMerge = <T extends PlainObject, U extends PlainObject>(
 };
 
 /**
- * Locks or unlocks scrolling on the body.
- */
-export const ScrollLock = (bool: boolean) => {
+Locks or unlocks scrolling on the body.
+*/
+export const ScrollLock = (isLocked: boolean) => {
   const scrollbarWidth = window.innerWidth - document.body.clientWidth;
 
-  if (bool) {
+  if (isLocked) {
     document.body.style.overflow = 'hidden';
     document.body.style.paddingRight = `${scrollbarWidth}px`;
   } else {
@@ -54,8 +54,8 @@ export const ScrollLock = (bool: boolean) => {
 };
 
 /**
- * Creates a debounced version of a function that delays its execution.
- */
+Creates a debounced version of a function that delays its execution.
+*/
 export const debounce = <T extends (...args: unknown[]) => void>(
   function_: T,
   delay: number,

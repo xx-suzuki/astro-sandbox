@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'astro/types';
 
 import SvgSprite from '@/components/component/SvgSprite.astro';
-import { isBlank } from '@/helper/node/utils';
+import { blankAttribute } from '@/helper/node/utils';
 interface Props {
   addClass?: string;
   anchor: Omit<HTMLAttributes<'a'>, 'href'> & {
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const { addClass, anchor, modifier, target = false, text = 'details' } = Astro.props;
-const anchorAttribute = target ? { ...anchor, ...isBlank(target) } : anchor;
+const anchorAttribute = target ? { ...anchor, ...blankAttribute(target) } : anchor;
 const addModifier = modifier ? `c-btn-basic--${modifier}` : '';
 ---
 

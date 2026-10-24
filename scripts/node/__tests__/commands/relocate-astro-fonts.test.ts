@@ -10,7 +10,7 @@ const removeMock = vi.fn();
 const consoleSizeMock = vi.fn();
 const consoleDoneMock = vi.fn();
 const consoleExistMock = vi.fn();
-const removeEmptyDirMock = vi.fn();
+const didRemoveEmptyDirMock = vi.fn();
 
 vi.mock('fast-glob', () => ({
   default: fgMock,
@@ -34,7 +34,7 @@ vi.mock('@scripts-node/helper/drop-console', () => ({
 }));
 
 vi.mock('@scripts-node/helper/utils', () => ({
-  removeEmptyDir: removeEmptyDirMock,
+  didRemoveEmptyDir: didRemoveEmptyDirMock,
 }));
 
 describe('relocate-astro-fonts', () => {
@@ -47,7 +47,7 @@ describe('relocate-astro-fonts', () => {
     ensureDirMock.mockResolvedValue(undefined);
     copyMock.mockResolvedValue(undefined);
     removeMock.mockResolvedValue(undefined);
-    removeEmptyDirMock.mockResolvedValue(true);
+    didRemoveEmptyDirMock.mockResolvedValue(true);
   });
 
   it('runRelocateAstroFonts => move and rewrite fonts', async () => {

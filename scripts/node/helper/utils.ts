@@ -20,7 +20,7 @@ export const createFolder = (dir: string): void => {
   }
 };
 
-export const removeEmptyDir = async (dir: string): Promise<boolean> => {
+export const didRemoveEmptyDir = async (dir: string): Promise<boolean> => {
   if (!(await fs.pathExists(dir))) return false;
 
   const entries = await fs.readdir(dir);
@@ -31,7 +31,7 @@ export const removeEmptyDir = async (dir: string): Promise<boolean> => {
     const stat = await fs.stat(fullPath);
 
     if (stat.isDirectory()) {
-      const isChildEmpty = await removeEmptyDir(fullPath);
+      const isChildEmpty = await didRemoveEmptyDir(fullPath);
       if (!isChildEmpty) isEmpty = false;
     } else if (!isIgnoreFile(entry)) {
       isEmpty = false;

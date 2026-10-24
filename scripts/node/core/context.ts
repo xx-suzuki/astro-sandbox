@@ -11,8 +11,7 @@ export const resolveMode = (options: ModeOptions, fallback: AppMode = 'productio
   }
 
   if (options.develop) return 'development';
-  if (options.production) return 'production';
-  return fallback;
+  return options.production ? 'production' : fallback;
 };
 
 export const applyMode = (mode: AppMode): AppMode => {

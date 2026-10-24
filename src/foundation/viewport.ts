@@ -16,6 +16,14 @@ class Viewport {
     globalThis.addEventListener(Events.Resize, this.handleResize);
   }
 
+  private update(): void {
+    html.style.setProperty('--fvh', `${this.maxHeight * 0.01}px`);
+  }
+
+  private updateMin(): void {
+    html.style.setProperty('--fvh-min', `${window.innerHeight * 0.01}px`);
+  }
+
   handleResize(): void {
     if (window.innerWidth !== this.lastWidth) {
       this.lastWidth = window.innerWidth;
@@ -25,18 +33,12 @@ class Viewport {
       return;
     }
 
-    if (window.innerHeight > this.maxHeight) {
-      this.maxHeight = window.innerHeight;
-      this.update();
+    if (window.innerHeight <= this.maxHeight) {
+      return;
     }
-  }
 
-  private update(): void {
-    html.style.setProperty('--fvh', `${this.maxHeight * 0.01}px`);
-  }
-
-  private updateMin(): void {
-    html.style.setProperty('--fvh-min', `${window.innerHeight * 0.01}px`);
+    this.maxHeight = window.innerHeight;
+    this.update();
   }
 }
 
