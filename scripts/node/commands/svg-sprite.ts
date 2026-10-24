@@ -112,7 +112,10 @@ export const runSvgSprite = async (targets?: string | string[]): Promise<void> =
 
   // for types
   const typesPath = path.join(rootPath, config.typesPath);
-  const unionType = types.map((name) => `'${name}'`).join(' | ');
+  const unionType = types
+    .toSorted((a, b) => a.localeCompare(b, 'en', { numeric: true }))
+    .map((name) => `'${name}'`)
+    .join(' | ');
   const tsContent = `// prettier-ignore\nexport type SvgSpriteNames = ${unionType};\n`;
   createFolder(path.dirname(typesPath));
   await fs.writeFile(typesPath, tsContent, 'utf8');
