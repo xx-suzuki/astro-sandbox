@@ -16,7 +16,7 @@
 - 静的サイト用の開発環境。CMS へのアップロードや差分納品を想定し、**出力ファイル名をハッシュ化しない**構成を維持すること。
 - フレームワーク: Astro 7（`output` は静的生成、`trailingSlash: 'always'`、`compressHTML: false`）
 - ビルド: Vite 8 / Rolldown（`build:vite` は `BUILD_BY=vite` で JS バンドルを生成。`vite.config.ts` は `rolldownOptions` を使う）
-- 言語: TypeScript 6 系（`astro/tsconfigs/strictest` 準拠）。TypeScript 7 は `astro check` が依存する programmatic API を未提供のため上げないこと。
+- 言語: TypeScript 6 系（`astro/tsconfigs/strictest` 準拠）。TypeScript 7 は **上げないこと**。`@astrojs/check` の peer が `typescript: ^5 || ^6`、`typescript-eslint` の peer が `typescript: >=4.8.4 <6.1.0` で、どちらも未対応（2026-10-25 時点の最新は `@astrojs/check@0.9.12` / `typescript-eslint@8.72.0`）。両方が TS7 を受け入れてから再検討する。
 - CSS: SCSS + FLOCSS + BEM（`destyle.css` ベース、PostCSS / autoprefixer / postcss-sort-media-queries）
 - Node タスク: `scripts/node/**` の TypeScript を `tsx` で直接実行
 - テスト: Vitest（`scripts` / `frontend` の 2 プロジェクト構成）
