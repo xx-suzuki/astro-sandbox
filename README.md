@@ -62,7 +62,7 @@ pnpm dev
 │   ├── commands/       # Task entries called from npm scripts
 │   ├── core/           # Shared task foundation (mode / watch)
 │   ├── helper/         # Task helpers
-│   └── __test__/       # Vitest tests for the tasks above
+│   └── __tests__/      # Vitest tests for the tasks above
 └── project.config.ts   # Common project settings
 ```
 
@@ -92,7 +92,7 @@ pnpm dev
 | `check:markup`  | MarkupLint (`src/**/*.astro`)                               |
 | `format`        | ESLint & Stylelint & Prettier (auto fix, sequential)        |
 | `test`          | Vitest (all projects with coverage)                         |
-| `test:scripts`  | Vitest (`scripts/node/__test__` only)                       |
+| `test:backend`  | Vitest (`scripts/node/__tests__` only)                      |
 | `test:frontend` | Vitest (`src` only)                                         |
 | `report:w3c`    | Build HTML then output W3C validation report                |
 | `create:icon`   | Generate SVG data for Font Awesome                          |

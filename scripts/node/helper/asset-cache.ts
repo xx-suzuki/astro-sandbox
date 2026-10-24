@@ -54,11 +54,9 @@ export const readManifest = (manifestPath: string, optionsHash: string): Manifes
   try {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8')) as Manifest;
 
-    if (manifest.version !== MANIFEST_VERSION || manifest.optionsHash !== optionsHash) {
-      return createManifest(optionsHash);
-    }
-
-    return manifest;
+    return manifest.version === MANIFEST_VERSION && manifest.optionsHash === optionsHash
+      ? manifest
+      : createManifest(optionsHash);
   } catch {
     return createManifest(optionsHash);
   }

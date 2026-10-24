@@ -65,10 +65,9 @@ const resolveAssetFileName = (chunkInfo: Rolldown.PreRenderedAsset) => {
   if (fileExtension && imgExtension.includes(fileExtension)) {
     return `${assetsDir.images.outDir}/${fileName}`;
   }
-  if (fileExtension && cssExtension.includes(fileExtension)) {
-    return `${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`;
-  }
-  return name;
+  return fileExtension && cssExtension.includes(fileExtension)
+    ? `${assetsDir.styles.outDir}/${assetsDir.styles.outName}.css`
+    : name;
 };
 
 function ignoreAssetWarnings(): Plugin {

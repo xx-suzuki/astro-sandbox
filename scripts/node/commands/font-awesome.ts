@@ -93,7 +93,7 @@ const processIconSelection = async (
     selectedStyle = await askQuestion(Object.keys(data.choices));
   }
 
-  if (!selectedStyle || !(selectedStyle in data.choices)) {
+  if (!selectedStyle || !Object.hasOwn(data.choices, selectedStyle)) {
     consoleError(`Selected style "${selectedStyle}" is not valid.`);
     return;
   }

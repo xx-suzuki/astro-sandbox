@@ -76,7 +76,7 @@ export default defineConfig(
   // ----------------------------------
   // Tests
   {
-    files: ['**/__test__/**/*.ts', '**/*.{test,spec}.{ts,tsx}'],
+    files: ['**/__tests__/**/*.ts', '**/*.{test,spec}.{ts,tsx}'],
     rules: {
       // vitest の mockResolvedValue 等は型上 値引数が必須なため、明示的な undefined を許容する
       'unicorn/no-useless-undefined': ['error', { checkArguments: false }],
@@ -87,21 +87,33 @@ export default defineConfig(
   // ALL files
   {
     rules: {
-      // eslint-plugin-unicorn 73 で追加された様式・命名ルールは既存実装の規約と衝突するため無効化する
-      'unicorn/consistent-boolean-name': 'off',
-      'unicorn/consistent-class-member-order': 'off',
-      'unicorn/filename-case': 'off',
-      // outDir / isDev などは project.config.ts が公開する既存の命名規約のため置換対象にしない
+      // クラスメンバー順は unicorn/consistent-class-member-order が担当。両者は要求する並びが逆で共存できない
+      'perfectionist/sort-classes': 'off',
+      // TypeScript / SCSS は kebab-case。`__tests__` は Vitest の慣例ディレクトリ名のため対象外
+      'unicorn/filename-case': ['error', { case: 'kebabCase', ignore: [/^__tests__$/] }],
+      // src / ext / arg などは Astro の props 名や既存 API の一部のため置換対象にしない
       'unicorn/name-replacements': 'off',
-      'unicorn/no-computed-property-existence-check': 'off',
-      'unicorn/no-declarations-before-early-exit': 'off',
-      'unicorn/no-non-function-verb-prefix': 'off',
+      // astro.config.ts の loadEnv() など、設定ファイルはトップレベル実行が前提
+      'unicorn/no-top-level-side-effects': 'off',
       // globalThis 経由の参照はビルド時（Node 環境）に ReferenceError を避けるため意図的に残す
       'unicorn/no-unnecessary-global-this': 'off',
+      // core/watch.ts の queue は .then() チェーン自体が実行の直列化を担う
       'unicorn/prefer-await': 'off',
+      // Iterator#toArray() は対応ブラウザが限られるためスプレッド展開を維持する
       'unicorn/prefer-iterator-to-array': 'off',
+      // ブラウザ向けバンドルでトップレベル await は出力チャンクの形式に影響する
       'unicorn/prefer-top-level-await': 'off',
-      'unicorn/prevent-abbreviations': 'off',
+    },
+  },
+
+  // ----------------------------------
+  // Astro filename（ALL files の kebabCase を上書きするため最後に置く）
+  // src/pages はファイル名がそのままルートになるため kebabCase 側に残す
+  {
+    files: ['src/components/**/*.astro', 'src/layouts/**/*.astro'],
+    rules: {
+      // ディレクトリ名は ALL files の kebabCase 側で検査するためここでは対象外にする
+      'unicorn/filename-case': ['error', { case: 'pascalCase', checkDirectories: false }],
     },
   },
 );

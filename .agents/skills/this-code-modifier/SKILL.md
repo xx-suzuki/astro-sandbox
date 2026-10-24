@@ -34,7 +34,7 @@ description: 本プロジェクトの AGENTS.md・既存実装規約に沿って
    - import 順・オブジェクトキー順は perfectionist が自動整列するため手で並べ替えない
 
 5. 検証する
-   - 変更後は `pnpm format` → `pnpm check` → `pnpm test:scripts` の順で実行する
+   - 変更後は `pnpm format` → `pnpm check` → `pnpm test:backend` の順で実行する
    - Astro / SCSS を変更した場合は `pnpm check:markup` を追加する
    - マークアップ検証まで必要な場合のみ `pnpm report:w3c` を実行する（内部で検証用ビルドまで行う）
    - 失敗した場合は原因を特定し、修正して再検証する

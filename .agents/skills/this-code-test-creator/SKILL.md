@@ -15,8 +15,8 @@ description: 本プロジェクトの AGENTS.md・既存テスト規約に沿っ
 2. プロジェクト規約を確認する
    - `README.md` と `AGENTS.md` を確認する
    - 既存テストの配置・命名・import・mock 方針を確認する
-   - フレームワークは Vitest。プロジェクトは `cli`（`scripts/node/__test__/**/*.test.ts` / node 環境）と `frontend`（`src/**/*.{test,spec}.{ts,tsx}` / jsdom 環境）の 2 つ
-   - Node タスクのテストは `scripts/node/__test__/<layer>/<name>.test.ts` に置き、対象と同じディレクトリ構成をミラーする
+   - フレームワークは Vitest。プロジェクトは `backend`（`scripts/node/__tests__/**/*.test.ts` / node 環境）と `frontend`（`src/**/*.{test,spec}.{ts,tsx}` / jsdom 環境）の 2 つ
+   - Node タスクのテストは `scripts/node/__tests__/<layer>/<name>.test.ts` に置き、対象と同じディレクトリ構成をミラーする
    - `frontend` プロジェクトはテスト未整備で、`setupFiles` の `src/test/setup.ts` も未作成。`src` 配下にテストを追加する場合は先に同ファイルを用意する
 
 3. 既存実装と既存テストを確認する
@@ -41,7 +41,7 @@ description: 本プロジェクトの AGENTS.md・既存テスト規約に沿っ
    - テスト追加のために production コード修正が必要な場合は、勝手に変更せず確認する
 
 6. 検証する
-   - `pnpm format` → `pnpm check` → 対象テスト（`pnpm test:scripts` または `pnpm test:frontend`）の順で進める
+   - `pnpm format` → `pnpm check` → 対象テスト（`pnpm test:backend` または `pnpm test:frontend`）の順で進める
    - カバレッジまで確認する場合のみ `pnpm test` を使う
    - 失敗した場合は原因を特定し、テストまたは必要最小限の実装を修正して再検証する
 

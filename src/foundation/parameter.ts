@@ -15,6 +15,10 @@ const { body } = document;
 // };
 
 class Parameter {
+  private layerElm: HTMLDivElement | undefined = undefined;
+
+  private pane: Pane | undefined = undefined;
+
   // ----------------------------------
   // Style
   public PARAMS = {
@@ -24,19 +28,14 @@ class Parameter {
     slow: 0.6,
   };
 
-  get getPane() {
-    return this.pane;
-  }
-  private layerElm: HTMLDivElement | undefined = undefined;
-
-  private pane: Pane | undefined = undefined;
-
   constructor() {
     this.updateStyleVariables();
-    if (import.meta.env.MODE !== 'production') {
-      this.bindPane();
-      this.bindStyleVariables();
+    if (import.meta.env.MODE === 'production') {
+      return;
     }
+
+    this.bindPane();
+    this.bindStyleVariables();
   }
 
   private bindPane() {
@@ -142,6 +141,10 @@ class Parameter {
     html.style.setProperty('--duration-base', `${this.PARAMS.base}s`);
     html.style.setProperty('--duration-slow', `${this.PARAMS.slow}s`);
     html.style.setProperty('--duration-loose', `${this.PARAMS.loose}s`);
+  }
+
+  get getPane() {
+    return this.pane;
   }
 }
 

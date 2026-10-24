@@ -16,10 +16,10 @@
 - 静的サイト用の開発環境。CMS へのアップロードや差分納品を想定し、**出力ファイル名をハッシュ化しない**構成を維持すること。
 - フレームワーク: Astro 7（`output` は静的生成、`trailingSlash: 'always'`、`compressHTML: false`）
 - ビルド: Vite 8 / Rolldown（`build:vite` は `BUILD_BY=vite` で JS バンドルを生成。`vite.config.ts` は `rolldownOptions` を使う）
-- 言語: TypeScript 6 系（`astro/tsconfigs/strictest` 準拠）。TypeScript 7 は `astro check` が依存する programmatic API を未提供のため上げないこと。
+- 言語: TypeScript 6 系（`astro/tsconfigs/strictest` 準拠）。TypeScript 7 は **上げないこと**。`@astrojs/check` の peer が `typescript: ^5 || ^6`、`typescript-eslint` の peer が `typescript: >=4.8.4 <6.1.0` で、どちらも未対応（2026-10-25 時点の最新は `@astrojs/check@0.9.12` / `typescript-eslint@8.72.0`）。両方が TS7 を受け入れてから再検討する。
 - CSS: SCSS + FLOCSS + BEM（`destyle.css` ベース、PostCSS / autoprefixer / postcss-sort-media-queries）
 - Node タスク: `scripts/node/**` の TypeScript を `tsx` で直接実行
-- テスト: Vitest（`scripts` / `frontend` の 2 プロジェクト構成）
+- テスト: Vitest（`backend` / `frontend` の 2 プロジェクト構成）
 - 静的解析: ESLint（flat config）/ Stylelint / Prettier / markuplint / html-validate
 - 雛形生成: Plop（`plopfile.ts`）
 - Git フック: husky + lint-staged
@@ -45,7 +45,7 @@
 - `scripts/node/commands/` : npm scripts から実行するタスク本体
 - `scripts/node/core/` : タスク共通基盤（`cli.ts` = CLI 起動、`context.ts` = モード解決、`watch.ts` = chokidar 監視）
 - `scripts/node/helper/` : タスク用ヘルパー（`cli-args.ts` = 引数解析、`targets.ts` = 対象ファイル解決、`asset-cache.ts` = 生成物キャッシュ など）
-- `scripts/node/__test__/` : `commands` / `core` / `helper` のディレクトリ構成をミラーしたテスト
+- `scripts/node/__tests__/` : `commands` / `core` / `helper` のディレクトリ構成をミラーしたテスト
 - `static/` : そのままコピーする静的ファイル（`static/assets` → `.tmp/assets`、`static/root` → `.tmp`）
 - `plop/` : Plop のテンプレート（`.hbs`）
 - `.cache/` : 各種キャッシュの集約先（生成物。`clean` の対象外）。`images` = 画像生成とマニフェスト、`astro` / `vite-astro` / `vite` / `vitest` / `tsc` = 各ツール、`eslint` / `stylelint` / `prettier` = 静的解析
@@ -165,7 +165,7 @@ npm scripts は接頭辞で役割を分けている。
 | `pnpm check:markup` | markuplint（`src/**/*.astro`） |
 | `pnpm format` | ESLint / Stylelint / Prettier の自動修正（`src` / 設定ファイル / `scripts/node`）を逐次実行 |
 | `pnpm test` | Vitest 全プロジェクト + カバレッジ |
-| `pnpm test:scripts` | `scripts/node/__test__/**` のみ実行 |
+| `pnpm test:backend` | `scripts/node/__tests__/**` のみ実行 |
 | `pnpm test:frontend` | `src/**/*.{test,spec}.{ts,tsx}` のみ実行 |
 | `pnpm report:w3c` | HTML 検証用ビルド（astro → fonts → html 整形）後に W3C バリデーションを実行し `report-w3c.txt` を出力 |
 | `pnpm create:icon` | Font Awesome アイコンから SVG データを生成 |
@@ -209,7 +209,7 @@ npm scripts は接頭辞で役割を分けている。
 変更後は原則この順で実行すること。
 
 ```bash
-pnpm format && pnpm check && pnpm test:scripts
+pnpm format && pnpm check && pnpm test:backend
 ```
 
 - マークアップ検証まで求められた場合は `pnpm report:w3c` を追加する（内部で検証用ビルドまで行うため、事前の `pnpm build` は不要）。
@@ -218,7 +218,7 @@ pnpm format && pnpm check && pnpm test:scripts
 **テスト方針**
 
 - フレームワークは Vitest。`globals: true` のため `describe` / `it` / `expect` は import 不要だが、既存テストに合わせて `vitest` から明示 import する。
-- Node タスクのテストは `scripts/node/__test__/<layer>/<name>.test.ts` に置き、対象と同じディレクトリ構成をミラーする。
+- Node タスクのテストは `scripts/node/__tests__/<layer>/<name>.test.ts` に置き、対象と同じディレクトリ構成をミラーする。
 - import はエイリアス（`@scripts-node/*` / `@root/*`）で書く。
 - 外部ライブラリ（`fs-extra` / `fast-glob` / `sharp` 等）は `vi.mock` でモックし、プロジェクト内のコードは実実行させる。
 - モック定義後に `await import(...)` で対象を読み込む既存パターンに合わせる。

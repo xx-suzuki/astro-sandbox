@@ -1,9 +1,9 @@
 /**
- * Converts a string to Upper Camel Case (Pascal Case)
- * @function
- * @param {string | undefined} inputString - The input string to be converted
- * @returns {string} - The converted string in Upper Camel Case
- */
+Converts a string to Upper Camel Case (Pascal Case)
+@function
+@param {string | undefined} inputString - The input string to be converted
+@returns {string} - The converted string in Upper Camel Case
+*/
 export const toUpperCamelCase = (inputString: string | undefined): string => {
   if (inputString === undefined) {
     return '';

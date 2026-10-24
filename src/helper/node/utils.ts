@@ -1,11 +1,11 @@
 import { loadDefaultJapaneseParser } from 'budoux';
 
 /**
- * Splits a text string into individual characters wrapped in <span> tags while preserving HTML tags.
- * @function
- * @param {string} text - The input text string
- * @returns {string} - The processed HTML string with each character wrapped in a <span>
- */
+Splits a text string into individual characters wrapped in <span> tags while preserving HTML tags.
+@function
+@param {string} text - The input text string
+@returns {string} - The processed HTML string with each character wrapped in a <span>
+*/
 export const splitText = (text: string): string => {
   const regex = new RegExp(/<[^>]*>/);
   const word = text.split(/(<[^>]*>)/gi);
@@ -28,22 +28,22 @@ export const splitText = (text: string): string => {
 };
 
 /**
- * Returns an object with target="_blank" if the boolean value is true, otherwise returns an empty object.
- * @function
- * @param {boolean} bool - Determines whether to return a target attribute
- * @returns {object} - An object with { target: '_blank' } if true, otherwise an empty object
- */
-export const isBlank = (bool: boolean): { target?: string } => {
-  return bool ? { target: '_blank' } : {};
+Returns an object with target="_blank" if the boolean value is true, otherwise returns an empty object.
+@function
+@param {boolean} isBlank - Determines whether to return a target attribute
+@returns {object} - An object with { target: '_blank' } if true, otherwise an empty object
+*/
+export const blankAttribute = (isBlank: boolean): { target?: string } => {
+  return isBlank ? { target: '_blank' } : {};
 };
 
 /**
- * Parses a Japanese HTML string using BudouX and replaces zero-width space
- * characters (`\u200B`) with `<wbr>` tags to enable soft line breaks in HTML output.
- *
- * @param {string} str - The input HTML string containing Japanese text.
- * @returns {string} The HTML string with BudouX-inserted break points replaced by `<wbr>` tags.
- */
+Parses a Japanese HTML string using BudouX and replaces zero-width space
+characters (`\u200B`) with `<wbr>` tags to enable soft line breaks in HTML output.
+
+@param {string} str - The input HTML string containing Japanese text.
+@returns {string} The HTML string with BudouX-inserted break points replaced by `<wbr>` tags.
+*/
 export const budouXTranslate = (string_: string) => {
   const parser = loadDefaultJapaneseParser();
 

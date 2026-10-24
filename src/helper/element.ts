@@ -1,6 +1,6 @@
 /**
- * Gets the position of an element relative to the document.
- */
+Gets the position of an element relative to the document.
+*/
 export const offset = (element: HTMLElement): { left: number; top: number } => {
   const rect = element.getBoundingClientRect();
   const scrollLeft = window.scrollX;
@@ -24,8 +24,8 @@ export const offset = (element: HTMLElement): { left: number; top: number } => {
 };
 
 /**
- * Decodes HTML entities in a given string.
- */
+Decodes HTML entities in a given string.
+*/
 export const decodeHtmlEntities = (html: string): string => {
   const parser = new DOMParser();
 
@@ -40,8 +40,8 @@ export const decodeHtmlEntities = (html: string): string => {
 };
 
 /**
- * Splits the text content of an element into individual characters wrapped in <span> tags.
- */
+Splits the text content of an element into individual characters wrapped in <span> tags.
+*/
 export const splitText = (element: HTMLElement) => {
   const plainText = element.textContent ?? '';
   const textWithTags = element.getHTML().trim();

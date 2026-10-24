@@ -18,13 +18,6 @@ const config: Config = {
     ignoreFrontMatter: true,
   },
   pretenders: [
-    {
-      as: {
-        element: 'source',
-        inheritAttrs: true,
-      },
-      selector: 'source',
-    },
     // astro:assets の Font は link / style を出力する
     {
       as: {
@@ -43,11 +36,16 @@ const config: Config = {
     },
   ],
   rules: {
-    'invalid-attr': {
+    // Astro は任意の要素を自己終了形で書けるが、markuplint 5 はこれを未閉鎖と判定するため無効化する
+    'html-standard/no-unclosed-element-at-eof': false,
+    // invalid-attr は v6 で削除予定のため後継ルールへ移行済み
+    'no-unknown-attr': {
       options: {
         allowAttrs: ['prefix'],
       },
     },
+    // markuplint 5 で recommended に入った非規範ルール。head の並びは Layout.astro で手動管理する
+    'performance/head-element-order': false,
   },
 };
 

@@ -27,8 +27,8 @@ export default defineConfig({
         test: {
           ...sharedTestConfig,
           environment: 'node',
-          include: ['scripts/node/__test__/**/*.test.ts'],
-          name: 'scripts',
+          include: ['scripts/node/__tests__/**/*.test.ts'],
+          name: 'backend',
         },
       },
       {
